@@ -3,6 +3,9 @@
 #include<map>
 #include<string>
 #include<algorithm>
+#include<vector>
+#include<typeinfo>
+#include<fstream>
 using namespace std;
 class scene
 {
@@ -10,122 +13,140 @@ public:
 	string name;
 	string long_description;
 	string short_description;
+	string special_1_name;
+	string special_2_name;
 	string special_1_description;
+	string special_description_1;
 	string special_2_description;
-	string special_3_description;
-	string special_4_description;
-	string look_description_1;
-	int times = 0;
+	string special_1_look_description_1;
+	string special_1_look_description_2;
+	string special_1_look_description_3;
+	string hint;
+	string stuff_can_be_used_1;
+	string stuff_can_get_1;
+	string stuff_1_get_info;
+	int max_stuff_1_can_get_amount;
 	int max_x;
 	int min_x;
 	int max_y;
 	int min_y;
-	int special_1_x;
-	int special_1_y;
-	int special_2_x;
-	int special_2_y;
-	int special_3_x;
-	int special_3_y;
-	int special_4_x;
-	int special_4_y;
+	int special_1_x = 3;
+	int special_1_y = 0;
+	int special_2_x = 2;
+	int special_2_y = -5;
 };
 class player
 {
 public:
 	map<string, int> inventory;
 	string action;
-	int x = 0;
-	int y = 0;
+	string command[27] = { "north","south","west","east","board","enter","take","give","search","look","eat","cut","climb","drop","up","down","unlock","sail","open","quit","inventory","setting","save","load" ,"hint","help"," " };
+	int set = 1;
+	int x = 4;
+	int y = -3;
+	int banana_amount = 5;
+	int island_times = 0;
+	bool if_over = false;
 };
-void engine();
-int load_game();
-int save_game();
+player engine(player, scene);
+player load_game(player);
+int save_game(player);
 player island(player, scene);
-string take_action();
+string take_action(player);
 player behave(player, string, scene);
 scene set_scene(player);
-bool if_over(player, scene);
+player if_over(player, scene);
+player init_inventory(player);
+void help();
+player setting(player);
 int main()
 {
 	bool success = false, first_time = true, over = true;
 	player player1;
 	scene place;
-	if (first_time)
-	{
-		cout << "You have just awakened on a strange island with a terrible headache.You can't remember anything "
-			<< "about yourself or where you are." << endl;
-		player1.inventory["knife"] = 0;
-		player1.inventory["banana"] = 0;
-	}
-	else
-		cout << "Welcome back! Survivor!" << endl;
+	player1 = init_inventory(player1);
 	while (!success)
 	{
 		place = set_scene(player1);
-		if (place.name == "island")
+		if (place.name == "island"&&player1.y > -6)
+		{
 			player1 = island(player1, place);
-
-
+		}
 	}
 
 	system("pause");
 	return 0;
 }
-int load_game()
+string take_action(player player1)
 {
-	return false;
-}
-int save_game()
-{
-	return 1;
-}
-string take_action()
-{
-	string action;
-	cout << "What are you gonna do?\n";
-	getline(cin, action);
+	string action = "char";
 	string behavior = "none";
+	cout << "What are you gonna do?\n";
+	if (action != "char")
+	{
+		cin.ignore(999);
+		cin.get();
+	}
+	getline(cin, action);
 	transform(action.begin(), action.end(), action.begin(), tolower);
-	if (action == "go north" || action == "north")
+	if (action == "setting")
+		behavior = "setting";
+	else if (action == "go north" || action == "north" || action == player1.command[0])
 		behavior = "north";
-	else if (action == "go south" || action == "south")
+	else if (action == "go south" || action == "south" || action == player1.command[1])
 		behavior = "south";
-	else if (action == "go west" || action == "west")
+	else if (action == "go west" || action == "west" || action == player1.command[2])
 		behavior = "west";
-	else if (action == "go east" || action == "east")
+	else if (action == "go east" || action == "east" || action == player1.command[3])
 		behavior = "east";
-	else if (action == "look")
+	else if (action == "look" || action == player1.command[9])
 		behavior = "look";
-	else if (action == "search")
+	else if (action == "search" || action == player1.command[8])
 		behavior = "search";
-	else if (action == "take" || action == "take it")
+	else if (action == "take" || action == "take it" || action == player1.command[6])
 		behavior = "take";
-	else if (action == "enter")
+	else if (action == "enter" || action == player1.command[5])
 		behavior = "enter";
+	else if (action == "eat" || action == "eat something" || action == player1.command[10])
+		behavior = "eat";
+	else if (action == "inventory" || action == player1.command[20])
+		behavior = "inventory";
+	else if (action == "hint" || action == "h" || action == player1.command[24])
+		behavior = "hint";
+	else if (action == "save game" || action == "save" || action == player1.command[22])
+		behavior = "save";
+	else if (action == "load game" || action == "load" || action == player1.command[23])
+		behavior = "load";
+	else if (action == "cut" || action == player1.command[11])
+		behavior = "cut";
+	else if (action == "help" || action == player1.command[25])
+		behavior = "help";
+	else if (action == "quit" || action == player1.command[19])
+		behavior = "quit";
 	return behavior;
 }
 player behave(player player1, string behavior, scene place)
 {
 	player person;
 	person = player1;
-	if (behavior == "north"&&person.x < 5)
+	if (behavior == "north")
 	{
 		person.x += 1;
 		person.action = "go north";
 	}
-	else if (behavior == "south"&&person.x > -5)
+	else if (behavior == "south")
 	{
 		person.x -= 1;
 		person.action = "go south";
 	}
-	else if (behavior == "west"&&person.y > -12)
-	{
-		person.y -= 1;
-		person.action = "go west";
-	}
-	else if (behavior == "east"&&person.y < 5)
+	else if (behavior == "west")
 	{
 		person.y += 1;
+		person.action = "go west";
+	}
+	else if (behavior == "east")
+	{
+		person.y -= 1;
 		person.action = "go east";
 	}
 	else if (behavior == "look")
@@ -136,45 +157,96 @@ player behave(player player1, string behavior, scene place)
 	{
 		person.action = "take";
 	}
+	else if (behavior == "enter" || behavior == "go in")
+	{
+		person.action = "enter";
+	}
+	else if (behavior == "eat")
+	{
+		person.action = "eat";
+	}
+	else if (behavior == "inventory")
+	{
+		person.action = "inventory";
+	}
+	else if (behavior == "hint")
+	{
+		person.action = "hint";
+	}
+
+	else if (behavior == "save")
+	{
+		person.action = "save";
+	}
+	else if (behavior == "load")
+	{
+		person.action = "load";
+	}
+	else if (behavior == "cut")
+	{
+		person.action = "cut";
+	}
+	else if (behavior == "help")
+	{
+		person.action = "help";
+	}
+	else if (behavior == "quit")
+	{
+		person.action = "quit";
+	}
+	else if (behavior == "setting")
+	{
+		person = setting(player1);
+	}
 	return person;
 }
-bool if_over(player player1, scene place)
+player if_over(player player1, scene place)
 {
-	bool over = false;
+	player person;
+	person = player1;
 	if (player1.x < place.min_x)
 	{
-		cout << "You go too far go back!" << endl;
-		over = true;
+		person.x += 1;
+		person.if_over = true;
 	}
 	else if (player1.x > place.max_x)
 	{
-		cout << "You go too far go back!" << endl;
-		over = true;
+		person.x -= 1;
+		person.if_over = true;
 	}
 	else if (player1.y > place.max_y)
 	{
-		cout << "You go too far go back!" << endl;
-		over = true;
+		person.y -= 1;
+		person.if_over = true;
 	}
 	else if (player1.y < place.min_y)
 	{
-		cout << "You go too far go back!" << endl;
-		over = true;
+		person.y += 1;
+		person.if_over = true;
 	}
-	return over;
+	else
+		person.if_over = false;
+	return person;
 }
-scene set_scene(player player1)
+scene set_scene(player player1)//当切换场景的时候记得要把上一个场景的次数加一
 {
 	scene place;
-	if (player1.y >= -6)
+	if (player1.y > -6)
 	{
 		place.name = "island";
 		place.long_description = "The island is forested with banana trees. Most of the bananas are green, but one tree to your west might have ripe bananas.\nThere are ominous drums in the background.There is a ship to your east with a gangplank to the shore\n";
 		place.short_description = "So many banana trees!\n";
-		place.special_1_description = "There is a ripe banana tree!\n";
-		place.special_2_description = "You found a exit!\n";
-		place.look_description_1 = "There are some repe bananas on the tree.\n";
-		place.times += 1;
+		place.special_1_name = "tree";
+		place.special_2_name = "gangplank";
+		place.special_1_description = "You are standing in front of a ripe banana tree, you can take a look to see what is on the tree\n";
+		place.special_2_description = "You found a gangplank! You wanna go up or go down?\n";
+		place.special_1_look_description_1 = "There are some repe bananas on the tree.";
+		place.special_1_look_description_2 = "There is nothing on the tree....";
+		place.special_1_look_description_3 = "You are standing in front of a ripe banana tree! But....there is nothing on the tree....";
+		place.hint = "There is a ripe banana tree around here, you can get ripe banana on this tree, try to find it!";
+		place.stuff_can_be_used_1 = "knife";
+		place.stuff_can_get_1 = "banana";
+		place.stuff_1_get_info = "You got a tempting banana!";
 		place.max_x = 5;
 		place.min_x = -5;
 		place.max_y = 5;
@@ -182,69 +254,336 @@ scene set_scene(player player1)
 		place.special_1_x = 3;
 		place.special_1_y = 0;
 		place.special_2_x = 2;
-		place.special_2_y = -5;
+		place.special_2_x = -5;
 	}
 	return place;
 }
 player island(player player1, scene place)
 {
-	string behavior;
 	player person;
-	bool over = true;
 	person = player1;
-	behavior = take_action();
-	while (over = if_over(person, place))
-		behavior = take_action();
-	while (behavior == "none")
-	{
-		cout << "You can`t do that bro" << endl;
-		behavior = take_action();
-	}
-	person = behave(person, behavior, place);
-	if (person.action == "look"&&person.x != place.special_1_x&&person.x != place.special_2_x&&person.x != place.special_3_x&&person.x != place.special_4_x)
-	{
-		if (place.times == 1)
-			cout << place.long_description;
-		else
-			cout << place.short_description;
-	}
-	else if (person.x == place.special_1_x&&person.y == place.special_1_y)
-	{
-		cout << place.special_1_description;
-		behavior = take_action();
-		person = behave(person, behavior, place);
-		if (person.action == "look" || person.action == "search")
-		{
-			cout << place.look_description_1;
-			behavior = take_action();
-			person = behave(person, behavior, place);
-			if (person.action == "take")
-			{
-				if (person.inventory["knife"] == 1)
-					person.inventory["banana"] += 1;
-				else
-					cout << "Sorry, you need a knife to get the banana.\n";
-			}
-		}
-		else if (person.action == "take")
-		{
-			if (person.inventory["knife"] == 1)
-				person.inventory["banana"] += 1;
-			else
-				cout << "Sorry, you need a knife to get the banana.\n";
-		}
-	}
-	else if (person.x == place.special_2_x&&person.y == place.special_2_y)
+	person = engine(person, place);
+	return person;
+}
+player init_inventory(player player1)
+{
+	player person;
+	person = player1;
+	person.inventory["knife"] = 1;
+	person.inventory["bananas"] = 0;
+	person.inventory["tresure"] = 0;
+	person.inventory["door"] = 0;
+	person.inventory["trunk"] = 0;
+	person.inventory["parrot"] = 0;
+	person.inventory["keys"] = 0;
+	return person;
+}
+player setting(player player1)//输入字母的时候会出现两次 you can`t do that bro!
+{
+	string change, *new_command;
+	int traversal = 0, index;
+	int number;
+	bool repeat = true;
+	player person;
+	person = player1;
+	new_command = person.command;
+	cout << "There are commands in this game." << endl;
+	for (index = 0; index <= 25; index++)
 	{
 
+		switch (index)
+		{
+		default:
+		case 0:cout << index + 1 << ". " << "Go " << "north---" << person.command[index] << endl; break;
+		case 1:cout << index + 1 << ". " << "Go " << "south---" << person.command[index] << endl; break;
+		case 2:cout << index + 1 << ". " << "Go " << "west---" << person.command[index] << endl; break;
+		case 3:cout << index + 1 << ". " << "Go " << "east---" << person.command[index] << endl; break;
+		case 4:cout << index + 1 << ". " << "To " << "board---" << person.command[index] << endl; break;
+		case 5:cout << index + 1 << ". " << "To " << "enter---" << person.command[index] << endl; break;
+		case 6:cout << index + 1 << ". " << "To " << "take---" << person.command[index] << endl; break;
+		case 7:cout << index + 1 << ". " << "To " << "give---" << person.command[index] << endl; break;
+		case 8:cout << index + 1 << ". " << "To " << "search---" << person.command[index] << endl; break;
+		case 9:cout << index + 1 << ". " << "To" << "look---" << person.command[index] << endl; break;
+		case 10:cout << index + 1 << ". " << "To " << "eat---" << person.command[index] << endl; break;
+		case 11:cout << index + 1 << ". " << "To " << "cut---" << person.command[index] << endl; break;
+		case 12:cout << index + 1 << ". " << "To " << "climb---" << person.command[index] << endl; break;
+		case 13:cout << index + 1 << ". " << "To " << "drop---" << person.command[index] << endl; break;
+		case 14:cout << index + 1 << ". " << "Go " << "up---" << person.command[index] << endl; break;
+		case 15:cout << index + 1 << ". " << "Go " << "down---" << person.command[index] << endl; break;
+		case 16:cout << index + 1 << ". " << "To " << "unlock---" << person.command[index] << endl; break;
+		case 17:cout << index + 1 << ". " << "To " << "sail---" << person.command[index] << endl; break;
+		case 18:cout << index + 1 << ". " << "To " << "open---" << person.command[index] << endl; break;
+		case 19:cout << index + 1 << ". " << "To " << "quit---" << person.command[index] << endl; break;
+		case 20:cout << index + 1 << ". " << "Check " << "inventory---" << person.command[index] << endl; break;
+		case 21:cout << index + 1 << ". " << "To " << "setting---" << person.command[index] << endl; break;
+		case 22:cout << index + 1 << ". " << "To " << "save---" << person.command[index] << endl; break;
+		case 23:cout << index + 1 << ". " << "To " << "load--" << person.command[index] << endl; break;
+		case 24:cout << index + 1 << ". " << "To see " << "hint---" << person.command[index] << endl; break;
+		case 25:cout << index + 1 << ". " << "To see " << "help---" << person.command[index] << endl; break;
+			break;
+		}
 	}
-	else if (person.action == "go north" || person.action == "go south" || person.action == "go east" || person.action == "go west")
+	cout << "Enter the front number to choose which one you want to change" << endl;
+	cin >> number;
+	if (cin.fail())
 	{
-		if (place.times == 1)
+		person.action = "setting fail";
+		cin.clear();
+		cin.get();
+		number = 0;
+		person.set = 0;
+	}
+	else
+	{
+		cin.clear();
+		cin.get();
+	}
+	if (number > 0 && number <= index - 1)
+	{
+
+		cout << "What word you want to change for?" << endl;
+		getline(cin, change);
+		transform(change.begin(), change.end(), change.begin(), tolower);
+		while (repeat)
+		{
+			for (traversal = 0; traversal <= index - 1; traversal++)
+				if (person.command[traversal] == change)
+				{
+					cout << "This key is already used in command, please use aother key." << endl;
+					getline(cin, change);
+					transform(change.begin(), change.end(), change.begin(), tolower);
+					traversal = 0;
+				}
+			repeat = false;
+		}
+		for (index = 0; index < number - 1; index++)
+			new_command++;
+		*new_command = change;
+		cout << "done!" << endl;
+		index = number + 1;
+	}
+	else
+	{
+		person.action = "setting fail";
+		person.set = 0;
+	}
+	return person;
+}
+int save_game(player player1)//设置也要保存下来
+{
+	ofstream game_file;
+	map<string, int>::iterator it;
+	int success = 1;
+	string *set;
+	game_file.open("Advanture Island.txt");
+	if (!game_file.is_open())
+	{
+		cout << "Error!" << endl;
+		success = 0;
+	}
+	else
+	{
+		game_file << "location:" << endl;
+		game_file << player1.x << " " << player1.y << "\n";
+		game_file << "Inventory:" << endl;
+		for (it = player1.inventory.begin(); it != player1.inventory.end(); it++)
+		{
+			game_file << it->second << "\n";
+		}
+		game_file << "banana_amount: " << endl;
+		game_file << player1.banana_amount << endl;
+		game_file << "setting:" << endl;
+		for (set = player1.command; *set != " "; set++)
+			game_file << *set << endl;
+		game_file.close();
+	}
+	return success;
+}
+player load_game(player player1)
+{
+	player person;
+	ifstream game_file;
+	map<string, int>::iterator it;
+	string loaction, inventory, banana_amount, setting, *set;
+	person = player1;
+	game_file.open("Advanture Island.txt");
+	if (!game_file.is_open())
+		cout << "Fail loading game!" << endl;
+	else
+	{
+		game_file >> loaction;
+		game_file >> person.x >> person.y;
+		game_file >> inventory;
+		for (it = person.inventory.begin(); it != person.inventory.end(); it++)
+		{
+			game_file >> it->second;
+		}
+		game_file >> banana_amount;
+		game_file >> person.banana_amount;
+		game_file >> setting;
+		for (set = person.command; *set != " "; set++)
+		{
+			game_file >> *set;
+		}
+		cout << "Load game successfully" << endl;
+	}
+	game_file.close();
+	return person;
+}
+void help()
+{
+	cout << "Sorry, there is nothing I can help you...." << endl;
+}
+
+player engine(player player1, scene place)
+{
+	player person;
+	person = player1;
+	bool save = false;
+	bool load = false;
+	string behavior;
+	int *stuff_1_max;
+	stuff_1_max = &place.max_stuff_1_can_get_amount;
+	if (place.name == "island")
+	{
+		*stuff_1_max = person.banana_amount;
+		if (person.x == place.special_1_x&&person.y == place.special_1_y)
+		{
+			if (person.banana_amount != 0)
+			{
+				cout << place.special_1_description;
+			}
+			else if (person.banana_amount == 0)
+				cout << place.special_description_1 << endl;
+		}
+	}
+
+	if (person.x == place.special_2_x&&person.y == place.special_2_y)
+	{
+		cout << place.special_2_description;
+	}
+	else
+	{
+		if (player1.island_times == 0)
 			cout << place.long_description << endl;
 		else
 			cout << place.short_description << endl;
 	}
+
+	behavior = take_action(player1);
+	while (behavior == "none")
+	{
+		cout << "You can`t do that bro" << endl;
+		behavior = take_action(player1);
+	}
+	person = behave(person, behavior, place);
+	person = if_over(person, place);
+	while (person.if_over == true)
+	{
+		cout << "You go too far go back!" << endl;
+		behavior = take_action(player1);
+		person = behave(person, behavior, place);
+		person = if_over(person, place);
+	}
+	if (person.x == place.special_1_x&&person.y == place.special_1_y)
+	{
+		while (person.action == "cut")
+		{
+			cout << "You can`t cut the " << place.special_1_name << "!" << endl;
+			behavior = take_action(player1);
+			person = behave(person, behavior, place);
+		}
+		while (person.action == "look")
+		{
+			if (person.banana_amount != 0)
+			{
+				cout << place.special_1_look_description_1 << endl;
+				behavior = take_action(player1);
+				person = behave(person, behavior, place);
+			}
+			else
+			{
+				cout << place.special_1_look_description_3 << endl;
+				behavior = take_action(player1);
+				person = behave(person, behavior, place);
+			}
+		}
+		if (person.action == "take")
+		{
+			if (person.inventory[place.stuff_can_be_used_1] != 0 && *stuff_1_max != 0)
+			{
+				*stuff_1_max -= 1;
+				if (place.name == "island")
+				{
+					person.inventory["bananas"] += 1;
+				}
+				cout << place.stuff_1_get_info << endl;
+			}
+			else if (person.inventory[place.stuff_can_be_used_1] == 0)
+			{
+				cout << "Sorry, you need a " << place.stuff_can_be_used_1 << " to get the banana.\n";
+			}
+			else if (*stuff_1_max == 0)
+			{
+				cout << place.special_1_look_description_2 << endl;
+			}
+		}
+		else;
+	}
+	else if (person.x == place.special_2_x&&person.y == place.special_2_y)
+	{
+		if (person.action == "up" || person.action == "down")
+			person.y -= 1;
+		else if (person.action == "look")
+			cout << place.special_2_description << endl;
+	}
+	if (person.action == "eat")
+	{
+		if (person.inventory["bananas"] == 0)
+			cout << "You have nothing to eat." << endl;
+		else
+		{
+			cout << "Your stomach feels better." << endl;
+			person.inventory["bananas"] -= 1;
+		}
+	}
+	else if (person.action == "inventory")
+	{
+		map<string, int>::iterator it;
+		for (it = person.inventory.begin(); it != person.inventory.end(); it++)
+			cout << it->first << ": " << it->second << endl;
+	}
+	else if (person.action == "hint")
+		cout << place.hint << endl;
+	else if (person.action == "save")
+	{
+		save = save_game(person);
+		if (save)
+			cout << "Save successfully!" << endl;
+		else
+			cout << "Save fail!" << endl;
+	}
+	else if (person.action == "load")
+	{
+		person = load_game(person);
+		load = true;
+	}
+	else if (person.action == "help")
+	{
+		help();
+	}
+	else if (person.action == "setting fail")
+	{
+		cin.get();
+	}
+	else if (person.action == "quit")
+	{
+		exit(1);
+	}
 	cout << "x: " << person.x << " y: " << person.y << endl;
+	if (place.name == "island"&&load == false)
+	{
+		person.banana_amount = *stuff_1_max;
+	}
 	return person;
 }
