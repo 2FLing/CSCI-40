@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 #include<stdio.h>
 #include<map>
 #include<string>
@@ -44,7 +44,7 @@ public:
 	int set = 1;
 	int x = 4;
 	int y = -3;
-	int banana_amount = 5;
+	int banana_amount = 1;
 	int island_times = 0;
 	bool if_over = false;
 };
@@ -224,7 +224,7 @@ player if_over(player player1, scene place)
 		player1.if_over = false;
 	return player1;
 }
-scene set_scene(player player1)//µ±ÇĞ»»³¡¾°µÄÊ±ºò¼ÇµÃÒª°ÑÉÏÒ»¸ö³¡¾°µÄ´ÎÊı¼ÓÒ»
+scene set_scene(player player1)//å½“åˆ‡æ¢åœºæ™¯çš„æ—¶å€™è®°å¾—è¦æŠŠä¸Šä¸€ä¸ªåœºæ™¯çš„æ¬¡æ•°åŠ ä¸€
 {
 	scene place;
 	if (player1.y > -6)
@@ -272,7 +272,7 @@ player init_inventory(player player1)
 	player1.inventory["keys"] = 0;
 	return player1;
 }
-player setting(player player1)//ÊäÈë×ÖÄ¸µÄÊ±ºò»á³öÏÖÁ½´Î you can`t do that bro!
+player setting(player player1)//è¾“å…¥å­—æ¯çš„æ—¶å€™ä¼šå‡ºç°ä¸¤æ¬¡ you can`t do that bro!
 {
 	string change, *new_command;
 	int traversal = 0, index;
@@ -362,7 +362,7 @@ player setting(player player1)//ÊäÈë×ÖÄ¸µÄÊ±ºò»á³öÏÖÁ½´Î you can`t do that bro!
 	}
 	return player1;
 }
-int save_game(player player1)//ÉèÖÃÒ²Òª±£´æÏÂÀ´
+int save_game(player player1)//è®¾ç½®ä¹Ÿè¦ä¿å­˜ä¸‹æ¥
 {
 	ofstream game_file;
 	map<string, int>::iterator it;
@@ -435,7 +435,7 @@ player engine(player player1, scene place)
 	int *stuff_1_max;
 	stuff_1_max = &place.max_stuff_1_can_get_amount;
 	*stuff_1_max = player1.banana_amount;
-	if (player1.x == place.special_1_x&&player1.y == place.special_1_y)
+	if (place.name == "island"&&player1.x == place.special_1_x&&player1.y == place.special_1_y)
 	{
 		if (player1.banana_amount != 0)
 		{
@@ -454,8 +454,11 @@ player engine(player player1, scene place)
 	else
 	{
 		if (player1.island_times == 0)
+		{
 			cout << place.long_description << endl;
-		else
+			player1.island_times += 1;
+		}
+		else if (player1.action != "look")
 			cout << place.short_description << endl;
 	}
 	behavior = take_action(player1);
@@ -522,7 +525,7 @@ player engine(player player1, scene place)
 		}
 		else if (player1.x == place.special_2_x&&player1.y == place.special_2_y)
 		{
-			if (player1.action == "up" || player1.action == "down")
+			if (player1.action == "enter")
 				player1.y -= 1;
 			else if (player1.action == "look")
 				cout << place.special_2_description << endl;
@@ -570,6 +573,10 @@ player engine(player player1, scene place)
 	else if (player1.action == "quit")
 	{
 		exit(1);
+	}
+	else if (player1.action == "look")
+	{
+		cout << place.long_description << endl;
 	}
 	cout << "x: " << player1.x << " y: " << player1.y << endl;
 	if (place.name == "island"&&load == false)
