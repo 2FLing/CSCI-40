@@ -2,7 +2,6 @@
 //This program can caculate electric bill or gas bill for a month base on the 
 //quantities,baseline quantities,baseline price,and over baseline price the user input.
 #include<iostream>
-#include<stdio.h>
 #include<string>
 using namespace std;
 double price(double, double, double, double, double);
