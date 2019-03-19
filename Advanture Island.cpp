@@ -41,6 +41,7 @@ public:
 	map<string, int> inventory;
 	string action;
 	string command[27] = { "north","south","west","east","board","enter","take","give","search","look","eat","cut","climb","drop","up","down","unlock","sail","open","quit","inventory","setting","save","load" ,"hint","help"," " };
+	string location = "up";
 	int set = 1;
 	int x = 4;
 	int y = -3;
@@ -52,6 +53,7 @@ player engine(player, scene);
 player load_game(player);
 int save_game(player);
 player island(player, scene);
+player upper(player, scene);
 string take_action(player);
 player behave(player, string, scene);
 scene set_scene(player);
@@ -68,10 +70,15 @@ int main()
 	player1 = init_inventory(player1);
 	while (!success)
 	{
-		place = set_scene(player1);
-		if (place.name == "island"&&player1.y > -6)
+		if (player1.y > -6)
 		{
+			place = set_scene(player1);
 			player1 = island(player1, place);
+		}
+		else if (player1.location == "up"&&player1.y <= -6)
+		{
+			place = set_scene(player1);
+			player1 = upper(player1, place);
 		}
 	}
 
@@ -253,6 +260,10 @@ scene set_scene(player player1)//当切换场景的时候记得要把上一个�
 		place.special_2_x = 2;
 		place.special_2_y = -5;
 	}
+	else if (player1.location == "up"&&player1.y <= -6)
+	{
+
+	}
 	return place;
 }
 player island(player player1, scene place)
@@ -264,7 +275,7 @@ player island(player player1, scene place)
 player init_inventory(player player1)
 {
 
-	player1.inventory["knife"] = 1;
+	player1.inventory["knife"] = 0;
 	player1.inventory["bananas"] = 0;
 	player1.inventory["tresure"] = 0;
 	player1.inventory["door"] = 0;
@@ -588,4 +599,8 @@ player engine(player player1, scene place)
 		player1.banana_amount = *stuff_1_max;
 	}
 	return player1;
+}
+player upper(player player1)
+{
+
 }
