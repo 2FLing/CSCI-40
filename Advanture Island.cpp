@@ -15,12 +15,17 @@ public:
 	string short_description;
 	string special_1_name;
 	string special_2_name;
+	string special_3_name;
+	string special_4_name;
 	string special_1_description;
 	string special_description_1;
 	string special_2_description;
 	string special_1_look_description_1;
 	string special_1_look_description_2;
 	string special_1_description_2;
+	string special_3_description;
+	string special_3_description_2;
+	string special_4_description;
 	string hint;
 	string stuff_can_be_used_1;
 	string stuff_can_get_1;
@@ -30,10 +35,14 @@ public:
 	int min_x;
 	int max_y;
 	int min_y;
-	int special_1_x = 3;
-	int special_1_y = 0;
-	int special_2_x = 2;
-	int special_2_y = -5;
+	int special_1_x;
+	int special_1_y;
+	int special_2_x;
+	int special_2_y;
+	int special_3_x;
+	int special_3_y;
+	int special_4_x;
+	int special_4_y;
 };
 class player
 {
@@ -53,7 +62,6 @@ player engine(player, scene);
 player load_game(player);
 int save_game(player);
 player island(player, scene);
-player upper(player, scene);
 string take_action(player);
 player behave(player, string, scene);
 scene set_scene(player);
@@ -61,7 +69,7 @@ player if_over(player, scene);
 player init_inventory(player);
 void help();
 player setting(player);
-string word_to_Piglatin(string);
+string To_lower(string);
 int main()
 {
 	bool success = false, first_time = true, over = true;
@@ -70,15 +78,10 @@ int main()
 	player1 = init_inventory(player1);
 	while (!success)
 	{
-		if (player1.y > -6)
+		place = set_scene(player1);
+		if (place.name == "island" and player1.y > -6)
 		{
-			place = set_scene(player1);
 			player1 = island(player1, place);
-		}
-		else if (player1.location == "up"&&player1.y <= -6)
-		{
-			place = set_scene(player1);
-			player1 = upper(player1, place);
 		}
 	}
 
@@ -96,40 +99,40 @@ string take_action(player player1)
 		cin.get();
 	}
 	getline(cin, action);
-	transform(action.begin(), action.end(), action.begin(), tolower);
+	action = To_lower(action);
 	if (action == "setting")
 		behavior = "setting";
-	else if (action == "go north" || action == "north" || action == player1.command[0])
+	else if (action == "go north" or action == "north" or action == player1.command[0])
 		behavior = "north";
-	else if (action == "go south" || action == "south" || action == player1.command[1])
+	else if (action == "go south" or action == "south" or action == player1.command[1])
 		behavior = "south";
-	else if (action == "go west" || action == "west" || action == player1.command[2])
+	else if (action == "go west" or action == "west" or action == player1.command[2])
 		behavior = "west";
-	else if (action == "go east" || action == "east" || action == player1.command[3])
+	else if (action == "go east" or action == "east" or action == player1.command[3])
 		behavior = "east";
-	else if (action == "look" || action == player1.command[9])
+	else if (action == "look" or action == player1.command[9])
 		behavior = "look";
-	else if (action == "search" || action == player1.command[8])
+	else if (action == "search" or action == player1.command[8])
 		behavior = "search";
-	else if (action == "take" || action == "take it" || action == player1.command[6])
+	else if (action == "take" or action == "take it" or action == player1.command[6])
 		behavior = "take";
-	else if (action == "enter" || action == player1.command[5])
+	else if (action == "enter" or action == player1.command[5])
 		behavior = "enter";
-	else if (action == "eat" || action == "eat something" || action == player1.command[10])
+	else if (action == "eat" or action == "eat something" or action == player1.command[10])
 		behavior = "eat";
-	else if (action == "inventory" || action == player1.command[20])
+	else if (action == "inventory" or action == player1.command[20])
 		behavior = "inventory";
-	else if (action == "hint" || action == "h" || action == player1.command[24])
+	else if (action == "hint" or action == "h" or action == player1.command[24])
 		behavior = "hint";
-	else if (action == "save game" || action == "save" || action == player1.command[22])
+	else if (action == "save game" or action == "save" or action == player1.command[22])
 		behavior = "save";
-	else if (action == "load game" || action == "load" || action == player1.command[23])
+	else if (action == "load game" or action == "load" or action == player1.command[23])
 		behavior = "load";
-	else if (action == "cut" || action == player1.command[11])
+	else if (action == "cut" or action == player1.command[11])
 		behavior = "cut";
-	else if (action == "help" || action == player1.command[25])
+	else if (action == "help" or action == player1.command[25])
 		behavior = "help";
-	else if (action == "quit" || action == player1.command[19])
+	else if (action == "quit" or action == player1.command[19])
 		behavior = "quit";
 	return behavior;
 }
@@ -159,11 +162,11 @@ player behave(player player1, string behavior, scene place)
 	{
 		player1.action = "look";
 	}
-	else if (behavior == "take" || behavior == "take it")
+	else if (behavior == "take" or behavior == "take it")
 	{
 		player1.action = "take";
 	}
-	else if (behavior == "enter" || behavior == "go in")
+	else if (behavior == "enter" or behavior == "go in")
 	{
 		player1.action = "enter";
 	}
@@ -238,13 +241,13 @@ scene set_scene(player player1)//当切换场景的时候记得要把上一个�
 	if (player1.y > -6)
 	{
 		place.name = "island";
-		place.long_description = "The island is forested with banana trees. Most of the bananas are green, but one tree to your west might have ripe bananas.\nThere are ominous drums in the background.There is a ship to your east with a gangplank to the shore\n";
-		place.short_description = "So many banana trees!\n";
+		place.long_description = "The island is forested with banana trees. Most of the bananas are green, but one tree to your west might have ripe bananas.\nThere are ominous drums in the background.There is a ship to your east with a gangplank to the shore";
+		place.short_description = "So many banana trees!";
 		place.special_1_name = "tree";
 		place.special_2_name = "gangplank";
 		place.special_1_description = "You are standing in front of a ripe banana tree, you can take a look to see what is on the tree\n";
-		place.special_2_description = "You found a gangplank! You wanna enter?\n";
-		place.special_1_look_description_1 = "There is a branch of repe bananas on the tree.";
+		place.special_2_description = "You found a gangplank! You wanna enter the ship?\n";
+		place.special_1_look_description_1 = "There are some repe bananas on the tree.";
 		place.special_1_look_description_2 = "There is nothing on the tree....";
 		place.special_1_description_2 = "You are standing in front of a ripe banana tree! But....there is nothing on the tree....";
 		place.hint = "There is a ripe banana tree around here, you can get ripe banana on this tree, try to find it!";
@@ -258,11 +261,33 @@ scene set_scene(player player1)//当切换场景的时候记得要把上一个�
 		place.special_1_x = 3;
 		place.special_1_y = 0;
 		place.special_2_x = 2;
-		place.special_2_y = -5;
+		place.special_2_x = -5;
 	}
-	else if (player1.location == "up"&&player1.y <= -6)
+	else if (player1.x <= -6 and player1.location == "up")
 	{
-
+		place.name = "upper deck";
+		place.long_description = "The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.";
+		place.short_description = "It is upper deck";
+		place.special_1_name = "capain`s quarters";
+		place.special_2_name = "ladder";
+		place.special_3_name = "Ship`s Wheel";
+		place.special_1_description = "There is a bed and a table in this room.(There is a knife on the table.)";
+		place.special_2_description = "There is a ladder, do you want to go down?";
+		place.special_3_description = "There is a large gorilla by the ship`s wheel. The gorilla is hostile. You can`t approach the wheel.\n";
+		place.special_3_description_2 = "You are at the wheel.";
+		place.special_1_look_description_1 = "There are a bed and a table in this room. Em.... there is something on the table";
+		place.special_1_look_description_2 = "There are a bed and a table in this room.";
+		place.hint = "大猩猩又大又凶得想办法才行";
+		place.stuff_can_get_1 = "knife";
+		place.stuff_1_get_info = "You got a sharp knife!";
+		place.max_x = 5;
+		place.min_x = -5;
+		place.max_y = 5;
+		place.min_y = -6;
+		place.special_1_x = 3;
+		place.special_1_y = 0;
+		place.special_2_x = 2;
+		place.special_2_x = -5;
 	}
 	return place;
 }
@@ -275,7 +300,7 @@ player island(player player1, scene place)
 player init_inventory(player player1)
 {
 
-	player1.inventory["knife"] = 0;
+	player1.inventory["knife"] = 1;
 	player1.inventory["bananas"] = 0;
 	player1.inventory["tresure"] = 0;
 	player1.inventory["door"] = 0;
@@ -343,12 +368,12 @@ player setting(player player1)//输入字母的时候会出现两次 you can`t d
 		cin.clear();
 		cin.get();
 	}
-	if (number > 0 && number <= index - 1)
+	if (number > 0 and number <= index - 1)
 	{
 
 		cout << "What word you want to change for?" << endl;
 		getline(cin, change);
-		transform(change.begin(), change.end(), change.begin(), tolower);
+		change = To_lower(change);
 		while (repeat)
 		{
 			for (traversal = 0; traversal <= index - 1; traversal++)
@@ -356,7 +381,7 @@ player setting(player player1)//输入字母的时候会出现两次 you can`t d
 				{
 					cout << "This key is already used in command, please use aother key." << endl;
 					getline(cin, change);
-					transform(change.begin(), change.end(), change.begin(), tolower);
+					change = To_lower(change);
 					traversal = 0;
 				}
 			repeat = false;
@@ -447,11 +472,11 @@ player engine(player player1, scene place)
 	int *stuff_1_max;
 	stuff_1_max = &place.max_stuff_1_can_get_amount;
 	*stuff_1_max = player1.banana_amount;
-	if (place.name == "island"&&player1.x == place.special_1_x&&player1.y == place.special_1_y)
+	if (place.name == "island" and player1.x == place.special_1_x and player1.y == place.special_1_y)
 	{
 		if (player1.banana_amount != 0)
 		{
-			cout << place.special_1_description;
+			cout << place.special_1_description << endl;
 		}
 		else if (player1.banana_amount == 0)
 		{
@@ -459,9 +484,9 @@ player engine(player player1, scene place)
 		}
 	}
 
-	else if (player1.x == place.special_2_x&&player1.y == place.special_2_y)
+	else if (player1.x == place.special_2_x and player1.y == place.special_2_y)
 	{
-		cout << place.special_2_description;
+		cout << place.special_2_description << endl;
 	}
 	else
 	{
@@ -490,7 +515,7 @@ player engine(player player1, scene place)
 	}
 	if (place.name == "island")
 	{
-		if (player1.x == place.special_1_x&&player1.y == place.special_1_y)
+		if (player1.x == place.special_1_x and player1.y == place.special_1_y)
 		{
 			while (player1.action == "cut")
 			{
@@ -515,7 +540,7 @@ player engine(player player1, scene place)
 			}
 			if (player1.action == "take")
 			{
-				if (player1.inventory[place.stuff_can_be_used_1] != 0 && *stuff_1_max != 0)
+				if (player1.inventory[place.stuff_can_be_used_1] != 0 and *stuff_1_max != 0)
 				{
 					*stuff_1_max -= 1;
 					if (place.name == "island")
@@ -526,7 +551,7 @@ player engine(player player1, scene place)
 				}
 				else if (player1.inventory[place.stuff_can_be_used_1] == 0)
 				{
-					cout << "Sorry, you need a " << place.stuff_can_be_used_1 << " to get the banana.\n";
+					cout << "Sorry, you need a " << place.stuff_can_be_used_1 << " to get the banana." << endl;
 				}
 				else if (*stuff_1_max == 0)
 				{
@@ -535,10 +560,12 @@ player engine(player player1, scene place)
 			}
 			else;
 		}
-		else if (player1.x == place.special_2_x&&player1.y == place.special_2_y)
+		else if (player1.x == place.special_2_x and player1.y == place.special_2_y)
 		{
 			if (player1.action == "enter")
 				player1.y -= 1;
+			else if (player1.action == "look")
+				cout << place.special_2_description << endl;
 		}
 	}
 	if (player1.action == "eat")
@@ -586,12 +613,7 @@ player engine(player player1, scene place)
 	}
 	else if (player1.action == "look")
 	{
-		if (player1.x == place.special_1_x&&player1.y == place.special_1_y)
-			cout << place.special_1_look_description_1 << endl;
-		else if (player1.x == place.special_2_x&&player1.y == place.special_2_y)\
-			cout << place.special_2_description << endl;
-		else
-			cout << place.long_description << endl;
+		cout << place.long_description << endl;
 	}
 	cout << "x: " << player1.x << " y: " << player1.y << endl;
 	if (place.name == "island"&&load == false)
@@ -600,7 +622,14 @@ player engine(player player1, scene place)
 	}
 	return player1;
 }
-player upper(player player1)
+string To_lower(string words)
 {
-
+	string::iterator it;
+	int index = 0;
+	for (it = words.begin(); it != words.end(); it++)
+	{
+		*it = tolower(*it);
+		words.at(index++) = *it;
+	}
+	return words;
 }
