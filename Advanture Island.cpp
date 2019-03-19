@@ -1,4 +1,11 @@
-﻿
+﻿#include<iostream>
+#include<stdio.h>
+#include<map>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<typeinfo>
+#include<fstream>
 using namespace std;
 class scene
 {
@@ -52,6 +59,7 @@ player if_over(player, scene);
 player init_inventory(player);
 void help();
 player setting(player);
+string word_to_Piglatin(string);
 int main()
 {
 	bool success = false, first_time = true, over = true;
@@ -228,8 +236,8 @@ scene set_scene(player player1)//当切换场景的时候记得要把上一个�
 		place.special_1_name = "tree";
 		place.special_2_name = "gangplank";
 		place.special_1_description = "You are standing in front of a ripe banana tree, you can take a look to see what is on the tree\n";
-		place.special_2_description = "You found a gangplank! You wanna go up or go down?\n";
-		place.special_1_look_description_1 = "There are some repe bananas on the tree.";
+		place.special_2_description = "You found a gangplank! You wanna enter?\n";
+		place.special_1_look_description_1 = "There is a branch of repe bananas on the tree.";
 		place.special_1_look_description_2 = "There is nothing on the tree....";
 		place.special_1_description_2 = "You are standing in front of a ripe banana tree! But....there is nothing on the tree....";
 		place.hint = "There is a ripe banana tree around here, you can get ripe banana on this tree, try to find it!";
@@ -243,7 +251,7 @@ scene set_scene(player player1)//当切换场景的时候记得要把上一个�
 		place.special_1_x = 3;
 		place.special_1_y = 0;
 		place.special_2_x = 2;
-		place.special_2_x = -5;
+		place.special_2_y = -5;
 	}
 	return place;
 }
@@ -520,8 +528,6 @@ player engine(player player1, scene place)
 		{
 			if (player1.action == "enter")
 				player1.y -= 1;
-			else if (player1.action == "look")
-				cout << place.special_2_description << endl;
 		}
 	}
 	if (player1.action == "eat")
@@ -569,7 +575,12 @@ player engine(player player1, scene place)
 	}
 	else if (player1.action == "look")
 	{
-		cout << place.long_description << endl;
+		if (player1.x == place.special_1_x&&player1.y == place.special_1_y)
+			cout << place.special_1_look_description_1 << endl;
+		else if (player1.x == place.special_2_x&&player1.y == place.special_2_y)\
+			cout << place.special_2_description << endl;
+		else
+			cout << place.long_description << endl;
 	}
 	cout << "x: " << player1.x << " y: " << player1.y << endl;
 	if (place.name == "island"&&load == false)
