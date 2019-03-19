@@ -1,11 +1,4 @@
-﻿#include<iostream>
-#include<stdio.h>
-#include<map>
-#include<string>
-#include<algorithm>
-#include<vector>
-#include<typeinfo>
-#include<fstream>
+﻿
 using namespace std;
 class scene
 {
