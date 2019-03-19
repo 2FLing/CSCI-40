@@ -78,61 +78,60 @@ int main()
 	system("pause");
 	return 0;
 }
-string take_action(player player1)
+string take_action(player player1)// This function can determind the the command for the character in the game base on what the player input.
 {
 	
 	return behavior;
 }
-player behave(player player1, string behavior, scene place)
+player behave(player player1, string behavior, scene place)// This function can make the character to do something according to the command it given.
 {
 	
 	return player1;
 }
-player if_over(player player1, scene place)
+player if_over(player player1, scene place)//This function can determind if the character is over max coordinate of the map.
 {
 
 	return player1;
 }
-scene set_scene(player player1)//当切换场景的时候记得要把上一个场景的次数加一
+scene set_scene(player player1)//This function can initialize the different map in this game
 {
 	
 	return place;
 }
-player island(player player1, scene place)
+player island(player player1, scene place)//This function is represent the map of island in this game. Characters can do different things in each different map.
 {
 
 	return player1;
 }
-player init_inventory(player player1)
+player init_inventory(player player1)// This function can initialize the amount of suff the character carrys, usually they are all zeros.
 {
 
 	return player1;
 }
-player setting(player player1)//输入字母的时候会出现两次 you can`t do that bro!
+player setting(player player1)//This function is used to set different keys for the command of this game
 {
 	
 	return player1;
 }
-int save_game(player player1)//设置也要保存下来
-{
+int save_game(player player1)//	This function is used to save the game.
 	
 	return success;
 }
-player load_game(player player1)
+player load_game(player player1)//This funtion is used to load the game.
 {
 	
 	return player1;
 }
-void help()
+void help()//This function is used to print help in the game.
 {
 
 }
 
-player engine(player player1, scene place)
+player engine(player player1, scene place)//This funtion is used to run the game in different map.
 {
 	return player1;
 }
-string word_to_Piglatin(string word)
+string word_to_Piglatin(string word)//This funtion is used to translate the words to Pig Latin
 {
 	return Piglatin;
 }
