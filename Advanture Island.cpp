@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 #include<fstream>
+#include<cmath>
 using namespace std;
 class scene
 {
@@ -56,10 +57,13 @@ public:
 	int set = 1;
 	int x = 4;
 	int y = -3;
+	int x_last_time = 4;
+	int y_last_time = -3;
 	int banana_amount = 1;
 	int knife_amount = 1;
 	int island_times = 0;
 	int upper_deck_times = 0;
+	int capitains_quarters_times = 0;
 	bool if_over = false;
 };
 player engine(player, scene, int);
@@ -73,6 +77,7 @@ player init_inventory(player);
 void help();
 player setting(player);
 string To_lower(string);
+int if_closer(player, scene);
 int main()
 {
 	bool success = false;
@@ -140,21 +145,25 @@ player behave(player player1, string behavior)
 {
 	if (behavior == "north")
 	{
+		player1.x_last_time = player1.x;
 		player1.x += 1;
 		player1.action = "go north";
 	}
 	else if (behavior == "south")
 	{
+		player1.x_last_time = player1.x;
 		player1.x -= 1;
 		player1.action = "go south";
 	}
 	else if (behavior == "west")
 	{
+		player1.y_last_time = player1.y;
 		player1.y += 1;
 		player1.action = "go west";
 	}
 	else if (behavior == "east")
 	{
+		player1.y_last_time = player1.y;
 		player1.y -= 1;
 		player1.action = "go east";
 	}
@@ -497,8 +506,6 @@ player engine(player player1, scene place, int success)
 				cout << place.long_description << endl;
 				player1.island_times += 1;
 			}
-			else if (player1.action != "look")
-				cout << place.short_description << endl;
 		}
 	}
 	else if (place.name == "upper deck")
@@ -601,14 +608,8 @@ player engine(player player1, scene place, int success)
 	}
 	else if (player1.y <= 6 and player1.location == "up")
 	{
-		if (player1.x <= place.special_1_x and player1.y == place.special_1_y)
+		if (player1.x <= place.special_1_x)
 		{
-			if (player1.action == "enter")
-			{
-				player1.x -= 1;
-			}
-			if (player1.action == "out")
-				player1.x += 1;
 			while (player1.action == "look")
 			{
 				if (player1.knife_amount != 0)
@@ -622,6 +623,13 @@ player engine(player player1, scene place, int success)
 					cout << place.special_1_look_description_2 << endl;
 					behavior = take_action(player1);
 					player1 = behave(player1, behavior);
+				}
+			}
+			if (player1.action == "take")
+			{
+				if (stuff_1_max != 0)
+				{
+					sadasd
 				}
 			}
 		}
@@ -681,6 +689,7 @@ player engine(player player1, scene place, int success)
 	{
 		cout << place.long_description << endl;
 	}
+	if_closer(player1, place);
 	cout << "x: " << player1.x << " y: " << player1.y << endl;
 	if (place.name == "island" and load == false)
 	{
@@ -703,4 +712,24 @@ string To_lower(string words)
 		words.at(index++) = *it;
 	}
 	return words;
+}
+int if_closer(player player1, scene place)
+{
+	int close = 0;
+	if (place.name == "island")
+	{
+		if (player1.x == place.special_1_x and player1.y == place.special_1_y)
+			;
+		else if (abs(player1.x - place.special_1_x) <= abs(player1.x_last_time - place.special_1_x) and abs(player1.y - place.special_1_y) <= abs(player1.y_last_time - place.special_1_y))
+			cout << "You are getting closer to the ripe banana tree!" << endl;
+		else
+			cout << "You are getting away the ripe banana tree!" << endl;
+		if (player1.x == place.special_2_x and player1.y == place.special_2_y)
+			;
+		else if (((player1.x - place.special_2_x) < (player1.x_last_time - place.special_2_x) and (player1.y - place.special_2_y) < (player1.y_last_time - place.special_2_y)))
+			cout << "You are getting closer to the gangplank!" << endl;
+		else
+			cout << "You are getting away the gangplank!" << endl;
+	}
+	return 0;
 }
