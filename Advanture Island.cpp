@@ -46,13 +46,10 @@ public:
 	int special_3_y;
 	int special_5_x;
 	int special_5_y;
-<<<<<<< HEAD
 	int bed_x;
 	int bed_y;
 	int table_x;
 	int table_y;
-=======
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 };
 class player
 {
@@ -73,13 +70,9 @@ public:
 	int hide = 0;
 	int upper_deck_times = 0;
 	int capitains_quarters_times = 0;
-<<<<<<< HEAD
 	int in_n_out = 0;
-=======
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 	bool if_gorilla_run = 0;
 	bool if_over = false;
-	bool long_or_short = 0;
 };
 player engine(player, scene);
 player island(player, scene);
@@ -341,11 +334,8 @@ scene set_scene(player player1)//当切换场景的时候记得要把上一个�
 	{
 		place.name = "upper deck";
 		place.long_description = "The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.\nstuff you can get: knife";
-<<<<<<< HEAD
 		place.long_description_after_got = "The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.";
 		place.short_description_after_got = "It is upper deck";
-=======
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 		place.short_description = "It is upper deck\nstuff you can get: knife";
 		place.special_1_name = "capain`s quarters";
 		place.special_2_name = "ladder";
@@ -375,13 +365,10 @@ scene set_scene(player player1)//当切换场景的时候记得要把上一个�
 		place.special_3_y = -12;
 		place.special_5_x = 2;
 		place.special_5_y = -7;
-<<<<<<< HEAD
 		place.table_x = -3;
 		place.table_y = -8;
 		place.bed_x = -3;
 		place.bed_y - 11;
-=======
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 	}
 	return place;
 }
@@ -530,11 +517,8 @@ int save_game(player player1)
 		game_file << player1.upper_deck_times << endl;
 		game_file << "player_capitains_quarters_times: " << endl;
 		game_file << player1.capitains_quarters_times << endl;
-<<<<<<< HEAD
 		game_file << "hide: " << endl;
 		game_file << player1.hide << endl;
-=======
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 		game_file << "setting:" << endl;
 		for (set = player1.command; *set != " "; set++)
 			game_file << *set << endl;
@@ -547,11 +531,7 @@ player load_game(player player1)
 {
 	ifstream game_file;
 	map<string, int>::iterator it;
-<<<<<<< HEAD
 	string loaction, inventory, banana_amount, knife_amount, player_location, player_x_last_time, setting, *set, hide;
-=======
-	string loaction, inventory, banana_amount, knife_amount, player_location, player_x_last_time, setting, *set;
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 	string plaer_y_last_time, player_island_times, player_upper_deck_times, player_capitains_quarters_times;
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
@@ -581,11 +561,8 @@ player load_game(player player1)
 		game_file >> player1.upper_deck_times;
 		game_file >> player_capitains_quarters_times;
 		game_file >> player1.capitains_quarters_times;
-<<<<<<< HEAD
 		game_file >> hide;
 		game_file >> player1.hide;
-=======
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 		game_file >> setting;
 		for (set = player1.command; *set != " "; set++)
 		{
@@ -608,17 +585,11 @@ player engine(player player1, scene place)
 
 	bool save = false;
 	bool load = false;
-<<<<<<< HEAD
-=======
-	int *stuff_1_max;
-
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 	if (player1.action == "eat")
 	{
 		if (player1.inventory["bananas"] == 0)
 			cout << "You have nothing to eat." << endl;
 		else
-<<<<<<< HEAD
 		{
 			cout << "Your stomach feels better." << endl;
 			player1.inventory["bananas"] -= 1;
@@ -1015,15 +986,12 @@ player upper_deck(player player1, scene place, int success)
 			player1 = if_over(player1, place);
 		}
 		if (player1.action == "get out")
-=======
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 		{
 			cout << "You have got out of the ship!" << endl;
 			player1.y += 3;
 			player1.upper_deck_times += 1;
 		}
 	}
-<<<<<<< HEAD
 	else
 	{
 		if (player1.upper_deck_times == 0 and player1.in_n_out == 0)
@@ -1060,47 +1028,6 @@ player upper_deck(player player1, scene place, int success)
 		}
 	}
 	player1 = engine(player1, place);
-=======
-	else if (player1.action == "inventory")
-	{
-		map<string, int>::iterator it;
-		for (it = player1.inventory.begin(); it != player1.inventory.end(); it++)
-			cout << it->first << ": " << it->second << endl;
-	}
-	else if (player1.action == "hint")
-		cout << place.hint << endl;
-	else if (player1.action == "save")
-	{
-		save = save_game(player1);
-		if (save)
-			cout << "Save successfully!" << endl;
-		else
-			cout << "Save fail!" << endl;
-	}
-	else if (player1.action == "load")
-	{
-		player1 = load_game(player1);
-		load = true;
-	}
-	else if (player1.action == "help")
-	{
-		help();
-	}
-	else if (player1.action == "setting fail")
-	{
-		cin.get();
-	}
-	else if (player1.action == "quit")
-	{
-		exit(1);
-	}
-	else if (player1.action == "look")
-	{
-		cout << place.long_description << endl;
-	}
-	cout << "x: " << player1.x << " y: " << player1.y << endl;
-	if_closer(player1, place);
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
 	return player1;
 }
 vector<string> give_stuff(string word)
@@ -1115,7 +1042,6 @@ vector<string> give_stuff(string word)
 }
 int action_give(string word, player player1)
 {
-<<<<<<< HEAD
 	int pos;
 	string temp;
 	int give;
@@ -1127,270 +1053,3 @@ int action_give(string word, player player1)
 		give = 0;
 	return give;
 }
-=======
-	int close = 0;
-	if (place.name == "island")
-	{
-		if (player1.x == place.special_1_x and player1.y == place.special_1_y)
-			;
-		else if (abs(player1.x - place.special_1_x) <= abs(player1.x_last_time - place.special_1_x) and abs(player1.y - place.special_1_y) <= abs(player1.y_last_time - place.special_1_y))
-			cout << "You are getting closer to the ripe banana tree!" << endl;
-		else
-			cout << "You are getting away the ripe banana tree!" << endl;
-		if (player1.x == place.special_2_x and player1.y == place.special_2_y)
-			;
-		else if (abs(player1.x - place.special_2_x) <= abs(player1.x_last_time - place.special_2_x) and abs(player1.y - place.special_2_y) <= abs(player1.y_last_time - place.special_2_y))
-			cout << "You are getting closer to the gangplank!" << endl;
-		else
-			cout << "You are getting away the gangplank!" << endl;
-	}
-	return 0;
-}
-player island(player player1, scene place)
-{
-
-	string behavior = "none";
-	int stuff_1_max;
-	stuff_1_max = player1.banana_amount;
-
-	if (player1.x == place.special_1_x and player1.y == place.special_1_y)
-	{
-		stuff_1_max = player1.banana_amount;
-		if (player1.banana_amount != 0)
-		{
-			cout << place.special_1_description << endl;
-		}
-		else if (player1.banana_amount == 0)
-		{
-			cout << place.special_1_description_2 << endl;
-		}
-		behavior = take_action(player1);
-		player1 = behave(player1, behavior);
-		while (player1.action == "cut")
-		{
-			cout << "You can`t cut the " << place.special_1_name << "!" << endl;
-			behavior = take_action(player1);
-			player1 = behave(player1, behavior);
-		}
-		while (player1.action == "look")
-		{
-			if (player1.banana_amount != 0)
-			{
-				cout << place.special_1_look_description_1 << endl;
-				behavior = take_action(player1);
-				player1 = behave(player1, behavior);
-			}
-			else
-			{
-				cout << place.special_1_look_description_2 << endl;
-				behavior = take_action(player1);
-				player1 = behave(player1, behavior);
-			}
-		}
-		if (player1.action == "take")
-		{
-			if (player1.inventory[place.stuff_can_be_used_1] != 0 and stuff_1_max != 0)
-			{
-				stuff_1_max -= 1;
-				player1.inventory["bananas"] += 1;
-				cout << place.stuff_1_get_info << endl;
-			}
-			else if (player1.inventory[place.stuff_can_be_used_1] == 0)
-			{
-				cout << "Sorry, you need a " << place.stuff_can_be_used_1 << " to get the banana." << endl;
-			}
-			else if (stuff_1_max == 0)
-			{
-				cout << place.special_1_look_description_2 << endl;
-			}
-		}
-	}
-	else if (player1.x == place.special_2_x and player1.y == place.special_2_y)
-	{
-		cout << place.special_2_description << endl;
-		behavior = take_action(player1);
-		player1 = behave(player1, behavior);
-		if (player1.action == "enter")
-		{
-			player1.y -= 3;
-			player1.long_or_short = 0;
-			player1.island_times += 1;
-		}
-		else if (player1.action == "look")
-			cout << place.special_2_description << endl;
-	}
-	else
-	{
-		if (player1.island_times == 0 and player1.long_or_short != 1)
-		{
-			cout << place.long_description << endl;
-			player1.long_or_short = 1;
-		}
-		else if (player1.long_or_short != 1)
-		{
-			player1.long_or_short = 1;
-			if (player1.banana_amount != 0)
-				cout << place.short_description << endl;
-			else
-				cout << place.short_description_after_got << endl;
-		}
-	}
-	if (behavior == "none")
-	{
-		behavior = take_action(player1);
-		while (behavior == "none")
-		{
-			cout << "You can`t do that bro" << endl;
-			behavior = take_action(player1);
-		}
-
-		player1 = behave(player1, behavior);
-		player1 = if_over(player1, place);
-		while (player1.if_over == true)
-		{
-			cout << "You go too far go back!" << endl;
-			behavior = take_action(player1);
-			player1 = behave(player1, behavior);
-			player1 = if_over(player1, place);
-		}
-	}
-	player1 = engine(player1, place);
-	return player1;
-}
-player upper_deck(player player1, scene place, int success)
-{
-
-	bool *gorilla_run;
-	string behavior = "none";
-	int stuff_1_max;
-	int *if_success = &success;
-	stuff_1_max = player1.knife_amount;
-	if (player1.x <= place.special_1_x)
-	{
-		stuff_1_max = player1.knife_amount;
-		if (player1.knife_amount != 0)
-		{
-			cout << place.special_1_description << endl;
-
-		}
-		else if (player1.knife_amount == 0)
-		{
-			cout << place.special_1_description_2 << endl;
-		}
-		behavior = take_action(player1);
-		player1 = behave(player1, behavior);
-		while (player1.action == "look")
-		{
-			if (player1.knife_amount != 0)
-			{
-				cout << place.special_1_look_description_1 << endl;
-				behavior = take_action(player1);
-				player1 = behave(player1, behavior);
-			}
-			else
-			{
-				cout << place.special_1_look_description_2 << endl;
-				behavior = take_action(player1);
-				player1 = behave(player1, behavior);
-			}
-		}
-		if (player1.action == "take")
-		{
-			if (stuff_1_max != 0)
-			{
-				stuff_1_max -= 1;
-				player1.inventory[place.stuff_can_get_1] += 1;
-				cout << place.stuff_1_get_info << endl;
-			}
-		}
-	}
-
-	else if (player1.x == place.special_2_x and player1.y == place.special_2_y)
-	{
-		cout << place.special_2_description << endl;
-		behavior = take_action(player1);
-		player1 = behave(player1, behavior);
-		if (player1.action == "down")
-			player1.location = "down";
-	}
-	else if (player1.x == place.special_3_x and player1.y == place.special_3_y)
-	{
-		if (player1.if_gorilla_run == 0)
-		{
-			cout << place.special_3_description;
-			behavior = take_action(player1);
-			player1 = behave(player1, behavior);
-			if (player1.action == "give")
-			{
-				player1.inventory["banana"] -= 1;
-				gorilla_run = &player1.if_gorilla_run;
-				*gorilla_run = 1;
-				cout << "The gorilla rush to the forest and disapear" << endl;
-			}
-		}
-		else
-		{
-			if (player1.inventory[place.stuff_can_be_used_1] != 0)
-			{
-				behavior = take_action(player1);
-				player1 = behave(player1, behavior);
-				if (player1.action == "start")
-				{
-					*if_success = 1;
-					cout << "You finally success to sail away!" << endl;
-				}
-			}
-			else
-				cout << "You need a " << place.stuff_can_be_used_1 << " to start this ship!" << endl;
-		}
-	}
-	else if (player1.x == place.special_5_x and player1.y == place.special_5_y)
-	{
-		cout << place.special_5_description << endl;
-		behavior = take_action(player1);
-		player1 = behave(player1, behavior);
-		if (player1.action == "get out")
-		{
-			player1.y += 3;
-			player1.upper_deck_times += 1;
-		}
-	}
-	else
-	{
-		if (player1.upper_deck_times == 0 and player1.long_or_short != 1)
-		{
-			cout << place.long_description << endl;
-			player1.long_or_short = 1;
-		}
-		else if (player1.long_or_short != 1)
-		{
-			player1.long_or_short = 1;
-			if (player1.knife_amount != 0)
-				cout << place.short_description << endl;
-			else
-				cout << place.short_description_after_got << endl;
-		}
-	}
-	if (behavior == "none")
-	{
-		behavior = take_action(player1);
-		while (behavior == "none")
-		{
-			cout << "You can`t do that bro" << endl;
-			behavior = take_action(player1);
-		}
-
-		player1 = behave(player1, behavior);
-		player1 = if_over(player1, place);
-		while (player1.if_over == true)
-		{
-			cout << "You go too far go back!" << endl;
-			behavior = take_action(player1);
-			player1 = behave(player1, behavior);
-			player1 = if_over(player1, place);
-		}
-	}
-	player1 = engine(player1, place);
-	return player1;
-}
->>>>>>> fa3d218d9dbccbc869dc4287e1c1692a6a6668aa
