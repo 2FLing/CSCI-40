@@ -1,84 +1,129 @@
+//MingkuanPang
+//This program can read names from a file
+// and sort the names and write into a new file.
 #include<iostream>
 #include<stdio.h>
-#include<string>
 #include<fstream>
+#include<string>
 using namespace std;
-char *My_sort(char*,int length);
+int sizes(char[], int[]);
+int sort_size(int[], int);
+void sort_names(string);
+const int MAX_LENGTH = 256;
 int main()
 {
 	ifstream input_file;
-	ofstream output_file;
-	char names[100],*new_name;
-	int index = 0, length;
-	input_file.open("names.txt");
-	if (!input_file.is_open())
-	{
-		cout << "Error!\n";
-		return 1;
-	}
-	while (!input_file.eof())
-		input_file.getline(names, 100);
-	input_file.close();
-	while (names[index] >= 'a'&&names[index] <= 'z' || names[index] >= 'A'&&names[index] <= 'Z' || names[index] == ' ')
-	{
-		index++;
-	}
-	length = index;
-	new_name=My_sort(names, length);
-	for (index = 0; index <= length; index++)
-	{
-		names[index] = *new_name;
-		new_name++;
-	}
-	output_file.open("new_name.txt");
-	for (index = 0; index <= length; index++)
-	{
-		output_file<<names[index];
-	}
-	output_file.close();
-	system("pause");
+	sort_names("names.txt");
 	return 0;
 }
-
-char *My_sort(char* names, int length)
+int sizes(char names[], int size[])//This function can judge the size of each names
 {
-	int index = 0, position[10], index_position = 0;
-	int current_index,temp,min,temp_index,min_index,name_index=0,new_name_index=0,position_length;
-	position[index_position] = index;
-	char new_name[100];
-	while (index <= length - 1)
+	int index, word_length = 0, size_index = 0, *size_pointer, size_length = 0;
+	size_pointer = size;
+	for (index = 0; index <= strlen(names) - 1; index++)
 	{
-		index++;
-		if (names[index] == ' ')
-			position[++index_position] =++index;
-	}
-	position_length = index_position;
-	for (current_index = 0; current_index <= index_position - 1; current_index++)
-	{
-		min = names[position[current_index]];
-		min_index = current_index;
-		for (temp_index = current_index; temp_index <= index_position; temp_index++)
+		if (names[index] != ' ')
 		{
-			if (names[position[temp_index]] < min)
+			word_length++;
+		}
+		if (names[index] == ' ' or index == strlen(names) - 1)
+		{
+			*size_pointer++ = word_length;
+			size_length++;
+			word_length = 0;
+		}
+	}
+	++size_pointer = NULL;
+	return size_length;
+}
+void sort_names(string name)//This function can write names into a new file in sorted sizes order.
+{
+	char buffer[MAX_LENGTH] = "none";
+	int size[MAX_LENGTH], pos[MAX_LENGTH];
+	int length = 0, index = 0, size_length, pos_index = 0, size_index = 0, name_length = 0;
+	char *new_name;
+	ifstream names;
+	ofstream new_names;
+	names.open(name);
+	if (!names.is_open())
+	{
+		cout << "error!" << endl;
+		exit(1);
+	}
+	while ((!names.eof()) and strlen(buffer) <= MAX_LENGTH - 1)
+	{
+		names.getline(buffer, MAX_LENGTH);
+	}
+	names.close();
+	size_length = sizes(buffer, size);
+	size_length = sort_size(size, size_length);
+	for (size_index = 0; size_index <= size_length - 1; size_index++)
+	{
+		length = 0;
+		for (index = 0; index <= strlen(buffer) - 1; index++)
+		{
+			if (buffer[index] != ' ')
 			{
-				min = names[position[temp_index]];
-				min_index = temp_index;
+				length++;
+			}
+			if (buffer[index] == ' ' or index == strlen(buffer) - 1)
+			{
+				name_length = length;
+				length = 0;
+				if (name_length == size[size_index] and pos_index <= MAX_LENGTH - 1)
+				{
+					if (index == strlen(buffer) - 1)
+						pos[pos_index] = index - name_length + 1;
+					else
+						pos[pos_index] = index - name_length;
+					pos_index++;
+					name_length = 0;
+				}
 			}
 		}
-		temp = position[current_index];
-		position[current_index] = position[min_index];
-		position[min_index] = temp;
 	}
-	index_position = 0;
-	while (index_position <= position_length)
+	new_names.open("new_names.txt");
+	for (index = 0; index <= pos_index - 1; index++)
 	{
-		name_index = position[index_position++];
-		while (names[name_index] != ' '&&name_index<=length)
+		size_index = pos[index];
+		while (buffer[size_index] != ' ' and size_index <= strlen(buffer) - 1)
 		{
-			new_name[new_name_index++]= names[name_index++];
+			new_names << buffer[size_index];
+			size_index++;
 		}
-		if(name_index<=length)
-			new_name[new_name_index++] = names[name_index];
+		new_names << " ";
 	}
-	return new_name;
+	new_names.close();
+}
+int sort_size(int size[], int size_length)//This funtion can sort the sizes of names.
+{
+	int index_1, temp, index_2, new_size[MAX_LENGTH], size_value;
+	for (index_1 = 0; index_1 <= size_length - 1; index_1++)
+		for (index_2 = index_1 + 1; index_2 <= size_length - 1; index_2++)
+		{
+			if (size[index_2] > size[index_1])
+			{
+				temp = size[index_1];
+				size[index_1] = size[index_2];
+				size[index_2] = temp;
+			}
+		}
+	new_size[0] = size[0];
+	size_value = new_size[0];
+	index_2 = 1;
+	for (index_1 = 0; index_1 <= size_length - 1; index_1++)
+	{
+		if (index_1 <= MAX_LENGTH - 1)
+		{
+			if (size[index_1] != size_value)
+			{
+				new_size[index_2++] = size[index_1];
+				size_value = size[index_1];
+			}
+		}
+	}
+	for (index_1 = 0; index_1 <= index_2; index_1++)
+		size[index_1] = new_size[index_1];
+
+	return index_2;
 }
