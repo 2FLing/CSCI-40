@@ -161,6 +161,7 @@ player take_action(player player1,scene place)
 	{
 		if (actions == "go" and objects == "none")
 		{
+			cout << "\n\n\n\n";
 			cout << "Which direction you want to go?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
@@ -168,6 +169,7 @@ player take_action(player player1,scene place)
 		}
 		if ((objects == "north" and actions == "go") or action == player1.command[0] or (actions == "north" and objects == "none"))
 		{
+			cout << "\n\n\n\n";
 			cout << "You are going north" << endl;
 			player1.x_last_time = player1.x;
 			player1.y_last_time = player1.y;
@@ -176,6 +178,7 @@ player take_action(player player1,scene place)
 		}
 		else if ((objects == "south" and actions == "go") or action == player1.command[1] or (actions == "south" and objects == "none"))
 		{
+			cout << "\n\n\n\n";
 			cout << "You are going south" << endl;
 			player1.x_last_time = player1.x;
 			player1.y_last_time = player1.y;
@@ -184,6 +187,7 @@ player take_action(player player1,scene place)
 		}
 		else if ((objects == "west" and actions == "go") or (actions == "west" and objects == "none") or action == player1.command[2])
 		{
+			cout << "\n\n\n\n";
 			cout << "You are going west" << endl;
 			player1.x_last_time = player1.x;
 			player1.y_last_time = player1.y;
@@ -192,6 +196,7 @@ player take_action(player player1,scene place)
 		}
 		else if ((objects == "east" and actions == "go") or (actions == "east" and objects == "none") or action == player1.command[3])
 		{
+			cout << "\n\n\n\n";
 			cout << "You are going east" << endl;
 			player1.x_last_time = player1.x;
 			player1.y_last_time = player1.y;
@@ -229,6 +234,7 @@ player take_action(player player1,scene place)
 		player1.action = actions;
 		if (objects == "none")
 		{
+			cout << "\n\n\n\n";
 			cout << "What are you gonna take?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
@@ -256,6 +262,7 @@ player take_action(player player1,scene place)
 		player1.object = objects;
 		if (objects == "none")
 		{
+			cout << "\n\n\n\n";
 			cout << "What you are gonna eat?" << endl;
 			getline(cin,extra_action);
 			extra_action = To_lower(extra_action);
@@ -264,11 +271,13 @@ player take_action(player player1,scene place)
 				player1.action = "eat";
 				player1.object = objects;
 				player1.inventory[extra_action]--;
+				cout << "\n\n\n\n";
 				cout << "After you eat " << extra_action << " your stomach feels better" << endl;
 			}
 			else
 			{
 				player1.action = "none";
+				cout << "\n\n\n\n";
 				cout<<"You don`t have "<<extra_action<<" to eat!"<<endl;
 			}
 		}
@@ -279,10 +288,12 @@ player take_action(player player1,scene place)
 				player1.action = "eat";
 				player1.object = objects;
 				player1.inventory[objects]--;
+				cout << "\n\n\n\n";
 				cout << "After you eat " << objects << " your stomach feels better" << endl;
 			}
 			else
 			{
+				cout << "\n\n\n\n";
 				cout << "You don`t have " << objects<< " to eat!" << endl;
 				player1.action = "none";
 			}
@@ -294,6 +305,7 @@ player take_action(player player1,scene place)
 		player1.object = objects;
 		if (objects == "none")
 		{
+			cout << "\n\n\n\n";
 			map<string, int>::iterator it;
 			for (it = player1.inventory.begin(); it != player1.inventory.end(); it++)
 				cout << it->first << ": " << it->second << endl;
@@ -339,9 +351,15 @@ player take_action(player player1,scene place)
 		if (objects == "game" or objects == "none")
 		{
 			if (save)
+			{
+				cout << "\n\n\n\n";
 				cout << "Save successfully!" << endl;
+			}
 			else
+			{
+				cout << "\n\n\n\n";
 				cout << "Save fail!" << endl;
+			}
 		}
 		else
 			player1=so_bad_so_sad(player1);
@@ -362,11 +380,13 @@ player take_action(player player1,scene place)
 	{
 		if (player1.inventory["knife"] == 0)
 		{
+			cout << "\n\n\n\n";
 			cout << "You need a knife to cut!" << endl;
 			player1.action = "none";
 		}
 		else if (objects == "none")
 		{
+			cout << "\n\n\n\n";
 			cout << "What are you gonna cut?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
@@ -415,6 +435,7 @@ player take_action(player player1,scene place)
 		}
 		if (objects == "none")
 		{
+			cout << "\n\n\n\n";
 			cout << "What are you gonna get?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
@@ -438,6 +459,7 @@ player take_action(player player1,scene place)
 		player1.object = objects;
 		if (objects == "none")
 		{
+			cout << "\n\n\n\n";
 			cout << "What you wanna give?" << endl;
 			getline(cin, extra_action);
 			if (if_can_give(player1, place, extra_action))
@@ -487,8 +509,11 @@ player take_action(player player1,scene place)
 		}
 	}
 	else
+	{
+		cout << "\n\n\n\n";
 		cout << "You can`t do that bro!" << endl;
-	if (player1.hide == 0 and player1.action=="move")
+	}
+	if (player1.hide == 0 and player1.action=="move" or player1.action=="load" or player1.action=="display" or player1.action=="save")
 	{
 		cout << "***********************************************************************************************" << endl;
 		cout << "Extra information: " << endl;
@@ -731,6 +756,7 @@ int save_game(player player1)
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
 	{
+		cout << "\n\n\n\n";
 		cout << "Error!" << endl;
 		success = 0;
 	}
@@ -777,7 +803,10 @@ player load_game(player player1)
 	string plaer_y_last_time, player_island_times, player_upper_deck_times, player_capitains_quarters_times;
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
+	{
+		cout << "\n\n\n\n";
 		cout << "Fail loading game!" << endl;
+	}
 	else
 	{
 		game_file >> loaction;
@@ -811,6 +840,7 @@ player load_game(player player1)
 			game_file >> *set;
 		}
 		player1.load = 1;
+		cout << "\n\n\n\n";
 		cout << "Load game successfully" << endl;
 		++set = NULL;
 	}
@@ -906,7 +936,6 @@ int if_closer(player player1, scene place)
 }
 player island(player player1, scene place)
 {
-	cout << "\n\n\n\n\n";
 	if (player1.x == place.stuff_can_cut_x and player1.y == place.stuff_can_cut_y)
 	{
 		if (player1.banana_amount != 0)
@@ -1151,6 +1180,7 @@ bool if_has_object(string action)
 }
 player so_bad_so_sad(player player1)
 {
+	cout << "\n\n\n\n";
 	cout << "So bad so sad, you can`t " << player1.action << " " << player1.object <<" right now!"<< endl;
 	player1.action = "none";
 	return player1;
