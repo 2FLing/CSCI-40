@@ -732,6 +732,53 @@ scene set_scene(player player1)
 		place.bed_x = -3;
 		place.bed_y = -11;
 	}
+	else if (player1.y <= -7 and player1.location == "down")
+	{
+		place.name = "lower deck";
+		place.stuff_can_eat.push_back("banana");
+		place.stuff_can_give.push_back("banana");
+		place.stuff_can_give.push_back("treasure");
+		place.stuff_can_get.push_back("knife");
+		place.long_description = "The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.\nstuff you can get: knife";
+		place.long_description_after_got = "The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.";
+		place.short_description_after_got = "It is upper deck";
+		place.short_description = "It is upper deck\nstuff you can get: knife";
+		place.entrance_1_name = "capain`s quarters";
+		place.entrance_2_name = "ladder";
+		place.place_can_give_stuff_1_name = "Ship`s Wheel";
+		place.special_1_name = "gorilla";
+		place.entrance_3_name = "gangplank";
+		place.entrance_1_description = "There is a bed and a table in this room.(There is a knife on the table.)";
+		place.entrance_1_description_2 = "There is a bed and a table in this room.";
+		place.entrance_2_description = "There is a ladder, do you want to go down?";
+		place.place_can_give_stuff_1_description_1 = "There is a large gorilla by the ship`s wheel. The gorilla is hostile. You can`t approach the wheel.\n";
+		place.place_can_give_stuff_1_description_2 = "You are at the wheel.";
+		place.entrance_1_look_description_1 = "There are a bed and a table in this room. Em.... there is something on the table";
+		place.entrance_1_look_description_2 = "There are a bed and a table in this room.";
+		place.entrance_3_description = "You found a gangplank! You wanna leave the ship?";
+		place.hint = "What monkey like to eat?";
+		place.stuff_can_be_used_1 = "key";
+		place.stuff_can_get.push_back("knife");
+		place.stuff_can_get.push_back("treasure");
+		place.stuff_1_get_info = "You got a sharp knife!";
+		place.max_x = 7;
+		place.min_x = -4;
+		place.max_y = -7;
+		place.min_y = -12;
+		place.entrance_1_x = -1;
+		place.entrance_2_x = 2;
+		place.entrance_2_y = -10;
+		place.place_can_give_stuff_1_x = 5;
+		place.place_can_give_stuff_1_y = -11;
+		place.place_can_give_stuff_2_x = 2;
+		place.place_can_give_stuff_2_y = -7;
+		place.entrance_3_x = 2;
+		place.entrance_3_y = -9;
+		place.table_x = -3;
+		place.table_y = -8;
+		place.bed_x = -3;
+		place.bed_y = -11;
+	}
 	return place;
 }
 
