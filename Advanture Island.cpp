@@ -20,6 +20,7 @@ public:
 	string entrance_1_name;
 	string entrance_2_name;
 	string entrance_3_name;
+	string entrance_4_name;
 	string special_1_name;
 	string stuff_can_cut_description;
 	string entrance_1_look_description_1;
@@ -54,14 +55,25 @@ public:
 	int entrance_2_y;
 	int entrance_3_x;
 	int entrance_3_y;
+	int entrance_4_x;
+	int entrance_4_y;
 	int place_can_give_stuff_1_x;
 	int place_can_give_stuff_1_y;
 	int place_can_give_stuff_2_x;
 	int place_can_give_stuff_2_y;
+	int place_can_use_stuff_1_x;
+	int place_can_use_stuff_1_y;
 	int bed_x;
 	int bed_y;
 	int table_x;
 	int table_y;
+	int barrel_x;
+	int barrel_y;
+	int trunk_x;
+	int trunk_y;
+	int tool_x;
+	int tool_y;
+
 };
 class player
 {
@@ -81,6 +93,12 @@ public:
 	int banana_amount = 1;
 	int knife_amount = 1;
 	int island_times = 0;
+	int lower_times = 0;
+	int captain_quarts_times = 0;
+	int ship_wheel_times = 0;
+	int cargo_hold_times = 0;
+	int brig_times = 0;
+	int galley_times = 0;
 	int hide = 0;
 	int upper_deck_times = 0;
 	int capitains_quarters_times = 0;
@@ -90,6 +108,7 @@ public:
 };
 player island(player, scene);
 player upper_deck(player, scene, int);
+player lower_deck(player, scene);
 player load_game(player);
 int save_game(player);
 void action_seprate(string&, string&, string);
@@ -701,7 +720,7 @@ scene set_scene(player player1)
 		place.place_can_give_stuff_1_name = "Ship`s Wheel";
 		place.special_1_name = "gorilla";
 		place.entrance_3_name = "gangplank";
-		place.entrance_1_description = "There is a bed and a table in this room.(There is a knife on the table.)";
+		place.entrance_1_description = "There is a bed and a table in this room.";
 		place.entrance_1_description_2 = "There is a bed and a table in this room.";
 		place.entrance_2_description = "There is a ladder, do you want to go down?";
 		place.place_can_give_stuff_1_description_1 = "There is a large gorilla by the ship`s wheel. The gorilla is hostile. You can`t approach the wheel.\n";
@@ -731,6 +750,48 @@ scene set_scene(player player1)
 		place.table_y = -8;
 		place.bed_x = -3;
 		place.bed_y = -11;
+	}
+	else if (player1.y <= -7 and player1.location == "down")
+	{
+		place.name = "lower deck";
+		place.stuff_can_eat.push_back("banana");
+		place.stuff_can_get.push_back("treasure");
+		place.long_description = "The deck below is dimly lit, and smells musty. You can make out three doors.\n One is to the east, one is to the west, and one is a trapdoor below you.\nstuff you can get: treasure.";
+		place.long_description_after_got = "The deck below is dimly lit, and smells musty. You can make out three doors.\n One is to the east, one is to the west, and one is a trapdoor below you.";
+		place.short_description_after_got = "It is lower deck";
+		place.short_description = "It is lower deck\nstuff you can get: knife";
+		place.entrance_1_name = "cargo hold";
+		place.entrance_2_name = "ladder";
+		place.entrance_3_name = "brig";
+		place.entrance_4_name = "galley";
+		place.entrance_1_description = "You`ve entered the cargo hold. Ther are barrels, a pile of tools, and a trunk.";
+		place.entrance_2_description = "There is a ladder, do you want to go down?";
+		place.entrance_1_look_description_1 = "There are barrels, a pile of tools, and a trunk.";
+		place.entrance_3_description = "In this room there is a prisoner in a locked cell.\nHe says,\"Jack,I`m so glad you`re alive. The captain locked me up for cheating at cards, which is the only reason the islanders didn`t capture me.\nThey killed everyone else.\nNow I guess we`re the only two left, which makes you captain since you were first mate.\n Go find the keys to unlock this door, and we can sail out of here.\"";
+		place.hint = "Why there is trunk in the ship?";
+		place.stuff_can_be_used_1 = "key";
+		place.stuff_can_get.push_back("treasure");
+		place.stuff_1_get_info = "You got the treasure!";
+		place.max_x = 7;
+		place.min_x = -4;
+		place.max_y = -7;
+		place.min_y = -12;
+		place.entrance_1_x = -1;
+		place.entrance_1_y = -9;
+		place.entrance_2_x = 2;
+		place.entrance_2_y = -10;
+		place.entrance_3_x = 0;
+		place.entrance_3_y = -11;
+		place.entrance_4_x = 2;
+		place.entrance_4_y = -10;
+		place.place_can_use_stuff_1_x = 0;
+		place.place_can_give_stuff_1_y = -11;
+		place.barrel_x = -2;
+		place.barrel_y = -8;
+		place.tool_x = 1;
+		place.tool_y = -7;
+		place.trunk_x = 3;
+		place.trunk_y = -7;
 	}
 	return place;
 }
@@ -1264,6 +1325,55 @@ player upper_deck(player player1, scene place, int success)
 	++if_success = NULL;
 	return player1;
 }
+player lower_deck(player player1, scene place)
+{
+	player1 = pick_it_up(player1, place);
+	if (player1.x == place.entrance_1_x and player1.y == place.entrance_1_y)
+	{
+		cout << place.entrance_1_description << endl;
+		player1 = take_action(player1, place);
+	}
+
+	else if (player1.x == place.entrance_2_x and player1.y == place.entrance_2_y)
+	{
+		cout << place.entrance_2_description << endl;
+		player1 = take_action(player1, place);
+		if (player1.action == "down")
+			player1.location = "down";
+	}
+
+	else if (player1.x == place.entrance_3_x and player1.y == place.entrance_3_y)
+	{
+		cout << place.entrance_3_description << endl;
+		player1 = take_action(player1, place);
+		player1 = re_take_action(player1, place);
+		if (player1.action == "get out")
+		{
+			cout << "You have got out of the ship!" << endl;
+			player1.y += 3;
+			player1.upper_deck_times += 1;
+		}
+	}
+	else
+	{
+		if (player1.upper_deck_times == 0 and player1.in_n_out == 0)
+		{
+			player1.in_n_out = 1;
+			cout << place.long_description << endl;
+		}
+		else if (player1.upper_deck_times != 0 and player1.in_n_out == 0)
+		{
+			player1.in_n_out = 1;
+			if (player1.knife_amount != 0)
+				cout << place.short_description << endl;
+			else
+				cout << place.short_description_after_got << endl;
+		}
+		player1 = take_action(player1, place);
+		player1 = re_take_action(player1, place);
+	}
+	return player1;
+}
 void action_seprate(string &actions, string &objects, string action)
 {
 	int pos;
@@ -1478,10 +1588,16 @@ bool if_can_drop(player player1, string stuff)
 }
 string coordinate_to_string(player player1)
 {
-	string coordinate;
+	string coordinate, up_or_down;
+	if (player1.location == "up")
+		up_or_down = "1";
+	else
+		up_or_down = "0";
 	coordinate = to_string(player1.x);
 	coordinate.append(" ");
 	coordinate.append(to_string(player1.y));
+	coordinate.append(" ");
+	coordinate.append(up_or_down);
 	return coordinate;
 }
 player pick_it_up(player player1, scene place)
