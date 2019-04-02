@@ -1,4 +1,10 @@
-﻿#include<iostream>
+﻿//Group2
+//MingkuanPang
+//Juan
+//Karnvir
+//Matthew Jones
+//CSCI-40 group project Advanture Island game.
+#include<iostream>
 #include<stdio.h>
 #include<map>
 #include<string>
@@ -139,7 +145,8 @@ scene set_scene(player, scene);
 scene init_scene(scene);
 player if_over(player, scene);
 player init_inventory(player);
-void help();
+void help(player);
+void welcome();
 void extra_info(player, scene);
 player setting(player);
 string To_lower(string);
@@ -173,6 +180,7 @@ int main()
 	player1 = init_inventory(player1);
 	place = init_scene(place);
 	int *if_success = &success;
+	welcome();
 	while (success == 0)
 	{
 		place = set_scene(player1, place);
@@ -188,22 +196,30 @@ int main()
 	system("pause");
 	return 0;
 }
-player take_action(player player1, scene place)
+player take_action(player player1, scene place)//This function can transfer the command from player to the action of the character in the game.
 {
 	bool save = false;
 	bool load = false;
 	string action = "char";
-	string actions;
+	string actions, eat_enter;
 	string objects;
 	string extra_action = "none";
 	string drop_coordinate;
-	cout << "What are you gonna do?\n";
+	cout << "What are you gonna do?" << endl;
+	action = getchar();
+	while (action == "\n")
+	{
+		cout << "Enter fail" << endl;
+		cout << "What are you gonna do?" << endl;
+		action = getchar();
+	}
+	eat_enter = action;
 	getline(cin, action);
+	action = eat_enter + action;
 	action = To_lower(action);
 	if (action == "leave")
 		action = "get out";
 	action_seprate(actions, objects, action);
-	system("cls");
 	if (actions == "setting" or action == player1.command[21])
 	{
 		player1.action = actions;
@@ -227,7 +243,6 @@ player take_action(player player1, scene place)
 	{
 		if (actions == "go" and objects == "none")
 		{
-			cout << "\n\n\n\n";
 			cout << "Which direction you want to go?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
@@ -235,7 +250,6 @@ player take_action(player player1, scene place)
 		}
 		if ((objects == "north" and actions == "go") or action == player1.command[0] or (actions == "north" and objects == "none"))
 		{
-			cout << "\n\n\n\n";
 			cout << "You are going north" << endl;
 			player1.x_last_time = player1.x;
 			player1.y_last_time = player1.y;
@@ -245,7 +259,6 @@ player take_action(player player1, scene place)
 		}
 		else if ((objects == "south" and actions == "go") or action == player1.command[1] or (actions == "south" and objects == "none"))
 		{
-			cout << "\n\n\n\n";
 			cout << "You are going south" << endl;
 			player1.x_last_time = player1.x;
 			player1.y_last_time = player1.y;
@@ -255,7 +268,6 @@ player take_action(player player1, scene place)
 		}
 		else if ((objects == "west" and actions == "go") or (actions == "west" and objects == "none") or action == player1.command[2])
 		{
-			cout << "\n\n\n\n";
 			cout << "You are going west" << endl;
 			player1.x_last_time = player1.x;
 			player1.y_last_time = player1.y;
@@ -265,7 +277,6 @@ player take_action(player player1, scene place)
 		}
 		else if ((objects == "east" and actions == "go") or (actions == "east" and objects == "none") or action == player1.command[3])
 		{
-			cout << "\n\n\n\n";
 			cout << "You are going east" << endl;
 			player1.x_last_time = player1.x;
 			player1.y_last_time = player1.y;
@@ -313,7 +324,6 @@ player take_action(player player1, scene place)
 		player1.action = actions;
 		if (objects == "none")
 		{
-			cout << "\n\n\n\n";
 			cout << "What are you gonna take?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
@@ -345,7 +355,6 @@ player take_action(player player1, scene place)
 		player1.object = objects;
 		if (objects == "none")
 		{
-			cout << "\n\n\n\n";
 			cout << "What you are gonna eat?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
@@ -354,13 +363,11 @@ player take_action(player player1, scene place)
 				player1.action = "eat";
 				player1.object = objects;
 				player1.inventory[extra_action]--;
-				cout << "\n\n\n\n";
 				cout << "After you eat " << extra_action << " your stomach feels better" << endl;
 			}
 			else
 			{
 				player1.action = "none";
-				cout << "\n\n\n\n";
 				cout << "You don`t have " << extra_action << " to eat!" << endl;
 			}
 		}
@@ -371,12 +378,10 @@ player take_action(player player1, scene place)
 				player1.action = "eat";
 				player1.object = objects;
 				player1.inventory[objects]--;
-				cout << "\n\n\n\n";
 				cout << "After you eat " << objects << " your stomach feels better" << endl;
 			}
 			else
 			{
-				cout << "\n\n\n\n";
 				cout << "You don`t have " << objects << " to eat!" << endl;
 				player1.action = "none";
 			}
@@ -388,7 +393,6 @@ player take_action(player player1, scene place)
 		player1.object = objects;
 		if (objects == "none")
 		{
-			cout << "\n\n\n\n";
 			map<string, int>::iterator it;
 			for (it = player1.inventory.begin(); it != player1.inventory.end(); it++)
 				cout << it->first << ": " << it->second << endl;
@@ -439,12 +443,10 @@ player take_action(player player1, scene place)
 		{
 			if (save)
 			{
-				cout << "\n\n\n\n";
 				cout << "Save successfully!" << endl;
 			}
 			else
 			{
-				cout << "\n\n\n\n";
 				cout << "Save fail!" << endl;
 			}
 		}
@@ -467,17 +469,16 @@ player take_action(player player1, scene place)
 	{
 		if (player1.inventory["knife"] == 0)
 		{
-			cout << "\n\n\n\n";
 			cout << "You need a knife to cut!" << endl;
 			player1.action = "none";
 		}
 		else if (objects == "none")
 		{
-			cout << "\n\n\n\n";
 			cout << "What are you gonna cut?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
 			player1.action = actions;
+			player1.object = extra_action;
 			if (if_can_cut(player1, place, extra_action))
 				player1.action = "cut";
 		}
@@ -502,7 +503,7 @@ player take_action(player player1, scene place)
 	{
 		player1.action = "help";
 		if (objects == "none")
-			help();
+			help(player1);
 		else
 		{
 			player1.object = objects;
@@ -530,7 +531,6 @@ player take_action(player player1, scene place)
 		{
 			if (objects == "none")
 			{
-				cout << "\n\n\n\n";
 				cout << "What are you gonna get?" << endl;
 				getline(cin, extra_action);
 				extra_action = To_lower(extra_action);
@@ -559,7 +559,6 @@ player take_action(player player1, scene place)
 		player1.object = objects;
 		if (objects == "none")
 		{
-			cout << "\n\n\n\n";
 			cout << "What you wanna give?" << endl;
 			getline(cin, extra_action);
 			extra_action = To_lower(extra_action);
@@ -701,13 +700,12 @@ player take_action(player player1, scene place)
 	}
 	else
 	{
-		cout << "\n\n\n\n";
 		cout << "You can`t do that bro!" << endl;
 	}
 
 	return player1;
 }
-player if_over(player player1, scene place)
+player if_over(player player1, scene place)//This function can determind if the player is over the boundaries of the map.
 {
 	if (player1.load != 1)
 	{
@@ -738,15 +736,15 @@ player if_over(player player1, scene place)
 		player1.load = 0;
 	return player1;
 }
-scene set_scene(player player1, scene place)
+scene set_scene(player player1, scene place)//This function can set up the map according to the coordinate of the player.
 {
 	if (player1.y >= -6)
 	{
 		place.name = "island";
-		place.long_description = "The island is forested with banana trees. Most of the bananas are green, but one tree to your west might have ripe bananas.\nThere are ominous drums in the background.There is a ship to your east with a gangplank to the shore.\nstuff you can get: banana";
+		place.long_description = "You are in a island.The island is forested with banana trees. Most of the bananas are green, but one tree to your west might have ripe bananas.\nThere are ominous drums in the background.There is a ship to your east with a gangplank to the shore.\nstuff you can get: banana\nEnter \"help\" for help";
 		place.short_description = "So many banana trees!\nstuff you can get: banana";
 		place.long_description_after_got = "The island is forested with banana trees. Most of the bananas are green.\nThere are ominous drums in the background.There is a ship to your east with a gangplank to the shore.";
-		place.short_description_after_got = "So many banana trees!";
+		place.short_description_after_got = "You are on the island.There are so many banana trees!";
 		place.stuff_can_cut_name = "tree";
 		place.entrance_1_name = "gangplank";
 		place.stuff_can_cut_description = "You are standing in front of a ripe banana tree, you can take a look to see what is on the tree";
@@ -767,10 +765,10 @@ scene set_scene(player player1, scene place)
 	else if (player1.y <= -7 and player1.location == "up")
 	{
 		place.name = "upper deck";
-		place.long_description = "The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.\nstuff you can get: knife";
-		place.long_description_after_got = "The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.";
-		place.short_description_after_got = "It is upper deck";
-		place.short_description = "It is upper deck\nstuff you can get: knife";
+		place.long_description = "You are in the top deck of the ship.The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.\nstuff you can get: knife";
+		place.long_description_after_got = "You are in the top deck of the ship.The top deck has a wheel at the north end of the ship, and the south end of the ship has a ladder down to the lower deck.";
+		place.short_description_after_got = "You are in the upper deck";
+		place.short_description = "You are in the upper deck.\nstuff you can get: knife";
 		place.entrance_1_name = "capain`s quarters";
 		place.entrance_2_name = "ladder";
 		place.entrance_4_name = "Ship`s Wheel";
@@ -778,8 +776,8 @@ scene set_scene(player player1, scene place)
 		place.entrance_3_name = "gangplank";
 		place.entrance_1_description = "You are in the captain`s quarter. There is a bed and a table in this room.\nstuff you can get: knife";
 		place.entrance_1_description_after_got = "You are in the captain`s quarter. There is a bed and a table in this room.";
-		place.entrance_1_short_description = "There is a bed and a table in this room.\nstuff you can get: knife";
-		place.entrance_1_short_description_after_got = "There is a bed and a table in this room.";
+		place.entrance_1_short_description = "You are in the captsin`s quarter.\nstuff you can get: knife";
+		place.entrance_1_short_description_after_got = "You are in the captain`s quarter";
 		place.entrance_2_description = "There is a ladder, do you want to go down?";
 		place.entrance_4_description = "You are at ship`s wheel.There is a large gorilla by the ship`s wheel. The gorilla is hostile. You can`t approach the wheel.\n";
 		place.entrance_4_description_2 = "You are at ship`s wheel. There is a gorilla right there.";
@@ -808,8 +806,8 @@ scene set_scene(player player1, scene place)
 	else if (player1.y <= -7 and player1.location == "down")
 	{
 		place.name = "lower deck";
-		place.long_description = "The deck below is dimly lit, and smells musty. You can make out three doors.\nOne is to the east, one is to the west, and one is a trapdoor below you.";
-		place.short_description = "It is lower deck.";
+		place.long_description = "You are in the lower deck of the ship.The deck below is dimly lit, and smells musty. You can make out three doors.\nOne is to the east, one is to the west, and one is a trapdoor below you.";
+		place.short_description = "You are in the lower deck.";
 		place.entrance_1_name = "cargo hold";
 		place.entrance_2_name = "ladder";
 		place.entrance_3_name = "brig";
@@ -851,20 +849,19 @@ scene set_scene(player player1, scene place)
 	return place;
 }
 
-player init_inventory(player player1)
+player init_inventory(player player1)//This function can initialize the inventory of the player.
+									 //Usually the amounts of the stuff that player carrying are all zeros.
 {
 
 	player1.inventory["knife"] = 0;
 	player1.inventory["banana"] = 0;
 	player1.inventory["treasure"] = 0;
-	player1.inventory["door"] = 0;
 	player1.inventory["trunk"] = 0;
-	player1.inventory["parrot"] = 0;
 	player1.inventory["key"] = 0;
 	player1.inventory["stem"] = 0;
 	return player1;
 }
-player setting(player player1)
+player setting(player player1)//This function can let the player set up the command keys in the game to what they want.
 {
 	string change, *new_command, eat_trash;
 	int traversal = 0, index;
@@ -873,7 +870,7 @@ player setting(player player1)
 
 	new_command = player1.command;
 	cout << "There are commands in this game." << endl;
-	for (index = 0; index <= 30; index++)
+	for (index = 0; index <= size(player1.command) - 2; index++)
 	{
 
 		switch (index)
@@ -888,7 +885,7 @@ player setting(player player1)
 		case 6:cout << index + 1 << ". " << "To " << "take---" << player1.command[index] << endl; break;
 		case 7:cout << index + 1 << ". " << "To " << "give---" << player1.command[index] << endl; break;
 		case 8:cout << index + 1 << ". " << "To " << "search---" << player1.command[index] << endl; break;
-		case 9:cout << index + 1 << ". " << "To" << "look---" << player1.command[index] << endl; break;
+		case 9:cout << index + 1 << ". " << "To " << "look---" << player1.command[index] << endl; break;
 		case 10:cout << index + 1 << ". " << "To " << "eat---" << player1.command[index] << endl; break;
 		case 11:cout << index + 1 << ". " << "To " << "cut---" << player1.command[index] << endl; break;
 		case 12:cout << index + 1 << ". " << "To " << "climb---" << player1.command[index] << endl; break;
@@ -962,7 +959,7 @@ player setting(player player1)
 	}
 	return player1;
 }
-int save_game(player player1)//写一个东西存 drop stuff 
+int save_game(player player1)//This function can save the progress of the game into a file.
 {
 	ofstream game_file;
 	map<string, int>::iterator it;
@@ -972,7 +969,6 @@ int save_game(player player1)//写一个东西存 drop stuff
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
 	{
-		cout << "\n\n\n\n";
 		cout << "Error!" << endl;
 		success = 0;
 	}
@@ -1039,7 +1035,7 @@ int save_game(player player1)//写一个东西存 drop stuff
 	}
 	return success;
 }
-player load_game(player player1)
+player load_game(player player1)//This function can load the game from a file.
 {
 	ifstream game_file;
 	map<string, int>::iterator it;
@@ -1050,7 +1046,6 @@ player load_game(player player1)
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
 	{
-		cout << "\n\n\n\n";
 		cout << "Fail loading game!" << endl;
 	}
 	else
@@ -1115,7 +1110,6 @@ player load_game(player player1)
 			getline(game_file, drop_stuff);
 			getline(game_file, player1.drop_stuff[drop_stuff]);
 		}
-		cout << "\n\n\n\n";
 		cout << "Load game successfully" << endl;
 		++set = NULL;
 	}
@@ -1129,7 +1123,8 @@ void help()
 }
 
 
-string To_lower(string words)
+string To_lower(string words)//This function can convert a string to lower case.
+							 // and skip "the" at the beginning of the string.
 {
 	string::iterator it;
 	int index = 0;
@@ -1142,14 +1137,15 @@ string To_lower(string words)
 		words = words.substr(4);
 	return words;
 }
-int if_closer(player player1, scene place)
+int if_closer(player player1, scene place)//This function can determind if the player is getting closer or away
+										  // to a room in the game.
 {
 	int close = 0;
 	if (place.name == "island" and player1.load == 0)
 	{
-		if (player1.x == place.stuff_can_cut_x or player1.y == place.stuff_can_cut_y)
+		if (player1.x == place.stuff_can_cut_x and player1.y == place.stuff_can_cut_y)
 			cout << "You currently at ripe banana tree." << endl;
-		else if (player1.x == place.entrance_1_x or player1.y == place.entrance_1_y)
+		else if (player1.x == place.entrance_1_x and player1.y == place.entrance_1_y)
 			cout << "You currently at gangplank." << endl;
 		else
 			cout << "You currently at island." << endl;
@@ -1178,9 +1174,9 @@ int if_closer(player player1, scene place)
 			cout << "You are currently at captain`s quaters." << endl;
 		else if (player1.x == place.entrance_2_x and player1.y == place.entrance_2_y)
 			cout << "You are currently at ladder." << endl;
-		else if (player1.x == place.entrance_4_x or player1.y == place.entrance_4_y)
+		else if (player1.x == place.entrance_4_x and player1.y == place.entrance_4_y)
 			cout << "You are currently at ship`s wheel." << endl;
-		else if (player1.x == place.entrance_3_x or player1.y == place.entrance_3_y)
+		else if (player1.x == place.entrance_3_x and player1.y == place.entrance_3_y)
 			cout << "You are currently at gangplank." << endl;
 		else
 			cout << "You are currently at upper deck." << endl;
@@ -1238,7 +1234,7 @@ int if_closer(player player1, scene place)
 			cout << "You are currently at ladder." << endl;
 		else if (player1.x <= place.entrance_4_max_x and player1.x >= place.entrance_4_min_x and player1.y <= place.entrance_4_max_y and player1.y >= place.entrance_4_min_y)
 			cout << "You are currently at galley" << endl;
-		else if (player1.x == place.entrance_3_x or player1.y == place.entrance_3_y)
+		else if (player1.x == place.entrance_3_x and player1.y == place.entrance_3_y)
 			cout << "You are currently at brig." << endl;
 		else
 			cout << "You are currently ar lower deck." << endl;
@@ -1316,7 +1312,7 @@ int if_closer(player player1, scene place)
 	}
 	return 0;
 }
-player island(player player1, scene place)
+player island(player player1, scene place)//This function can set up the map "island" in the game.
 {
 	player1 = pick_it_up(player1, place);
 	if (player1.x == place.stuff_can_cut_x and player1.y == place.stuff_can_cut_y)
@@ -1347,7 +1343,7 @@ player island(player player1, scene place)
 			}
 			else if (player1.banana_amount == 0)
 			{
-				cout << place.stuff_can_cut_description_2 << endl;
+				cout << "You already got the banana!" << endl;
 			}
 		}
 	}
@@ -1385,7 +1381,7 @@ player island(player player1, scene place)
 	extra_info(player1, place);
 	return player1;
 }
-player upper_deck(player player1, scene place, int *success)
+player upper_deck(player player1, scene place, int *success)//This function can set up the map "upper deck" in the game.
 {
 	vector<string> give;
 	player1 = pick_it_up(player1, place);
@@ -1519,7 +1515,7 @@ player upper_deck(player player1, scene place, int *success)
 
 		if (player1.hostile == 0)
 		{
-			cout << "There are hostile natives that appear outside the ship after the player boards\nThey will not allow anyone off the ship until you give the reasure to them." << endl;
+			cout << "There are hostile natives that appear outside the ship after the player boards\nThey will not allow anyone off the ship until you give the treasure to them." << endl;
 			player1 = take_action(player1, place);
 			player1 = re_take_action(player1, place);
 			if (player1.action == "give")
@@ -1566,7 +1562,7 @@ player upper_deck(player player1, scene place, int *success)
 	extra_info(player1, place);
 	return player1;
 }
-player lower_deck(player player1, scene place)
+player lower_deck(player player1, scene place)//This function can set up the map "lower deck" in the game.
 {
 	player1 = pick_it_up(player1, place);
 	if (player1.x <= place.entrance_1_max_x and player1.x >= place.entrance_1_min_x and player1.y <= place.entrance_1_max_y and player1.y >= place.entrance_1_min_y)
@@ -1731,7 +1727,8 @@ player lower_deck(player player1, scene place)
 	extra_info(player1, place);
 	return player1;
 }
-void action_seprate(string &actions, string &objects, string action)
+void action_seprate(string &actions, string &objects, string action)//This function can separate the command in two parts.
+																	// one is the action and one is object.
 {
 	int pos;
 	bool has_object;
@@ -1756,7 +1753,7 @@ void action_seprate(string &actions, string &objects, string action)
 		objects = "none";
 	}
 }
-bool if_has_object(string action)
+bool if_has_object(string action)//This function can determind if the command has object.
 {
 	int has = false, action_index;
 	if (action.length() - 1 >= 0)
@@ -1767,14 +1764,14 @@ bool if_has_object(string action)
 	}
 	return has;
 }
-player so_bad_so_sad(player player1)
+player so_bad_so_sad(player player1)//This function can prompt the player when they input the bad command.
 {
-	cout << "\n\n\n\n";
 	cout << "So bad so sad, you can`t " << player1.action << " " << player1.object << " right now!" << endl;
 	player1.action = "none";
 	return player1;
 }
-bool if_can_get(player player1, scene place, string stuff)
+bool if_can_get(player player1, scene place, string stuff)//This function can determind if the player can get
+														  // something in the game.
 {
 	bool get = false;
 	map<string, string>::iterator it;
@@ -1800,7 +1797,8 @@ bool if_can_get(player player1, scene place, string stuff)
 		cout << "Sorry, you can`t get " << player1.object << " right here" << endl;
 	return get;
 }
-bool if_can_cut(player player1, scene place, string stuff)
+bool if_can_cut(player player1, scene place, string stuff)//This function can determind if the player can cut
+														  // something in the game.
 {
 	bool cut = false;
 	map<string, string>::iterator it;
@@ -1824,7 +1822,8 @@ bool if_can_cut(player player1, scene place, string stuff)
 	}
 	return cut;
 }
-bool if_can_give(player player1, scene place, string stuff)
+bool if_can_give(player player1, scene place, string stuff)//This function can determind if the player can give
+														  // something in the game.
 {
 	bool give = false, equal = false;
 	map<string, string>::iterator it;
@@ -1869,7 +1868,8 @@ bool if_can_give(player player1, scene place, string stuff)
 
 	return give;
 }
-bool if_can_eat(player player1, scene place, string food)
+bool if_can_eat(player player1, scene place, string food)//This function can determind if the player can eat
+														  // something in the game.
 {
 	bool eat = false;
 	vector<string>::iterator it;
@@ -1890,7 +1890,8 @@ bool if_can_eat(player player1, scene place, string food)
 
 	return eat;
 }
-bool if_can_pick(player player1, string stuff)
+bool if_can_pick(player player1, string stuff)//This function can determind if the player can pick
+														  // something in the game.
 {
 	map<string, string>::iterator it;
 	bool pick = false;
@@ -1938,7 +1939,8 @@ bool if_can_pick(player player1, string stuff)
 	}
 	return pick;
 }
-player re_take_action(player player1, scene place)
+player re_take_action(player player1, scene place)//This function can retake the command again
+												  // when the player over boundaries of the map incidently.
 {
 	while (player1.action == "none")
 	{
@@ -1953,7 +1955,8 @@ player re_take_action(player player1, scene place)
 	}
 	return player1;
 }
-bool if_can_drop(player player1, string stuff)
+bool if_can_drop(player player1, string stuff)//This function can determind if the player can drop
+														  // something in the game.
 {
 	bool drop = false;
 	map<string, int>::iterator it;
@@ -1971,7 +1974,7 @@ bool if_can_drop(player player1, string stuff)
 	}
 	return drop;
 }
-string coordinate_to_string(player player1)
+string coordinate_to_string(player player1)//This function can convert the coordinate of the player to a string.
 {
 	string coordinate, up_or_down;
 	if (player1.location == "island")
@@ -1987,7 +1990,7 @@ string coordinate_to_string(player player1)
 	coordinate.append(up_or_down);
 	return coordinate;
 }
-player pick_it_up(player player1, scene place)
+player pick_it_up(player player1, scene place)//This function can let player pick up the stuff he dropped.
 {
 	string coordinate, name, origin_name;
 	map<string, string>::iterator it;
@@ -2018,7 +2021,8 @@ player pick_it_up(player player1, scene place)
 	}
 	return player1;
 }
-string re_name(player player1, string stuff)
+string re_name(player player1, string stuff)//This function can rename the stuff that the player dropped
+										   // in ordered by when the player dropped it.Such as banana 1, banana 2
 {
 	int times, pos, number = 0, max = 0;
 	map<string, string>::iterator it;
@@ -2035,7 +2039,8 @@ string re_name(player player1, string stuff)
 	stuff.append(to_string(number));
 	return stuff;
 }
-string recover_name(string name)
+string recover_name(string name)//This function can recover the name of the stuff
+								//that the player dropped.
 {
 	int index, pos;
 	bool has_space = false;
@@ -2049,7 +2054,7 @@ string recover_name(string name)
 	}
 	return name;
 }
-player drop_it(player player1)
+player drop_it(player player1)//This function can let player drop stuff in the game.
 {
 	map<string, string>::iterator it;
 	string name, drop_coordinate;
@@ -2082,7 +2087,8 @@ player drop_it(player player1)
 	}
 	return player1;
 }
-int get_number(string name)
+int get_number(string name)//This function can get the number in the name of the stuff that player dropped
+						   //like the 1 in banana 1.
 {
 	int pos, number;
 	pos = name.find(" ");
@@ -2090,7 +2096,7 @@ int get_number(string name)
 	number = stoi(name);
 	return number;
 }
-string sentence_to_pig_latin(string sentence)
+string sentence_to_pig_latin(string sentence)//This function can convert the words in a sentence to pig-latin.
 {
 	string new_sentence;
 	vector<string>marks;
@@ -2152,7 +2158,7 @@ string sentence_to_pig_latin(string sentence)
 	}
 	return new_sentence;
 }
-string pig_latin(string word)
+string pig_latin(string word)//This function can convert a single word to pig-latin.
 {
 	string first_letter;
 	first_letter = word.at(0);
@@ -2161,7 +2167,7 @@ string pig_latin(string word)
 	word.append(first_letter);
 	return word;
 }
-void get_sentence(string sentence, vector<string>&marks, vector<string>&word)
+void get_sentence(string sentence, vector<string>&marks, vector<string>&word)//This cuntion can separate a sentence into marks and words.
 {
 	int index = 0;
 	string mark = " ", temp_mark, words = " ", temp_word;
@@ -2203,7 +2209,7 @@ void get_sentence(string sentence, vector<string>&marks, vector<string>&word)
 		}
 	}
 }
-player add_times(player player1)
+player add_times(player player1)//This function can count how many times that player has been to the map.
 {
 	if (player1.room == "island" and player1.island_times == 0)
 	{
@@ -2297,7 +2303,8 @@ player add_times(player player1)
 	}
 	return player1;
 }
-player look_hint_and_search(player player1, scene place)
+player look_hint_and_search(player player1, scene place)//This function can prompt the player when the player
+														// enter "look","hint", and "search".
 {
 	if (place.name == "island")
 	{
@@ -2308,7 +2315,12 @@ player look_hint_and_search(player player1, scene place)
 				if (player1.action == "look")
 					cout << place.stuff_can_cut_look_description_1 << endl;
 				else if (player1.action == "hint")
-					cout << "Need knife to cut? Don`t forget there is a ship to your east." << endl;
+				{
+					if (player1.inventory["knife"] == 0)
+						cout << "Need knife to cut? Don`t forget there is a ship to your east." << endl;
+					else
+						cout << "Cut cut cut!!!!" << endl;
+				}
 			}
 			else
 			{
@@ -2506,7 +2518,25 @@ player look_hint_and_search(player player1, scene place)
 					else if (player1.action == "search")
 						cout << "No new discoveries." << endl;
 				}
-
+			}
+			else
+			{
+				if (player1.action == "look")
+				{
+					if (player1.treasure_amount != 0)
+						cout << "The cargo hold looks like a treasure cave." << endl;
+					else
+						cout << place.entrance_1_description << endl;
+				}
+				else if (player1.action == "hint")
+				{
+					if (player1.hostile == 0)
+						cout << "See if you can find something in this cargo hold." << endl;
+					else
+						cout << "There is nothing I can prompt you." << endl;
+				}
+				else if (player1.action == "search")
+					cout << "No new discoveries." << endl;
 			}
 		}
 		else if (player1.room == "brig")
@@ -2579,7 +2609,8 @@ player look_hint_and_search(player player1, scene place)
 	}
 	return player1;
 }
-scene init_scene(scene place)
+scene init_scene(scene place)//This function can initialize the coordinate of special stuff that 
+							 // the player can do something with like drop or cut.
 {
 	place.stuff_can_get["treasure"] = "1 -9 0";
 	place.stuff_can_give["banana"] = "5 -11 1";
@@ -2591,7 +2622,8 @@ scene init_scene(scene place)
 	place.stuff_can_eat.push_back("banana");
 	return place;
 }
-void extra_info(player player1, scene place)
+void extra_info(player player1, scene place)//This function can prompt the player the location he is currently at.
+
 {
 	if (player1.hide == 0 and player1.action == "move" or player1.action == "display" or player1.action == "save")
 	{
@@ -2605,7 +2637,7 @@ void extra_info(player player1, scene place)
 		cout << "***********************************************************************************************" << endl;
 	}
 }
-bool has_mark(string sentence)
+bool has_mark(string sentence)//This function can determind if a sentence has marks.
 {
 	int index, pos = 0;
 	bool real = true;
@@ -2618,7 +2650,8 @@ bool has_mark(string sentence)
 		real = false;
 	return real;
 }
-string To_lower_2(string words)
+string To_lower_2(string words)//This function can convert the words in sentence to lower case,
+							// it doesn`t skip "the" at the beginning of the word.
 {
 	string::iterator it;
 	int index = 0;
@@ -2628,4 +2661,56 @@ string To_lower_2(string words)
 		words.at(index++) = *it;
 	}
 	return words;
+}
+void help(player player1)//This function can print helping information for the player.
+{
+	int index;
+	cout << "The commands in this game is made up by one or two words, normally a verb fllowed by a noun." << endl;
+	cout << "You can change the keys for command by enter \"setting\"." << endl;
+	cout << "Here are the keys for command:" << endl;
+	for (index = 0; index <= size(player1.command) - 2; index++)
+	{
+
+		switch (index)
+		{
+		default:
+		case 0:cout << index + 1 << ". " << "To go " << "north---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 1:cout << index + 1 << ". " << "To go " << "south---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 2:cout << index + 1 << ". " << "To go " << "west---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 3:cout << index + 1 << ". " << "To go " << "east---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 4:cout << index + 1 << ". " << "To " << "board---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 5:cout << index + 1 << ". " << "To " << "enter---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 6:cout << index + 1 << ". " << "To " << "take---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 7:cout << index + 1 << ". " << "To " << "give---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 8:cout << index + 1 << ". " << "To " << "search---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 9:cout << index + 1 << ". " << "To " << "look---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 10:cout << index + 1 << ". " << "To " << "eat---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 11:cout << index + 1 << ". " << "To " << "cut---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 12:cout << index + 1 << ". " << "To " << "climb---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 13:cout << index + 1 << ". " << "To " << "drop---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 14:cout << index + 1 << ". " << "Go " << "up---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 15:cout << index + 1 << ". " << "Go " << "down---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 16:cout << index + 1 << ". " << "To " << "unlock---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 17:cout << index + 1 << ". " << "To " << "sail---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 18:cout << index + 1 << ". " << "To " << "open---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 19:cout << index + 1 << ". " << "To " << "quit---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 20:cout << index + 1 << ". " << "Check " << "inventory---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 21:cout << index + 1 << ". " << "To " << "setting---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 22:cout << index + 1 << ". " << "To " << "save---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 23:cout << index + 1 << ". " << "To " << "load--" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 24:cout << index + 1 << ". " << "To see " << "hint---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 25:cout << index + 1 << ". " << "To see " << "help---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 26:cout << index + 1 << ". " << "To" << " get something---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 27:cout << index + 1 << ". " << "To" << " hide extra information---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 28:cout << index + 1 << ". " << "To" << " display extra information---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 29:cout << index + 1 << ". " << "To" << " start something---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+		case 30:cout << index + 1 << ". " << "To" << " pick something---" << "enter \"" << player1.command[index] << "\"" << endl; break;
+			break;
+		}
+	}
+}
+void welcome()//This function can print welcome words to the player.
+{
+	cout << "You wake up on an island with no memory of how you got there.You need to overcome a"
+		<< "series of obstacles in order to be able to to board a pirate ship and sail it to civilization." << endl;
 }
