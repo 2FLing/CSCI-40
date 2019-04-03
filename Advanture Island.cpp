@@ -4,6 +4,7 @@
 //Karnvir
 //Matthew Jones
 //CSCI-40 group project Advanture Island game.
+//use "-std=c++11" to compile"
 #include<iostream>
 #include<stdio.h>
 #include<map>
@@ -12,6 +13,7 @@
 #include<fstream>
 #include<cmath>
 using namespace std;
+const int COMMAND_LENGTH 32;
 class scene
 {
 public:
@@ -133,7 +135,7 @@ public:
 	bool if_over = false;
 };
 player island(player, scene);
-player upper_deck(player, scene, int*);
+player upper_deck(player, scene, bool&);
 player lower_deck(player, scene);
 player load_game(player);
 player add_times(player);
@@ -173,27 +175,24 @@ int get_number(string);
 bool has_mark(string);
 int main()
 {
-	int success = 0;
+	bool success = false;
 	player player1;
 	scene place;
 	string word;
 	player1 = init_inventory(player1);
 	place = init_scene(place);
-	int *if_success = &success;
 	welcome();
-	while (success == 0)
+	while (!success)
 	{
 		place = set_scene(player1, place);
 		if (place.name == "island")
 			player1 = island(player1, place);
 		else if (place.name == "upper deck")
-			player1 = upper_deck(player1, place, if_success);
+			player1 = upper_deck(player1, place, success);
 		else
 			player1 = lower_deck(player1, place);
 	}
 	cout << "Game Over" << endl;
-	++if_success = NULL;
-	system("pause");
 	return 0;
 }
 player take_action(player player1, scene place)//This function can transfer the command from player to the action of the character in the game.
@@ -863,14 +862,13 @@ player init_inventory(player player1)//This function can initialize the inventor
 }
 player setting(player player1)//This function can let the player set up the command keys in the game to what they want.
 {
-	string change, *new_command, eat_trash;
+	string change, eat_trash;
 	int traversal = 0, index;
 	int number;
 	bool repeat = true;
 
-	new_command = player1.command;
 	cout << "There are commands in this game." << endl;
-	for (index = 0; index <= size(player1.command) - 2; index++)
+	for (index = 0; index <= COMMAND_LENGTH - 2; index++)
 	{
 
 		switch (index)
@@ -946,11 +944,10 @@ player setting(player player1)//This function can let the player set up the comm
 			repeat = false;
 		}
 		for (index = 0; index < number - 1; index++)
-			new_command++;
-		*new_command = change;
+			index++;
+		player1.command[index] = change;
 		cout << "done!" << endl;
 		index = number + 1;
-		++new_command = NULL;
 	}
 	else
 	{
@@ -964,8 +961,7 @@ int save_game(player player1)//This function can save the progress of the game i
 	ofstream game_file;
 	map<string, int>::iterator it;
 	map<string, string>::iterator drop_stuff;
-	int success = 1;
-	string *set;
+	int success = 1, index;
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
 	{
@@ -1022,8 +1018,8 @@ int save_game(player player1)//This function can save the progress of the game i
 		game_file << "hide: " << endl;
 		game_file << player1.hide << endl;
 		game_file << "setting:" << endl;
-		for (set = player1.command; *set != "null"; set++)
-			game_file << *set << endl;
+		for (index = 0; index <= COMMAND_LENGTH - 1; index++)
+			game_file << player1.command[index] << endl;
 		game_file << "drop_stuff:" << endl;
 		for (drop_stuff = player1.drop_stuff.begin(); drop_stuff != player1.drop_stuff.end(); drop_stuff++)
 		{
@@ -1031,7 +1027,6 @@ int save_game(player player1)//This function can save the progress of the game i
 			game_file << drop_stuff->second << endl;
 		}
 		game_file.close();
-		++set = NULL;
 	}
 	return success;
 }
@@ -1039,10 +1034,11 @@ player load_game(player player1)//This function can load the game from a file.
 {
 	ifstream game_file;
 	map<string, int>::iterator it;
-	string loaction, inventory, banana_amount, knife_amount, player_location, player_x_last_time, setting, *set, hide, drop_stuff;
+	string loaction, inventory, banana_amount, knife_amount, player_location, player_x_last_time, setting, hide, drop_stuff;
 	string plaer_y_last_time, player_island_times, player_upper_deck_times, player_capitains_quarters_times, player_lower_deck_times;
 	string player_cargo_hold_times, player_brig_times, player_galley_times, treasure_amount;
 	string gorilla, parrot, hostile, key, prison, get;
+	int index;
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
 	{
@@ -1099,9 +1095,9 @@ player load_game(player player1)//This function can load the game from a file.
 		game_file >> player1.hide;
 		game_file >> setting;
 		game_file.seekg(2, ios::cur);
-		for (set = player1.command; *set != "null"; set++)
+		for (index = 0; index <= COMMAND_LENGTH - 1; index++)
 		{
-			getline(game_file, *set);
+			getline(game_file, player1.command[index]);
 		}
 		game_file >> drop_stuff;
 		game_file.seekg(2, ios::cur);
@@ -1111,7 +1107,6 @@ player load_game(player player1)//This function can load the game from a file.
 			getline(game_file, player1.drop_stuff[drop_stuff]);
 		}
 		cout << "Load game successfully" << endl;
-		++set = NULL;
 	}
 	player1.load = 1;
 	game_file.close();
@@ -1381,7 +1376,7 @@ player island(player player1, scene place)//This function can set up the map "is
 	extra_info(player1, place);
 	return player1;
 }
-player upper_deck(player player1, scene place, int *success)//This function can set up the map "upper deck" in the game.
+player upper_deck(player player1, scene place, bool &success)//This function can set up the map "upper deck" in the game.
 {
 	vector<string> give;
 	player1 = pick_it_up(player1, place);
@@ -1501,7 +1496,7 @@ player upper_deck(player player1, scene place, int *success)//This function can 
 			{
 				if (player1.prison != 0)
 				{
-					*success = 1;
+					success = true;
 					cout << "You finally success to sail away!" << endl;
 				}
 				else
@@ -2118,13 +2113,13 @@ string sentence_to_pig_latin(string sentence)//This function can convert the wor
 		}
 		if (!bingo)
 		{
-			if (size(marks) > size(word))
+			if (marks.size() > word.size())
 			{
-				while (marks_index <= size(marks) - 1)
+				while (marks_index <= marks.size() - 1)
 				{
 					new_sentence.append(marks[marks_index]);
 					marks_index++;
-					if (word_index <= size(word) - 1)
+					if (word_index <= word.size() - 1)
 					{
 						word[word_index] = pig_latin(word[word_index]);
 						new_sentence.append(word[word_index]);
@@ -2134,12 +2129,12 @@ string sentence_to_pig_latin(string sentence)//This function can convert the wor
 			}
 			else
 			{
-				while (word_index <= size(word) - 1)
+				while (word_index <= word.size() - 1)
 				{
 					word[word_index] = pig_latin(word[word_index]);
 					new_sentence.append(word[word_index]);
 					word_index++;
-					if (marks_index <= size(marks) - 1)
+					if (marks_index <= marks.size() - 1)
 					{
 						new_sentence.append(marks[marks_index]);
 						marks_index++;
@@ -2668,7 +2663,7 @@ void help(player player1)//This function can print helping information for the p
 	cout << "The commands in this game is made up by one or two words, normally a verb fllowed by a noun." << endl;
 	cout << "You can change the keys for command by enter \"setting\"." << endl;
 	cout << "Here are the keys for command:" << endl;
-	for (index = 0; index <= size(player1.command) - 2; index++)
+	for (index = 0; index <= COMMAND_LENGTH - 2; index++)
 	{
 
 		switch (index)
