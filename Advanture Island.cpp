@@ -13,7 +13,11 @@
 #include<fstream>
 #include<cmath>
 using namespace std;
+<<<<<<< HEAD
 const int COMMAND_LENGTH = 32;
+=======
+const int COMMAND_LENGTH=32;
+>>>>>>> 4a2ca6d177aa12f2ae96eebcef7d3b309ae9d87a
 class scene
 {
 public:
