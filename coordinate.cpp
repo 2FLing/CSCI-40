@@ -1,4 +1,4 @@
-lude<iostream>
+#inlude<iostream>
 #include<fstream>
 #include<string>
 #include<cmath>
