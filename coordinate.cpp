@@ -1,3 +1,8 @@
+//MingkuanPang
+//This function can sort 10 pairs
+//of cartesian coordinates by
+//increasing x-values,decreasing y-values
+//and increasing distance from the origin.
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -32,7 +37,7 @@ int main()
 	}
 	return 0;
 }
-void read_pairs(coordinates coordinate[])
+void read_pairs(coordinates coordinate[])//read coordinates from file.
 {
 	ifstream file;
 	int index = 0,add_space=0, new_index = 0, coo_index = 0,space_index=0,x_or_y=0;
@@ -92,7 +97,7 @@ void read_pairs(coordinates coordinate[])
 	}
 	file.close();
 }
-void sort_pairs(coordinates coordinate[num_pairs],type  coordinate_type)
+void sort_pairs(coordinates coordinate[num_pairs],type  coordinate_type)//sort coordinate.
 {
 	int next, last,length=num_pairs-2;
 	coordinates temp;
@@ -123,7 +128,7 @@ void sort_pairs(coordinates coordinate[num_pairs],type  coordinate_type)
 			}
 		}
 }
-void print_pairs(coordinates coordinate[num_pairs], type  coordinate_type)
+void print_pairs(coordinates coordinate[num_pairs], type  coordinate_type)//print coordinates by the different order.
 {
 	int index;
 	switch (coordinate_type)
@@ -147,3 +152,4 @@ void print_pairs(coordinates coordinate[num_pairs], type  coordinate_type)
 			<< coordinate[index].distance << endl;
 	}
 }
+
