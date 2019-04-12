@@ -7,13 +7,12 @@
 #include<fstream>
 #include<string>
 #include<cmath>
-#include<cctype>
 using namespace std;
 const int num_pairs = 10;
 struct coordinates
 {
-	int x;
-	int y;
+	double x;
+	double y;
 	double distance;
 };
 enum type
@@ -22,99 +21,62 @@ enum type
 	y,
 	distances
 };
-void read_pairs(coordinates*);
-void sort_pairs(coordinates*, type coordinate_type);
-void print_pairs(coordinates*, type coordinate_type);
+int read_pairs(coordinates[]);
+void sort_pairs(coordinates[], type coordinate_type, int);
+void print_pairs(coordinates[], type coordinate_type, int);
 int main()
 {
 	type coordinate_type;
+	int size;
 	coordinates coordinate[num_pairs];
-	read_pairs(coordinate);
+	size = read_pairs(coordinate);
 	for (coordinate_type = x; coordinate_type <= distances; coordinate_type = type(coordinate_type + 1))
 	{
-		sort_pairs(coordinate, coordinate_type);
-		print_pairs(coordinate, coordinate_type);
+		sort_pairs(coordinate, coordinate_type, size);
+		print_pairs(coordinate, coordinate_type, size);
 	}
 	return 0;
 }
-void read_pairs(coordinates coordinate[])//read coordinates from file.
+int read_pairs(coordinates coordinate[])
 {
 	ifstream file;
-	int index = 0,add_space=0, new_index = 0, coo_index = 0,space_index=0,x_or_y=0;
-	string buffer, new_buffer, temp;
+	char space;
+	int index = 0;
 	file.open("points.txt");
 	if (!file.is_open())
 	{
 		cout << "Error!\n" << endl;
 		exit(1);
 	}
-	while (!file.eof())
+	while (not file.eof() and index <= num_pairs)
 	{
-		getline(file, buffer);
-	}
-	while (index <= buffer.length() - 1)
-	{
-		if (!isdigit(buffer.at(index)))
-		{
-			index++;
-			if (add_space != 0)
-			{
-				new_buffer.append(" ");
-				add_space = 0;
-			}
-		}
-		else
-		{
-			temp = buffer.at(index);
-			new_buffer.append(temp);
-			index++;
-			add_space = 1;
-		}
-	}
-	if(new_buffer.at(new_buffer.length()-1)!=' ')
-		new_buffer.append(" ");
-	while (new_index <= new_buffer.length() - 1)
-	{
-		while (new_buffer.at(new_index) != ' ')
-			new_index++;
-		if (x_or_y == 0)
-		{
-			coordinate[coo_index].x = stoi(new_buffer.substr(space_index, new_index - space_index));
-			new_index++;
-			space_index = new_index;
-			x_or_y = 1;
-		}
-		else
-		{
-			coordinate[coo_index].y = stoi(new_buffer.substr(space_index, new_index - space_index));
-			coordinate[coo_index].distance = sqrt(coordinate[coo_index].x*coordinate[coo_index].x
-				+ coordinate[coo_index].y*coordinate[coo_index].y);
-			coo_index++;
-			new_index++;
-			space_index = new_index;
-			x_or_y = 0;
-		}
+		file >> coordinate[index].x;
+		file >> coordinate[index].y;
+		coordinate[index].distance = sqrt(coordinate[index].x*coordinate[index].x +
+			coordinate[index].y*coordinate[index].y);
+		index++;
 	}
 	file.close();
+	return index;
 }
-void sort_pairs(coordinates coordinate[num_pairs],type  coordinate_type)//sort coordinate.
+void sort_pairs(coordinates coordinate[num_pairs], type  coordinate_type, int size)
 {
-	int next, last,length=num_pairs-2;
+	int next, last, length = size - 2;
 	coordinates temp;
 	bool out_of_order;
-	for(last = 0; last <= length; last++)
-		for(next = 0; next <= length-last; next++)
+	for (last = 0; last <= length; last++)
+		for (next = 0; next <= length - last; next++)
 		{
 			switch (coordinate_type)
 			{
 			case x:
-				out_of_order = coordinate[next+1].x < coordinate[next].x;
+				out_of_order = coordinate[next + 1].x < coordinate[next].x;
 				break;
 			case y:
-				out_of_order = coordinate[next+1].y > coordinate[next].y;
+				out_of_order = coordinate[next + 1].y > coordinate[next].y;
 				break;
 			case distances:
-				out_of_order = coordinate[next+1].distance < coordinate[next].distance;
+				out_of_order = coordinate[next + 1].distance < coordinate[next].distance;
 				break;
 			default:
 				break;
@@ -128,7 +90,7 @@ void sort_pairs(coordinates coordinate[num_pairs],type  coordinate_type)//sort c
 			}
 		}
 }
-void print_pairs(coordinates coordinate[num_pairs], type  coordinate_type)//print coordinates by the different order.
+void print_pairs(coordinates coordinate[num_pairs], type  coordinate_type, int size)
 {
 	int index;
 	switch (coordinate_type)
@@ -145,11 +107,10 @@ void print_pairs(coordinates coordinate[num_pairs], type  coordinate_type)//prin
 	default:
 		break;
 	}
-	for (index = 0; index <= num_pairs - 1; index++)
+	for (index = 0; index <= size - 1; index++)
 	{
 		cout << "x:" << coordinate[index].x << "  " << "y:" <<
 			coordinate[index].y << "  " << "distance:"
 			<< coordinate[index].distance << endl;
 	}
 }
-

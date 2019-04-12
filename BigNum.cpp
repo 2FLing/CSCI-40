@@ -37,55 +37,56 @@ int main()
 		cin.ignore(900, '\n');
 		done = toupper(response) != 'Y';
 	}
-	system("pause");
 	return 0;
 }
-void readBig(int num[])//ReadBig will read a number as a string,
-					   //It then converts each element of the string to an integer and stores it in an integer array.
-					   //Finally, it reverses the elements of the array so that the ones digit is in element zero,ement 1, the hundreds digit is in element 2, etc.
+void readBig(int num[])//ReadBig will read a number as a string,It then converts each element of
+					   // the string to an integer and stores it in an integer array.
+					   //Finally, it reverses the elements of 
+					   //the array so that the ones digit is in element zero,
+					   //ement 1, the hundreds digit is in element 2, etc.
 {
 	string number;
 	char temp;
-	int digit,pos;
+	int digit, start = 0, pos = 0;
 	for (digit = 0; digit <= MAX_DIGITS - 1; digit++)
 		num[digit] = 0;
 	cin >> number;
-	for (digit = number.length() - 1; digit >= 0; digit--)
+	digit = number.length() - 1;
+	while (digit != (number.length() - 1) / 2)
 	{
 		temp = number.at(digit);
-		pos = number.length() - 1 - digit;
 		number.at(digit) = number.at(pos);
-		number.at(number.length() - (digit + 1)) = temp;
-		if (digit == number.length() / 2)
-			break;
+		number.at(pos) = temp;
+		digit--;
+		pos++;
 	}
-	for (digit = 0; digit <= number.length() - 1; digit++)
-		num[digit] = int(number.at(digit) - '0');
-
+	for (start = 0; start <= number.length() - 1; start++)
+		num[start] = int(number.at(start) - '0');
 }
 
 
 
-void printBig(int num[])//PrintBig uses a while loop to skip leading zeros and then uses a for loop to print the number.
+void printBig(int num[])//PrintBig uses a while loop to skip leading zeros 
+						//and then uses a for loop to print the number.
 {
-	int digit = MAX_DIGITS-1;
-	while (num[digit] == 0)
+	int digit = MAX_DIGITS - 1;
+	while (num[digit] == 0 and digit != 0)
 		digit--;
 	for (digit; digit >= 0; digit--)
 		cout << num[digit];
 	cout << endl;
 }
-//1238
-//5675
-void addBig(int num1[], int num2[], int num3[])//AddBig adds the corresponding digits of the first two arrays and stores the answer in the third.
-												//In a second loop, it performs the carry operation.
+
+void addBig(int num1[], int num2[], int num3[])//AddBig adds the corresponding digits of the  
+											   //first two arrays and stores the answer in the third.
+											   //In a second loop, it performs the carry operation.
 {
-	int digit,my_sum,mover=0,temp,num3_size;
+	int digit, my_sum, mover = 0, temp = 0, num3_size, start, digit2;
 	for (digit = 0; digit <= MAX_DIGITS - 1; digit++)
 		num3[digit] = 0;
-	for (digit = 0; digit <= MAX_DIGITS-1; digit++)
+	for (digit2 = 0; digit2 <= MAX_DIGITS - 1; digit2++)
 	{
-		my_sum = num1[digit] + num2[digit]+mover;
+		my_sum = num1[digit2] + num2[digit2] + mover;
 		if (my_sum >= 10)
 		{
 			mover = my_sum / 10;
@@ -93,16 +94,11 @@ void addBig(int num1[], int num2[], int num3[])//AddBig adds the corresponding d
 		}
 		else
 			mover = 0;
-		num3[digit] = my_sum;
-	}
-	num3_size = digit;
-	for (digit; digit >= 0; digit--)
-	{
-		temp = num3[digit];
-		num3[digit] = num3[num3_size - digit];
-		num3[num3_size - digit] = temp;
-		if (temp == num3_size / 2)
-			break;
+		num3[digit2] = my_sum;
 	}
 
 }
+
+
+
+
