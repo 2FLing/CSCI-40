@@ -71,6 +71,10 @@ public:
 	int entrance_4_x;
 	int entrance_4_y;
 	int bed_x;
+	int shop_x;
+	int shop_y;
+	int question_x;
+	int question_y;
 };
 class player
 {
@@ -108,6 +112,7 @@ public:
 	int cargo_hold_times = 0;
 	int brig_times = 0;
 	int galley_times = 0;
+	int gangplank_times = 0;
 	int hide = 0;
 	int upper_deck_times = 0;
 	int if_gorilla_run = 0;
@@ -941,14 +946,34 @@ player if_over(player player1, scene place)
 	if (player1.load != 1)
 	{
 		if (player1.x < place.min_x)
-			player1.if_over = true;
+		{
+			if (player1.location == "down")
+			{
+				if (player1.x == place.entrance_2_x - 1 and player1.y == place.entrance_2_y)
+					player1.if_over = false;
+				else
+					player1.if_over = true;
+			}
+			else
+				player1.if_over = true;
+		}
 		else if (player1.x > place.max_x)
+
 		{
 			if (player1.location == "up")
 			{
 				if (player1.x == place.entrance_4_x + 1 and
 					player1.y == place.entrance_4_y and player1.if_gorilla_run == 0)
 					player1.if_over = false;
+				else
+					player1.if_over = true;
+			}
+			else if (player1.location == "down")
+			{
+				if (player1.x == place.entrance_2_x + 1 and player1.y == place.entrance_2_y)
+					player1.if_over = false;
+				else
+					player1.if_over = true;
 			}
 			else
 				player1.if_over = true;
@@ -1068,7 +1093,10 @@ scene set_scene(player player1, scene place)//This function can set up the map a
 		place.entrance_2_y = -10;
 		place.entrance_4_x = 2;
 		place.entrance_4_y = -11;
-
+		place.shop_x = 3;
+		place.shop_y = -10;
+		place.question_x = 1;
+		place.question_y = -10;
 	}
 	return place;
 }
@@ -1261,6 +1289,8 @@ int save_game(player player1)//This function can save the progress of the game i
 		game_file << player1.brig_times << endl;
 		game_file << "player_galley_times:" << endl;
 		game_file << player1.galley_times << endl;
+		game_file << "player_gangplank_times:" << endl;
+		game_file << player1.gangplank_times << endl;
 		game_file << "hide: " << endl;
 		game_file << player1.hide << endl;
 		game_file << "setting:" << endl;
@@ -1286,7 +1316,7 @@ player load_game(player player1)//This function can load the game from a file.
 		player_capitains_quarters_times, player_lower_deck_times;
 	string player_cargo_hold_times, player_brig_times, player_galley_times, treasure_amount;
 	string gorilla, parrot, hostile, key, prison, get, up_or_down, health, attack, money, time, day;
-	string time_spent, fighting, weapon, gold;
+	string time_spent, fighting, weapon, gold,gangplank;
 	int index;
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
@@ -1360,6 +1390,8 @@ player load_game(player player1)//This function can load the game from a file.
 		game_file >> player1.brig_times;
 		game_file >> player_galley_times;
 		game_file >> player1.galley_times;
+		game_file >> gangplank;
+		game_file >> player1.gangplank_times;
 		game_file >> hide;
 		game_file >> player1.hide;
 		game_file >> setting;
@@ -1717,9 +1749,20 @@ player upper_deck(player player1, scene place, bool& success)//This function can
 	else if (player1.x == place.entrance_3_x and player1.y == place.entrance_3_y)
 	{
 		player1.room = "gangplank";
+		player1 = add_times(player1);
 		if (player1.hostile == 0)
 		{
-			cout << "There are hostile natives that appear outside the ship after the player boards\nThey will not allow anyone off the ship until you give the treasure to them." << endl;
+			if (player1.in_n_out == 0 and player1.gangplank_times == 1)
+			{
+				cout << "There are hostile natives that appear outside the ship after the player boards\n"<<
+					"They will not allow anyone off the ship until you give the treasure to them." << endl;
+				player1.in_n_out = 1;
+			}
+			else if (player1.in_n_out == 0 and player1.gangplank_times != 1)
+			{
+				cout << "There are hostile natives outside want the treasure!" << endl;
+				player1.in_n_out = 1;
+			}
 			player1 = take_action(player1, place);
 			if (player1.action == "give")
 			{
@@ -1731,7 +1774,8 @@ player upper_deck(player player1, scene place, bool& success)//This function can
 		}
 		else
 		{
-			cout << place.entrance_3_description << endl;
+			if(player1.in_n_out==0)
+				cout << place.entrance_3_description << endl;
 			player1 = take_action(player1, place);
 			if (player1.action == "get out" or (player1.action == "move" and player1.object == "west"))
 			{
@@ -2370,6 +2414,12 @@ player add_times(player player1)
 		player1.in_n_out = 0;
 		player1.last_room = "galley";
 	}
+	else if (player1.room == "gangplank" and player1.gangplank_times == 0)
+	{
+		player1.gangplank_times++;
+		player1.in_n_out = 0;
+		player1.last_room = "gangplank";
+	}
 	else
 	{
 		if (player1.room != player1.last_room)
@@ -2416,6 +2466,12 @@ player add_times(player player1)
 				player1.in_n_out = 0;
 				player1.last_room = player1.room;
 			}
+			else if (player1.room == "gangplank")
+			{
+				player1.gangplank_times++;
+				player1.in_n_out = 0;
+				player1.last_room = player1.room;
+			}
 		}
 	}
 	return player1;
@@ -2454,6 +2510,8 @@ player look_hint_and_search(player player1, scene place)
 				cout << place.entrance_3_description << endl;
 			else if (player1.action == "hint")
 				cout << "To go in or not go in, that is a question." << endl;
+			else if (player1.action == "search")
+				cout << "No new discoveries" << endl;
 		}
 		else
 		{
@@ -2549,6 +2607,28 @@ player look_hint_and_search(player player1, scene place)
 					cout << "You need a sailor to help you start this ship." << endl;
 				else if (player1.action == "search")
 					cout << "No new discoveries." << endl;
+			}
+		}
+		else if (player1.room == "gangplank")
+		{
+			if (player1.hostile == 0)
+			{
+				if (player1.action == "look")
+					cout << "There are hostile natives that appear outside the ship after the player boards\n" <<
+					"They will not allow anyone off the ship until you give the treasure to them." << endl;
+				else if (player1.action == "hint")
+					cout << "Why you wait? Just give them the treasure." << endl;
+				else if (player1.action == "search")
+					cout << "No new discoveries" << endl;
+			}
+			else
+			{
+				if (player1.action == "look")
+					cout << place.entrance_3_description << endl;
+				else if (player1.action == "hint")
+					cout << "To go in or not go out, that is a question." << endl;
+				else if (player1.action == "search")
+					cout << "No new discoveries" << endl;
 			}
 		}
 		else
@@ -2717,6 +2797,11 @@ void help(player player1)
 //This function can print helping information for the player.
 {
 	int index;
+	cout << "About battle in this game:\n" << endl;
+	cout << "Once you are in a battle, you can only do either attack or run away, and quit the game."
+		<< "Fight until someone dies." << endl;
+	cout << "************************************************************************************************************" << endl;
+	cout << "About commands in this game:\n" << endl;
 	cout << "The commands in this game is made up by one or two words, normally a verb fllowed by a noun." << endl;
 	cout << "You can change the keys for command by enter \"setting\"." << endl;
 	cout << "Here are the keys for command:" << endl;
@@ -2961,6 +3046,7 @@ player fight(player player1, scene place)
 					{
 						player1.gold += 20;
 						cout << "Victory!!!You have defeated the ghost!" << endl;
+						cout << "Gold add 20" << endl;	
 						player1.fighting = false;
 					}
 				}
