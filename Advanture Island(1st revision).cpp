@@ -72,6 +72,8 @@ public:
 	map<string, string>stuff_can_cut;
 	map<string, string>stuff_can_give;
 	map<string, string>stuff_can_get;
+	map<string, equipment>equips;
+	map<string, string>questions;
 	vector<string>stuff_can_eat;
 	map<string, int>items;
 	int max_x;
@@ -91,9 +93,8 @@ public:
 	int bed_x;
 	int shop_x;
 	int shop_y;
-	int question_x;
-	int question_y;
-	map<string, equipment>equips;
+	int hut_x;
+	int hut_y;
 };
 class player
 {
@@ -138,7 +139,7 @@ public:
 	int galley_times = 0;
 	int gangplank_times = 0;
 	int shop_times;
-	int question_times;
+	int hut_times;
 	int hide = 0;
 	int upper_deck_times = 0;
 	int if_gorilla_run = 0;
@@ -151,6 +152,7 @@ public:
 	bool time_begin = true;
 	bool fighting = false;
 	bool with_light = false;
+	bool answering = false;
 	int cur_time = 0;
 	int start_time = 0;
 	int time_spent = 0;
@@ -160,6 +162,10 @@ public:
 	int num_item1;
 	int num_item2;
 	int num_item3;
+	int last_question_index=100;
+	int hut_score;
+	int wrong_times = 0;
+	int correct_row = 0;
 };
 player island(player, scene);
 player upper_deck(player, scene, bool&);
@@ -193,7 +199,6 @@ bool if_can_pick(player);
 int if_has(player, scene, string);
 int location(player, scene);
 player so_bad_so_sad(player);
-player pick_it_up(player, scene);
 string re_name(player, string);
 string recover_name(string);
 string pig_latin(string);
@@ -240,9 +245,19 @@ player take_action(player player1, scene place)
 	string objects;
 	string drop_coordinate;
 	int index;
+	string coordinate, name, origin_name;
+	map<string, string>::iterator it;
+	coordinate = coordinate_to_string(player1);
+	bool got_back = false;
 	player1.if_over = false;
 	player1.action = "none";
 	player1.object = "none";
+	for(it=player1.drop_stuff.begin();it!=player1.drop_stuff.end();it++)
+		if (coordinate == it->second and got_back==false)
+		{
+			cout << "You see the " << origin_name << " you throwed away is lying on the ground" << endl;
+			got_back = true;//Only for break the loop.
+		}
 	if (player1.with_light == true and player1.timer >= 20)
 	{
 		cout << "---------------------" << endl;
@@ -257,6 +272,12 @@ player take_action(player player1, scene place)
 		cout << "-----------------------------------------------------------------" << endl;
 		cout << "Which are you gonna buy?(enter the number in front of the item)" << endl;
 		cout << "-----------------------------------------------------------------" << endl;
+	}
+	else if (player1.answering == true)
+	{
+		cout << "--------------------------" << endl;
+		cout << "What are you gonna answer?" << endl;
+		cout << "--------------------------" << endl;
 	}
 	else
 	{
@@ -322,9 +343,9 @@ player take_action(player player1, scene place)
 			player1.action = "none";
 		}
 	}
-	else {
-		if (action == "leave")
-			action = "get out";
+	else if(player1.fighting==false and player1.answering==false)
+	{
+		
 		if (actions == "setting")
 		{
 			player1.action = actions;
@@ -437,7 +458,7 @@ player take_action(player player1, scene place)
 							cout << "-----------------------------------------------" << endl;
 							cout << "|The hostile native is here, you can`t go out!|" << endl;
 							cout << "-----------------------------------------------" << endl;
-							player1.y -= 1;
+							player1.y -= 2;
 							player1.action = "none";
 						}
 						else if (player1.location == "up" and player1.x == place.entrance_3_x and player1.y == place.entrance_3_y)
@@ -477,7 +498,7 @@ player take_action(player player1, scene place)
 						if (player1.if_over)
 						{
 							cout << "-------------------------" << endl;
-							cout << "|You go too far go back!|" << endl;
+							cout << "You go too far go back!" << endl;
 							cout << "-------------------------" << endl;
 							player1.y += 1;
 							player1.action = "none";
@@ -487,7 +508,7 @@ player take_action(player player1, scene place)
 							player1.action = "move";
 							player1.object = "east";
 							cout << "---------------------" << endl;
-							cout << "|You are going east.|" << endl;
+							cout << "You are going east." << endl;
 							cout << "---------------------" << endl;
 						}
 						else
@@ -510,7 +531,7 @@ player take_action(player player1, scene place)
 			else
 			{
 				cout << "--------------------------------------------------------" << endl;
-				cout << "|You can`t move until you run away or defeat the ghost!|" << endl;
+				cout << "You can`t move until you run away or defeat the ghost!" << endl;
 				cout << "--------------------------------------------------------" << endl;
 				player1.action = "none";
 			}
@@ -926,7 +947,27 @@ player take_action(player player1, scene place)
 					player1.object = "none";
 				}
 			}
-
+			if (player1.action == "pick")
+			{
+				it = player1.drop_stuff.begin();
+				got_back = false;
+				while (got_back!=true and it != player1.drop_stuff.end())
+				{
+					if (coordinate == it->second)
+					{
+						origin_name = recover_name(it->first);
+						name = it->first;
+						cout << "--------------------------" << endl;
+						cout << "You got the " << origin_name << " back!" << endl;
+						cout << "--------------------------" << endl;
+						player1.inventory[origin_name]++;
+						player1.drop_stuff.erase(name);
+						got_back = true;//Only for break the loop.
+					}
+					else
+						it++;
+				}
+			}
 		}
 		else if (actions == "up" or action == "u")
 		{
@@ -1111,6 +1152,39 @@ player take_action(player player1, scene place)
 			else
 				player1 = so_bad_so_sad(player1);
 		}
+		else if (actions == "unequip")
+		{
+			map<string, string>::iterator it;
+			map<string, equipment>::iterator equip;
+			bool wearing = false;
+			if (objects == "none")
+			{
+				cout << "What are you gonna unequip?" << endl;
+				getline(cin, objects);
+				objects = To_lower(objects);
+			}
+			for (it = player1.equipments.begin(); it != player1.equipments.end(); it++)
+			{
+				if (it->second == objects and (objects != "none" or objects != "punch"))
+				{
+					it->second = "none";
+					for (equip = place.equips.begin(); equip != place.equips.end(); equip++)
+						if (equip->second.name == objects)
+						{
+							player1.attack -= equip->second.attack;
+							player1.defence -= equip->second.defence;
+						}
+					wearing = true;
+					cout << "------------------------------" << endl;
+					cout << "You have uniquiped the " << objects << endl;
+					cout << "current attack is:" << player1.attack << endl;
+					cout << "current defence is:" << player1.defence << endl;
+					cout << "------------------------------" << endl;
+				}
+			}
+			if (!wearing)
+				cout << "You are not wearing " << objects << " currently" << endl;
+		}
 		else if (player1.room == "shop")
 		{
 			if (actions == "1")
@@ -1167,84 +1241,33 @@ player take_action(player player1, scene place)
 					cout << "---------------------------------------" << endl;
 				}
 			}
-			else if (actions == "unequip")
-			{
-				map<string, string>::iterator it;
-				map<string, equipment>::iterator equip;
-				bool wearing = false;
-				if (objects == "none")
-				{
-					cout << "What are you gonna unequip?" << endl;
-					getline(cin, objects);
-					objects = To_lower(objects);
-				}
-				if (objects == "chainmail")
-					objects = "chain mail";
-				for (it = player1.equipments.begin(); it != player1.equipments.end(); it++)
-				{
-					if (it->second == objects and (objects != "none" or objects != "punch"))
-					{
-						it->second = "none";
-						for (equip = place.equips.begin(); equip != place.equips.end(); equip++)
-							if (equip->second.name == objects)
-							{
-								player1.attack -= equip->second.attack;
-								player1.defence -= equip->second.defence;
-							}
-						wearing = true;
-						cout << "------------------------------" << endl;
-						cout << "You have uniquiped the " << objects << endl;
-						cout << "current attack is:" << player1.attack << endl;
-						cout << "current defence is:" << player1.defence << endl;
-						cout << "------------------------------" << endl;
-					}
-				}
-				if (!wearing)
-					cout << "You are not wearing " << objects << " currently" << endl;
-			}
-		}
-		else if (actions == "unequip")
-		{
-			map<string, string>::iterator it;
-			map<string, equipment>::iterator equip;
-			bool wearing = false;
-			if (objects == "none")
-			{
-				cout << "What are you gonna unequip?" << endl;
-				getline(cin, objects);
-				objects = To_lower(objects);
-			}
-			for (it = player1.equipments.begin(); it != player1.equipments.end(); it++)
-			{
-				if (it->second == objects and (objects != "none" or objects != "punch"))
-				{
-					it->second = "none";
-					for (equip = place.equips.begin(); equip != place.equips.end(); equip++)
-						if (equip->second.name == objects)
-						{
-							player1.attack -= equip->second.attack;
-							player1.defence -= equip->second.defence;
-						}
-					wearing = true;
-					cout << "------------------------------" << endl;
-					cout << "You have uniquiped the " << objects << endl;
-					cout << "current attack is:" << player1.attack << endl;
-					cout << "current defence is:" << player1.defence << endl;
-					cout << "------------------------------" << endl;
-				}
-			}
-			if (!wearing)
-				cout << "You are not wearing " << objects << " currently" << endl;
 		}
 		else if (actions == "sell")
 		{
 			cout << "You can only sell in the shop!" << endl;
 		}
+		else if (actions == "yes" and objects == "none" and player1.room=="hut")
+				player1.action = "yes";
 		else
 		{
 			cout << "------------------------" << endl;
 			cout << "|You can`t do that bro!|" << endl;
 			cout << "------------------------" << endl;
+		}
+	}
+	if (player1.answering==true)
+	{
+		if (actions == "leave" and objects == "none")
+			player1.action = "leave";
+		else
+		{
+			if (objects == "none")
+				player1.action = actions;
+			else
+			{
+				actions = actions.append(" ");
+				player1.action = actions + objects;
+			}
 		}
 	}
 	return player1;
@@ -1313,8 +1336,8 @@ scene set_scene(player player1, scene place)//This function can set up the map a
 		place.stuff_can_cut_look_description_1 = "There is one branch of repe bananas on the tree.";
 		place.stuff_can_cut_look_description_2 = "There is nothing on the tree....";
 		place.stuff_can_cut_description_2 = "You are standing in front of a ripe banana tree! But....there is nothing on the tree you can reach....";
-		place.shop_long_description = "You`ve enter the hostile`s shop.They have many different amazing stuff for sell\nThese items in this shop will updated in a period time.";
-		place.shop_short_description = "You`ve enter the hostile`s shop";
+		place.shop_long_description = "You`ve enter the native`s shop.They have many different amazing stuff for sell\nThese items in this shop will updated in a period time.";
+		place.shop_short_description = "You`ve enter the native`s shop";
 		place.stuff_1_get_info = "You got a tempting banana!";
 		place.max_x = 4;
 		place.min_x = 4;
@@ -1326,8 +1349,8 @@ scene set_scene(player player1, scene place)//This function can set up the map a
 		place.entrance_3_y = -4;
 		place.shop_x = 3;
 		place.shop_y = -3;
-		place.question_x = 5;
-		place.question_y = -3;
+		place.hut_x = 5;
+		place.hut_y = -3;
 	}
 	else if (player1.y <= -9 and player1.location == "up")
 	{
@@ -1377,8 +1400,8 @@ scene set_scene(player player1, scene place)//This function can set up the map a
 		place.entrance_2_name = "ladder";
 		place.entrance_3_name = "brig";
 		place.entrance_4_name = "galley";
-		place.entrance_1_description = "You`ve entered the cargo hold. There are barrels, a pile of tools, and a trunk.\n You are standing in front of a trunk.\nstuff can get:stem";
-		place.entrance_1_short_description = "You`ve entered the cargo hold. You are standing in front of a trunk\nstuff can get:stem";
+		place.entrance_1_description = "You`ve entered the cargo hold. There are barrels, a pile of tools, and a trunk.\n You are standing in front of a trunk.";
+		place.entrance_1_short_description = "You`ve entered the cargo hold. You are standing in front of a trunk";
 		place.entrance_2_description = "There is a ladder, do you want to go up or down?";
 		place.entrance_3_description = "You are at brig.In this room there is a prisoner in a locked cell.\nHe says,\"Jack,I`m so glad you`re alive. The captain locked me up for cheating at cards, which is the only reason the islanders didn`t capture me.\nThey killed everyone else.\nNow I guess we`re the only two left, which makes you captain since you were first mate.\nGo find the keys to unlock this door, and we can sail out of here.\"";
 		place.entrance_3_short_description = "You are at brig, that man is watching you.";
@@ -1539,6 +1562,10 @@ int save_game(player player1)//This function can save the progress of the game i
 	{
 		game_file << "location:" << endl;
 		game_file << player1.x << " " << player1.y << "\n";
+		game_file << "queston_index:" << endl;
+		game_file << player1.last_question_index << endl;
+		game_file << "hut_score:" << endl;
+		game_file << player1.hut_score << endl;
 		game_file << "health:" << endl;
 		game_file << player1.health << endl;
 		game_file << "attack:" << endl;
@@ -1631,8 +1658,8 @@ int save_game(player player1)//This function can save the progress of the game i
 		game_file << player1.gangplank_times << endl;
 		game_file << "player_shop_times:" << endl;
 		game_file << player1.shop_times << endl;
-		game_file << "player_question_times:" << endl;
-		game_file << player1.question_times << endl;
+		game_file << "player_hut_times:" << endl;
+		game_file << player1.hut_times << endl;
 		game_file << "item1" << endl;
 		game_file << player1.num_item1 << endl;
 		game_file << "item2" << endl;
@@ -1650,6 +1677,7 @@ int save_game(player player1)//This function can save the progress of the game i
 			game_file << drop_stuff->first << endl;
 			game_file << drop_stuff->second << endl;
 		}
+		game_file << "ending";
 		game_file.close();
 	}
 	return success;
@@ -1660,15 +1688,16 @@ player load_game(player player1)//This function can load the game from a file.
 	map<string, string>::iterator equip;
 	map<string, string>::iterator it;
 	string loaction, inventory, banana_amount, knife_amount, player_location,
-		player_x_last_time, setting, hide, drop_stuff;
+		player_x_last_time, setting, hide, drop_stuff,coordinate;
 	string plaer_y_last_time, player_island_times, player_upper_deck_times,
 		player_capitains_quarters_times, player_lower_deck_times;
 	string player_cargo_hold_times, player_brig_times, player_galley_times, treasure_amount;
 	string gorilla, parrot, hostile, key, prison, get, up_or_down, health, attack, money, time, day;
-	string time_spent, fighting, weapon, gold, gangplank, light, shop, question, item1, item2, item3;
-	string  defence, temp = " ", inventory_name;
+	string time_spent, fighting, weapon, gold, gangplank, light, shop, hut, item1, item2, item3;
+	string  defence, temp = " ", inventory_name,hut_score,question;
 	int index, inventory_quantity;
 	size_t pos;
+	player1.drop_stuff.erase(player1.drop_stuff.begin(), player1.drop_stuff.end());
 	game_file.open("Advanture Island.txt");
 	if (!game_file.is_open())
 	{
@@ -1680,6 +1709,10 @@ player load_game(player player1)//This function can load the game from a file.
 	{
 		game_file >> loaction;
 		game_file >> player1.x >> player1.y;
+		game_file >> question;
+		game_file >> player1.last_question_index;
+		game_file >> hut_score;
+		game_file >> player1.hut_score;
 		game_file >> health;
 		game_file >> player1.health;
 		game_file >> attack;
@@ -1775,8 +1808,8 @@ player load_game(player player1)//This function can load the game from a file.
 		game_file >> player1.gangplank_times;
 		game_file >> shop;
 		game_file >> player1.shop_times;
-		game_file >> question;
-		game_file >> player1.question_times;
+		game_file >> hut;
+		game_file >> player1.hut_times;
 		game_file >> item1;
 		game_file >> player1.num_item1;
 		game_file >> item2;
@@ -1796,12 +1829,17 @@ player load_game(player player1)//This function can load the game from a file.
 		while (!game_file.eof())
 		{
 			getline(game_file, drop_stuff);
-			getline(game_file, player1.drop_stuff[drop_stuff]);
+			if (drop_stuff != "ending")
+			{
+				getline(game_file, coordinate);
+				player1.drop_stuff[drop_stuff] = coordinate;
+			}
 		}
 		cout << "------------------------" << endl;
 		cout << "|Load game successfully|" << endl;
 		cout << "------------------------" << endl;
 	}
+	
 	player1.load = 1;
 	game_file.close();
 	return player1;
@@ -1825,21 +1863,21 @@ int location(player player1, scene place)//This function can determind if the pl
 										  // to a room in the game.
 {
 	int close = 0;
-	if (player1.location == "island" and player1.load == 0)
+	if (player1.location == "island")
 	{
 		if (player1.x == place.stuff_can_cut_x and player1.y == place.stuff_can_cut_y)
 			cout << "You currently at ripe banana tree." << endl;
 		else if (player1.x == place.entrance_3_x and player1.y == place.entrance_3_y)
 			cout << "You currently at gangplank." << endl;
 		else if (player1.x == place.shop_x and player1.y == place.shop_y)
-			cout << "You currently at hostile`s shop." << endl;
-		else if (player1.x == place.question_x and player1.y == place.question_y)
-			cout << "You currently at questions room." << endl;
+			cout << "You currently at native`s shop." << endl;
+		else if (player1.x == place.hut_x and player1.y == place.hut_y)
+			cout << "You currently at mysterious hut." << endl;
 		else
 			cout << "You currently at island." << endl;
 
 	}
-	else if (player1.location == "up" and player1.load == 0)
+	else if (player1.location == "up")
 	{
 		if (player1.x <= place.entrance_1_x and player1.y == place.entrance_1_y)
 		{
@@ -1859,7 +1897,7 @@ int location(player player1, scene place)//This function can determind if the pl
 
 
 	}
-	else if (player1.location == "down" and player1.load == 0)
+	else if (player1.location == "down")
 	{
 		if (player1.x == place.entrance_1_x and player1.y == place.entrance_1_y)
 			cout << "You currently in front of the trunk in cargo hold." << endl;
@@ -1879,7 +1917,6 @@ int location(player player1, scene place)//This function can determind if the pl
 }
 player island(player player1, scene place)//This function can set up the map "island" in the game.
 {
-	player1 = pick_it_up(player1, place);
 	if (player1.x == place.stuff_can_cut_x and player1.y == place.stuff_can_cut_y)
 	{
 		player1.room = "banana tree";
@@ -2031,6 +2068,146 @@ player island(player player1, scene place)//This function can set up the map "is
 			}
 		}
 	}
+	else if (player1.x == place.hut_x and player1.y == place.hut_y and player1.hostile == 1)
+	{
+		player1.room = "hut";
+		player1 = add_times(player1);
+		int question_index,index=0;
+		string bootlick="";
+		map<string, string>::iterator question = place.questions.begin();
+		if (player1.in_n_out == 0 and player1.hut_times == 1)
+		{
+			cout << "The owner of this hut is the most intelligent person in these native people.\n" <<
+				"He has been looking for a warrior who is as wise as him.\n" <<
+				"If you can answer his questions correctly and get his appreciation, he will give you a generous reward.\n"<<
+				"Do you want to accept his challenge?"<<endl;
+			player1.in_n_out = 1;
+		}
+		else if (player1.in_n_out == 0 and player1.hut_times > 1)
+		{
+			cout << "You have entered the mysterious hut." << endl;
+			if (player1.hut_score == 0)
+				cout << "Wanna accept the challenge?" << endl;
+			else
+				cout << "I remember you got " << player1.hut_score << " questions last time, that was awesome!" <<
+				"Wanna try again?" << endl;
+			player1.in_n_out = 1;
+		}
+		if(player1.answering==false)
+			player1 = take_action(player1,place);
+		if (player1.action == "yes" and player1.answering==false)
+			player1.answering = true;
+		if (player1.answering == true)
+		{
+			srand((unsigned)time(NULL));
+			question_index = rand() % 99;
+			while (question_index == player1.last_question_index)
+			{
+				srand((unsigned)time(NULL));
+				question_index = rand() % 99;
+			}
+			player1.last_question_index = question_index;
+			while (question != place.questions.end() and index != question_index)
+			{
+
+				index++;
+				question++;
+
+			}
+
+			cout << question->first <<"(Enter \"leave\" to leave)"<< endl;
+			player1 = take_action(player1, place);
+			if (player1.action == "leave")
+			{
+				cout << "Challenge over. You score this time is: " << player1.hut_score << endl;
+				player1.hut_score = 0;
+				player1.correct_row = 0;
+				player1.wrong_times = 0;
+				player1.answering = false;
+			}
+			else
+			{
+				if (player1.action == question->second)
+				{
+					player1.hut_score++;
+					player1.correct_row++;
+					if (player1.correct_row == 3)
+						bootlick = "You are excellent!";
+					else if (player1.correct_row == 6)
+						bootlick = "You are domanating!";
+					else if (player1.correct_row == 9)
+						bootlick = "You are unstoppable!";
+					else if (player1.correct_row == 12)
+						bootlick = "You are wicked sick!";
+					else if (player1.correct_row == 20)
+						bootlick = "You are legendary!";
+					else if (player1.correct_row >= 35)
+						bootlick = "I believe you are the most smartest man that I have seen!";
+					cout << "Correct!!! " << bootlick << endl;
+					if (player1.hut_score == 10)
+					{
+						cout << "Good job! The owner of the hut decide to give you ten stems!" << endl;
+						player1.inventory["stem"] += 10;
+					}
+					else if (player1.hut_score == 15)
+					{
+						cout << "Good job! The owner of the hut decide to give you ten stems!" << endl;
+						player1.inventory["health posion"] += 10;
+					}
+					else if (player1.hut_score == 20)
+					{
+						cout << "Good job! The owner of the hut decide to give you a pendent!" << endl;
+						player1.inventory["pendent"]++;
+					}
+					else if (player1.hut_score == 25)
+					{
+						cout << "Good job! The owner of the hut decide to give you a chainmail helmet!" << endl;
+						player1.inventory["chainmail helmet"]++;
+					}
+					else if (player1.hut_score == 30)
+					{
+						cout << "Good job! The owner of the hut decide to give you a sword!" << endl;
+						player1.inventory["sword"]++;
+					}
+					else if (player1.hut_score == 35)
+					{
+						cout << "Good job! The owner of the hut decide to give you a pair of leggings!" << endl;
+						player1.inventory["leggings"]++;
+					}
+					else if (player1.hut_score == 40)
+					{
+						cout << "Good job! The owner of the hut decide to give you a pair of chainmail boots!" << endl;
+						player1.inventory["chainmail boots"]++;
+					}
+					else if (player1.hut_score == 50)
+					{
+						cout << "Good job! The owner of the hut decide to give you a chain mail!" << endl;
+						player1.inventory["chain mail"]++;
+					}
+					else if (player1.hut_score == 65)
+					{
+						cout << "Good job! The owner of the hut decide to give you a cross!" << endl;
+						player1.inventory["cross"]++;
+					}
+				}
+				else
+				{
+					cout << "wrong answer" << endl;
+					cout << "The correct answer is: " << question->second << endl;
+					player1.wrong_times++;
+					if (player1.wrong_times == 3)
+					{
+						cout << "Challenge over. You score this time is: " << player1.hut_score << endl;
+						player1.hut_score = 0;
+						player1.correct_row = 0;
+						player1.wrong_times = 0;
+						player1.answering = false;
+						player1.in_n_out = 0;
+					}
+				}
+			}
+		}
+	}
 	else
 	{
 		player1.room = "island";
@@ -2045,7 +2222,7 @@ player island(player player1, scene place)//This function can set up the map "is
 			player1.in_n_out = 1;
 			cout << place.short_description << endl;
 			if (player1.hostile == 1)
-				cout << "The hostile natives establish a shop and a mysterious hut\n" <<
+				cout << "The natives establish a shop and a mysterious hut\n" <<
 				"The shop is on the south of island and the hut is on the north of island." << endl;
 		}
 		player1 = take_action(player1, place);
@@ -2055,7 +2232,6 @@ player island(player player1, scene place)//This function can set up the map "is
 player upper_deck(player player1, scene place, bool& success)//This function can set up the map "upper deck" in the game.
 {
 	vector<string> give;
-	player1 = pick_it_up(player1, place);
 	if (!player1.with_light)
 		player1 = fight(player1, place);
 	if (player1.x <= place.entrance_1_x and player1.y == place.entrance_1_y)
@@ -2316,7 +2492,6 @@ player upper_deck(player player1, scene place, bool& success)//This function can
 }
 player lower_deck(player player1, scene place)//This function can set up the map "lower deck" in the game.
 {
-	player1 = pick_it_up(player1, place);
 	if (!player1.with_light)
 		player1 = fight(player1, place);
 	if (player1.x == place.entrance_1_x and player1.y == place.entrance_1_y)
@@ -2326,51 +2501,110 @@ player lower_deck(player player1, scene place)//This function can set up the map
 		int get_stem;
 		if (player1.in_n_out == 0 and player1.cargo_hold_times == 1)
 		{
-			cout << place.entrance_1_description << endl;
+			cout << place.entrance_1_description <<"\nstuff can get:stem"<<endl;
 			player1.in_n_out = 1;
 		}
 		else if (player1.in_n_out == 0 and player1.cargo_hold_times != 1)
 		{
 			if (player1.get == 1)
-				cout << place.entrance_1_short_description << "and a treasure is hiding behind the trunck." << endl;
+				cout << place.entrance_1_short_description << "\nstuff can get:stem and treasure" << endl;
 			else
-				cout << place.entrance_1_short_description << endl;
+				cout << place.entrance_1_short_description << "\nstuff can get:stem" << endl;;
 			player1.in_n_out = 1;
 		}
 		player1 = take_action(player1, place);
 		if (player1.action == "get")
 		{
-			if (player1.treasure_amount != 0 and player1.get == 1)
+			if (player1.object == "treasure")
 			{
-				cout << "-----------------------" << endl;
-				cout << "|You got the treasure!|" << endl;
-				cout << "-----------------------" << endl;
-				player1.get = 0;
-				player1.inventory["treasure"]++;
-				player1.treasure_amount--;
-				place.stuff_can_get.erase("treaure");
+				if (player1.treasure_amount != 0)
+				{
+					if (player1.get == 1)
+					{
+						cout << "-----------------------" << endl;
+						cout << "You got the treasure!" << endl;
+						cout << "-----------------------" << endl;
+						player1.get = 0;
+						player1.inventory["treasure"]++;
+						player1.treasure_amount--;
+						place.stuff_can_get.erase("treaure");
+					}
+					else if (player1.get == 0)
+					{
+						cout << "--------------------------------------------------" << endl;
+						cout << "You don`t see any treasure here, at least...so far" << endl;
+						cout << "--------------------------------------------------" << endl;
+					}
+				}
+				else if(player1.treasure_amount==0)
+				{
+					cout << "------------------------------" << endl;
+					cout << "You already got the treasure!" << endl;
+					cout << "------------------------------" << endl;
+				}
 			}
-			else if (player1.get == 0 and player1.treasure_amount != 0)
+			else if (player1.object=="stem")
 			{
-				cout << "----------------------------" << endl;
-				cout << "|You got nothing from here.|" << endl;
-				cout << "----------------------------" << endl;
-			}
-			else
-			{
-				cout << "------------------------------" << endl;
-				cout << "|You aready got the treasure!|" << endl;
-				cout << "------------------------------" << endl;
+				if (player1.equipments["trinket"] == "pandent")
+				{
+					int got_two;
+					srand((unsigned)time(NULL));
+					got_two = rand() % 5;
+					if (got_two == 0)
+					{
+						cout << "-----------------" << endl;
+						cout << "You got two stems!" << endl;
+						cout << "-----------------" << endl;
+						player1.inventory["stem"] += 2;
+					}
+					else
+					{
+						cout << "-----------------" << endl;
+						cout << "You got a stem!" << endl;
+						cout << "-----------------" << endl;
+						player1.inventory["stem"]++;
+					}
+				}
+				else
+				{
+					cout << "-----------------" << endl;
+					cout << "You got a stem!" << endl;
+					cout << "-----------------" << endl;
+					player1.inventory["stem"]++;
+				}
 			}
 		}
 		else if (player1.action == "cut")
 		{
 			if (player1.object == "trunk")
 			{
-				cout << "-----------------" << endl;
-				cout << "|You got a stem!|" << endl;
-				cout << "-----------------" << endl;
-				player1.inventory["stem"]++;
+				if (player1.equipments["trinket"] == "pandent")
+				{
+					int got_two;
+					srand((unsigned)time(NULL));
+					got_two = rand() % 5;
+					if (got_two == 0)
+					{
+						cout << "-----------------" << endl;
+						cout << "You got two stems!" << endl;
+						cout << "-----------------" << endl;
+						player1.inventory["stem"] += 2;
+					}
+					else
+					{
+						cout << "-----------------" << endl;
+						cout << "You got a stem!" << endl;
+						cout << "-----------------" << endl;
+						player1.inventory["stem"]++;
+					}
+				}
+				else 
+				{
+					cout << "-----------------" << endl;
+					cout << "You got a stem!" << endl;
+					cout << "-----------------" << endl;
+					player1.inventory["stem"]++;
+				}
 			}
 		}
 
@@ -2435,14 +2669,14 @@ player lower_deck(player player1, scene place)//This function can set up the map
 			while (player1.action == "can`t go")
 			{
 				cout << "-----------------------------------" << endl;
-				cout << "|You have to leave the brig first.|" << endl;
+				cout << "You have to leave the brig first." << endl;
 				cout << "-----------------------------------" << endl;
 				player1 = take_action(player1, place);
 			}
 			if (player1.action == "unlock" and player1.prison == 0)
 			{
 				cout << "--------------------------------------------" << endl;
-				cout << "|You finally free that poor guy. Hell yeah!|" << endl;
+				cout << "You finally free that poor guy. Hell yeah!" << endl;
 				cout << "--------------------------------------------" << endl;
 				player1.inventory["key"]--;
 				player1.prison = 1;
@@ -2540,13 +2774,13 @@ player so_bad_so_sad(player player1)
 	if (player1.object != "none")
 	{
 		cout << "---------------------------------------------------------------------------------------" << endl;
-		cout << "|So bad so sad, you can`t " << player1.action << " " << player1.object << " right now!|" << endl;
+		cout << "So bad so sad, you can`t " << player1.action << " " << player1.object << " right now!" << endl;
 		cout << "---------------------------------------------------------------------------------------" << endl;
 	}
 	else
 	{
 		cout << "--------------------------------------------------------------" << endl;
-		cout << "|So bad so sad, you can`t " << player1.action << " right now!|" << endl;
+		cout << "So bad so sad, you can`t " << player1.action << " right now!" << endl;
 		cout << "--------------------------------------------------------------" << endl;
 	}
 	player1.action = "none";
@@ -2569,7 +2803,7 @@ bool if_can_get(player player1, scene place)
 	if (!get)
 	{
 		cout << "----------------------------------------------------------" << endl;
-		cout << "|Sorry, you can`t get " << player1.object << " right here|" << endl;
+		cout << "Sorry, you can`t get " << player1.object << " right here" << endl;
 		cout << "----------------------------------------------------------" << endl;
 	}
 	return get;
@@ -2592,7 +2826,7 @@ bool if_can_cut(player player1, scene place)
 	if (!cut)
 	{
 		cout << "--------------------------------------" << endl;
-		cout << "|" << player1.object << " is not here!|" << endl;
+		cout << "" << player1.object << " is not here!" << endl;
 		cout << "--------------------------------------" << endl;
 	}
 	return cut;
@@ -2615,13 +2849,13 @@ bool if_can_give(player player1, scene place)
 			else if (player1.inventory[player1.object] != 0 and it->second != coordinate)
 			{
 				cout << "-------------------------------" << endl;
-				cout << "|You can`t do that right here!|" << endl;
+				cout << "You can`t do that right here!" << endl;
 				cout << "-------------------------------" << endl;
 			}
 			else
 			{
 				cout << "---------------------------------" << endl;
-				cout << "|You don`t have " << player1.object << " to give!|" << endl;
+				cout << "You don`t have " << player1.object << " to give!" << endl;
 				cout << "---------------------------------" << endl;
 			}
 		}
@@ -2629,7 +2863,7 @@ bool if_can_give(player player1, scene place)
 	if (!equal)
 	{
 		cout << "--------------------------------------" << endl;
-		cout << "|You don`t have " << player1.object << " to give!|" << endl;
+		cout << "You don`t have " << player1.object << " to give!" << endl;
 		cout << "--------------------------------------" << endl;
 	}
 	return give;
@@ -2676,7 +2910,7 @@ bool if_can_pick(player player1)
 	if (!pick)
 	{
 		cout << "---------------------------" << endl;
-		cout << "|" << player1.object << " is not here!|" << endl;
+		cout << "" << player1.object << " is not here!" << endl;
 		cout << "---------------------------" << endl;
 	}
 
@@ -2711,40 +2945,6 @@ string coordinate_to_string(player player1)
 	coordinate.append(up_or_down);
 	return coordinate;
 }
-player pick_it_up(player player1, scene place)
-//This function can let player pick up the stuff he dropped.
-{
-	string coordinate, name, origin_name;
-	map<string, string>::iterator it;
-	coordinate = coordinate_to_string(player1);
-	bool got_back = false;
-	it = player1.drop_stuff.begin();
-	while (!got_back and it != player1.drop_stuff.end())
-	{
-		if (coordinate == it->second)
-		{
-			origin_name = recover_name(it->first);
-			name = it->first;
-			if (player1.action == "pick")
-			{
-				cout << "--------------------------" << endl;
-				cout << "|You got the " << origin_name << " back!|" << endl;
-				cout << "--------------------------" << endl;
-				player1.inventory[origin_name]++;
-				player1.drop_stuff.erase(name);
-				got_back = true;
-			}
-			if (!got_back)
-			{
-				cout << "You see the " << origin_name << " you throwed away is lying on the ground" << endl;
-				got_back = true;
-			}
-		}
-		else
-			it++;
-	}
-	return player1;
-}
 string re_name(player player1, string stuff)
 //This function can rename the stuff that the player dropped
 // in ordered by when the player dropped it.Such as banana 1, banana 2
@@ -2753,9 +2953,11 @@ string re_name(player player1, string stuff)
 	map<string, string>::iterator it;
 	for (it = player1.drop_stuff.begin(); it != player1.drop_stuff.end(); it++)
 	{
+
 		max = get_number(it->first);
 		if (max > number)
 			number = max;
+
 	}
 	pos = stuff.find(" ");
 	stuff = stuff.substr(0, pos);
@@ -2776,12 +2978,14 @@ string recover_name(string name)
 player drop_it(player player1)
 //This function can let player drop stuff in the game.
 {
-	map<string, string>::iterator it;
+	map<string, string>::iterator it = player1.drop_stuff.begin();
 	string name, drop_coordinate;
 	bool duplicate = false;
-	player1.inventory.erase(player1.object);
+	player1.inventory[player1.object]--;
+	if(player1.inventory[player1.object]<=0)
+		player1.inventory.erase(player1.object);
 	drop_coordinate = coordinate_to_string(player1);
-	for (it = player1.drop_stuff.begin(); it != player1.drop_stuff.end(); it++)
+	while ( it != player1.drop_stuff.end() and duplicate!=true)
 	{
 		name = it->first;
 		name = recover_name(name);
@@ -2789,17 +2993,19 @@ player drop_it(player player1)
 		{
 			name = it->first;
 			cout << "-----------------------------------------------------" << endl;
-			cout << "|You drop a " << player1.object << "\nPlease protect the environment!|" << endl;
+			cout << "You drop a " << player1.object << "\nPlease protect the environment!" << endl;
 			cout << "-----------------------------------------------------" << endl;
 			name = re_name(player1, name);
 			player1.drop_stuff[name] = drop_coordinate;
 			duplicate = true;
 		}
+		else
+			it++;
 	}
 	if (duplicate == false)
 	{
 		cout << "-----------------------------------------------------" << endl;
-		cout << "|You drop a " << player1.object << "\nPlease protect the environment!|" << endl;
+		cout << "You drop a " << player1.object << "\nPlease protect the environment!" << endl;
 		cout << "-----------------------------------------------------" << endl;
 		player1.object.append(" ");
 		player1.object.append("1");
@@ -2989,11 +3195,11 @@ player add_times(player player1)
 		player1.in_n_out = 0;
 		player1.last_room = "shop";
 	}
-	else if (player1.room == "question" and player1.question_times == 0)
+	else if (player1.room == "hut" and player1.hut_times == 0)
 	{
-		player1.question_times++;
+		player1.hut_times++;
 		player1.in_n_out = 0;
-		player1.last_room = "question";
+		player1.last_room = "hut";
 	}
 	else
 	{
@@ -3053,9 +3259,9 @@ player add_times(player player1)
 				player1.in_n_out = 0;
 				player1.last_room = player1.room;
 			}
-			else if (player1.room == "question")
+			else if (player1.room == "hut")
 			{
-				player1.question_times++;
+				player1.hut_times++;
 				player1.in_n_out = 0;
 				player1.last_room = player1.room;
 			}
@@ -3580,6 +3786,7 @@ scene init_scene(scene place)
 	pendant.attack = 0;
 	pendant.defence = 0;
 	place.stuff_can_get["treasure"] = "2 -9 0";
+	place.stuff_can_get["stem"] = "2 -9 0";
 	place.stuff_can_give["banana"] = "4 -10 1";
 	place.stuff_can_give["treasure"] = "3 -9 1";
 	place.stuff_can_get["knife"] = "1 -10 1";
@@ -3607,6 +3814,106 @@ scene init_scene(scene place)
 	place.equips["key"] = key;
 	place.equips["cross"] = cross;
 	place.equips["pendant"] = pendant;
+	place.questions["Who invented the telephone?"] = "bell";
+	place.questions["Which nail grows fastest?"] = "middle nail";
+	place.questions["What number of temperature does water boil at?"] = "100";
+	place.questions["Who discovered penicillin?"] = "fleming";
+	place.questions["What Spanish artist said he would eat his wife when she died?"] = "dali";
+	place.questions["Who wrote Julius Caesar, Macbeth and Hamlet?"] = "shakespeare";
+	place.questions["Who wrote Lazarillo de Tormes?"] = "anonymous";
+	place.questions[" What did the crocodile swallow in Peter Pan? "] = "alarm clock";
+	place.questions["Where was Lope de Vega born?"] = "madrid";
+	place.questions["Who did Lady Diana Spencer marry?"] = "prince charles";
+	place.questions["Where is Mulhacen?"] = "granada spain";
+	place.questions["How many states are there in the United States of America?"] = "50";
+	place.questions["Which river passes through Madrid?"] = "manzanares";
+	place.questions[" Which German city is famous for the perfume it produces?"] = "cologne";
+	place.questions["Who did Prince Rainier of Monaco marry? "] = "grace kelly";
+	place.questions["What year did the Spanish Civil War end?"] = "1939";
+	place.questions["When did the First World War start?"] = "1914";
+	place.questions["What did Joseph Priesley discover in 1774?"] = "oxygen";
+	place.questions["Where is the smallest bone in the body?"] = "ear";
+	place.questions[" Which is the only mammal that can’t jump?"] = "elephant";
+	place.questions["What does the roman numeral C represent?"] = "100";
+	place.questions["What colour is a panda? "] = "black and white";
+	place.questions["What nationality was Chopin?"] = "polish";
+	place.questions["What’s the best known artificial international language?"] = "esperanto";
+	place.questions["Who lived at 221B, Baker Street, London?"] = "sherlock holmes";
+	place.questions["Who cut Van Gogh’s ear? "] = "himself";
+	place.questions["Where did Salvador Dali live? "] = "figueras";
+	place.questions["Who painted the Mona Lisa?"] = "da vinci";
+	place.questions["How many dots are there on two dice?"] = "42";
+	place.questions["What horoscope sign has a crab?"] = "cancer";
+	place.questions["In which shop can you buy books in England?"] = "bookshop";
+	place.questions["Where does the British Prime Minister live? "] = "10, downing street";
+	place.questions["How long is the compulsory military service in England?"] = "it doesn’t exist";
+	place.questions["When did the Second World War end?"] = "1945";
+	place.questions["What are the first three words of the bible?"] = "in the beginning";
+	place.questions["How many children has Queen Elizabeth the Second got?"] = "4";
+	place.questions["What’s the real name of Siddartha Gautama?"] = "buddha";
+	place.questions["What’s the name of the famous big clock in London?"] = "big ben";
+	place.questions["Where was Christopher Columbus born?"] = "ggenoa";
+	place.questions["When did the American Civil War end? "] = "1865";
+	place.questions["What did the 7 dwarves do for a job? "] = "miners";
+	place.questions["Who painted the Sistine Chapel?"] = "michelangelo";
+	place.questions["Who wrote La Colmena?"] = "cela";
+	place.questions["Name a famous detective who smoked a pipe and played the violin."] = "s. holmes";
+	place.questions["Who said E=mc2 "] = "einstein";
+	place.questions["Which planet is nearest the sun? "] = "mercury";
+	place.questions["Where are the Dolomites?"] = "italy";
+	place.questions["What’s the capital of Kenya?"] = "nairobi";
+	place.questions["Which is the largest ocean?"] = "pacific";
+	place.questions["What’s the capital of Honduras?"] = "tegucigarpa";
+	place.questions["What’s the capital of Ethiopia?"] = "addis ababa";
+	place.questions["How many squares are there on a chess board?"] = "64";
+	place.questions["How many prongs are there on a fork? "] = "4";
+	place.questions["Which color starts first in chess? "] = "white";
+	place.questions["How many events are there in the decathlon?"] = "10";
+	place.questions[" What do you use to take a cork out of a bottle?"] = "corkscrew";
+	place.questions["What language has the most words?"] = "english";
+	place.questions["What’s the name of the main airport in Madrid?"] = "barajas";
+	place.questions["What money do they use in Japan?"] = "yen";
+	place.questions[" What year did Paquirri die?"] = "1984 or 1985";
+	place.questions["Who said, “I think, therefore I am”?"] = "descartes";
+	place.questions["Who wrote the Ugly Duckling?"] = "hans christian andersen";
+	place.questions["Where was El Greco born?"] = "greece";
+	place.questions["What’s the Hungarian word for pepper?"] = "paprika";
+	place.questions["Which painter did the group Mecano write a song about?"] = "dali";
+	place.questions["Who sang, “I’m dreaming of a white Christmas”?"] = "bing crosby";
+	place.questions["Name of the two main actors in “The Sting”."] = "paul newman and robert redford";
+	place.questions["What year did Elvis Presley die?"] = "1977";
+	place.questions[" What film star who was in 9« weeks is now a boxer?"] = "mickey rourke";
+	place.questions["Where was Marco Polo’s home town?"] = "venice";
+	place.questions["Which Italian leader was terribly afraid of the evil eye?"] = "mussolini";
+	place.questions["What country gave Florida to the USA in 1891?"] = "spain";
+	place.questions["Who gave his name to the month of July?"] = "julius caesar";
+	place.questions["Who wrote the Satanic Verses?"] = "salman rushdie";
+	place.questions["What was the first theatre play in Spain?"] = "la celestina";
+	place.questions["What’s the most important book in the Moslem religion?"] = "koran";
+	place.questions["When was Elvis’ first ever concert?"] = "1954";
+	place.questions["Who sang “My Way”?"] = "frank sinatra";
+	place.questions["Who as the main actor in “Cocktail”?"] = "tom cruise";
+	place.questions["Who was the main actor in Superman 2?"] = "christopher reeve";
+	place.questions["Who did Madonna marry?"] = "sean penn";
+	place.questions["What did the Montgolfier brothers invent?"] = "the balloon";
+	place.questions["Who is the president of Iraq?"] = "sadam hussein";
+	place.questions["What type of elephant has got the biggest ears?"] = "african";
+	place.questions["Who invented the electric light bulb?"] = "thomas edison";
+	place.questions["What’s the smallest type of tree in the world?"] = "bonsai";
+	place.questions["Who invented television?"] = "john logie baird";
+	place.questions["What activity other than jumping are kangaroos good at?"] = "boxing";
+	place.questions["What’s the capital of Ecuador? "] = "quito";
+	place.questions["What colours make purple?"] = "red and blue";
+	place.questions["What’s the hardest rock?"] = "diamond";
+	place.questions["How much does a litre of water weigh?"] = "1kg";
+	place.questions["When was President Kennedy killed?"] = "1963";
+	place.questions["What stopped in London at 3.45 on August 5th, 1975? "] = "big ben";
+	place.questions["What nationality was Marco Polo?"] = "italian";
+	place.questions["Who won a gold medal for Spain in cycling in the 1992 Olympics?"] = "jose manuel moreno";
+	place.questions["Who is the tallest basketball player in the world?"] = "manute boll";
+	place.questions["Where does the American president live?"] = "the white house";
+	place.questions["What is the first letter on a typewriter?"] = "q";
+	place.questions["Which river goes through London?"] = "thames";
 	return place;
 }
 bool has_mark(string sentence)
@@ -3706,7 +4013,12 @@ void boundary(player player1, scene place)
 //This function can prompt player when he get to the boundary of the map.
 {
 	if (player1.x == place.min_x and player1.x == place.max_x)
-		cout << "You are right at the boundary, you can`t go south or north" << endl;
+	{
+		if (player1.location == "island" and player1.hostile == 1)
+			;
+		else
+			cout << "You are right at the boundary, you can`t go south or north" << endl;
+	}
 	else if (player1.y == place.min_y and player1.y == place.max_x)
 		cout << "You are right at the boundray, you can`t go west or east" << endl;
 	else if (player1.x == place.min_x and player1.y == place.max_y)
@@ -3840,7 +4152,7 @@ void extra_info(player player1, scene place)
 player fight(player player1, scene place)
 {
 	monster ghost;
-	int pos, hour, min, cur_time, run;
+	int pos, hour, min, cur_time, run,dodge;
 	pos = player1.time.find(":");
 	hour = stoi(player1.time.substr(0, pos++));
 	min = stoi(player1.time.substr(pos, player1.time.length() - pos));
@@ -3854,13 +4166,28 @@ player fight(player player1, scene place)
 		{
 			cout << "You have encouter a ghost!" << endl;
 			player1.fighting = true;
+			if (player1.equipments["trinket"] == "cross")
+				player1.attack *= 2;
 			while (ghost.health != 0 and player1.fighting == true)
 			{
 				player1 = take_action(player1, place);
 				if (player1.action == "attack")
 				{
 					ghost.health -= player1.attack;
-					player1.health = player1.health - (ghost.attack - player1.defence * 0.5);
+					if (player1.equipments["trinket"] == "pendant")
+					{
+						srand((unsigned)time(NULL));
+						dodge = rand() % 10;
+						if (dodge == 0)
+						{
+							cout << "Dodge! You dodge an attack from ghost." << endl;
+							player1.health -= 0;
+						}
+						else
+							player1.health = player1.health - (ghost.attack - player1.defence * 0.5);
+					}
+					else
+						player1.health = player1.health - (ghost.attack - player1.defence * 0.5);
 					if (player1.weapon == "knife")
 					{
 						cout << "ultimate skill:shadow of knife!!! ";
@@ -3886,6 +4213,11 @@ player fight(player player1, scene place)
 						cout << "ultimate skill:punch storm!!! ";
 						cout << "Enimy health minus " << player1.attack << endl;
 					}
+					else if (player1.weapon == "sword")
+					{
+						cout << "ultimate skill:blade storm!!! ";
+						cout << "Enimy health minus " << player1.attack << endl;
+					}
 					cout << "Your health remind: " << player1.health << endl;
 					cout << "Ghost health remind: " << ghost.health << endl;
 					if (ghost.health <= 0)
@@ -3907,7 +4239,20 @@ player fight(player player1, scene place)
 					}
 					else
 					{
-						player1.health = player1.health - (ghost.attack - player1.defence * 0.5);
+						if (player1.equipments["trinket"] == "pendant")
+						{
+							srand((unsigned)time(NULL));
+							dodge = rand() % 10;
+							if (dodge == 0)
+							{
+								cout << "Dodge! You dodge an attack from ghost." << endl;
+								player1.health -= 0;
+							}
+							else
+								player1.health = player1.health - (ghost.attack - player1.defence * 0.5);
+						}
+						else
+							player1.health = player1.health - (ghost.attack - player1.defence * 0.5);
 						cout << "fail to run away....health remind: " << player1.health << ". keep fighting!" << endl;
 					}
 				}
@@ -3966,7 +4311,7 @@ void item_description(string item)
 	else if (item == "chainmail boots")
 		cout << "chainmail boots:Add 1 defence if equiped" << endl;
 	else if (item == "pendant")
-		cout << "pendant:There will be chance to get two stems when you wear pendant" << endl;
+		cout << "pendant:There will be chance to get two stems and dodge an attack in battle when you wear pendant" << endl;
 	else if (item == "cross")
 		cout << "cross:Attack will be double when attack a ghost." << endl;
 }
