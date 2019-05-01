@@ -141,12 +141,21 @@ public:
 	int brig_times = 0;
 	int galley_times = 0;
 	int gangplank_times = 0;
+<<<<<<< HEAD
 	int shop_times = 0;
 	int hut_times = 0;
 	int ladder_times = 0;
 	int hide = 0;
 	int upper_deck_times = 0;
 	int ship_times = 0;
+=======
+	int shop_times=0;
+	int hut_times=0;
+	int ladder_times = 0;
+	int hide = 0;
+	int upper_deck_times = 0;
+	int ship_times=0;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	int get = 0;
 	int up_or_down = 1;
 	bool gorilla_run = false;
@@ -167,6 +176,7 @@ public:
 	int day = 0;
 	double gold = 0;
 	int timer = 0;
+<<<<<<< HEAD
 	int num_item1 = 0;
 	int num_item2 = 0;
 	int num_item3 = 0;
@@ -177,6 +187,18 @@ public:
 	int correct_row = 0;
 	int money_made = 0;
 	int money_spend;
+=======
+	int num_item1=0;
+	int num_item2=0;
+	int num_item3=0;
+	int last_question_index = 100;
+	int hut_score=0;
+	int last_hut_score=0;
+	int wrong_times = 0;
+	int correct_row = 0;
+	int money_made = 0;
+	int money_spend=0;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	int kill = 0;
 	double final_score = 500;
 };
@@ -198,7 +220,11 @@ void welcome();
 void extra_info(player, scene);
 void boundary(player, scene);
 void item_description(string);
+<<<<<<< HEAD
 player discard_stuff(player, string);
+=======
+player discard_stuff(player,string);
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 player setting(player);
 string To_lower(string);
 string To_lower_2(string);
@@ -210,7 +236,11 @@ bool if_can_give(player, scene);
 bool if_can_eat(player, scene);
 bool if_can_drop(player);
 bool if_can_pick(player);
+<<<<<<< HEAD
 bool if_carrying(player, string);
+=======
+bool if_carrying(player,string);
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 int if_has_equipment(player, scene, string);
 int location(player, scene);
 player so_bad_so_sad(player);
@@ -224,7 +254,11 @@ int get_number(string);
 bool has_mark(string);
 bool match(string guess, string answer);
 player game_time(player);
+<<<<<<< HEAD
 player fight(player, scene, monster);
+=======
+player fight(player, scene,monster);
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 string ask_for_objects(string, string);
 void data_statistics(player);
 int main()
@@ -305,7 +339,11 @@ player take_action(player player1, scene place)
 		if (coordinate == it->second and got_back == false)
 		{
 			origin_name = recover_name(it->first);
+<<<<<<< HEAD
 			cout << "You see the " << origin_name <<
+=======
+			cout << "You see the " << origin_name << 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				" you throwed away is lying on the ground" << endl;
 			got_back = true;//Only for break the loop.
 		}
@@ -341,7 +379,11 @@ player take_action(player player1, scene place)
 	getline(cin, action);
 	action = eat_enter + action;
 	action = To_lower(action);
+<<<<<<< HEAD
 	if (!player1.fighting)
+=======
+	if(!player1.fighting)
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 		player1 = game_time(player1);
 	action_seprate(actions, objects, action);
 	for (index = 0; index <= COMMAND_LENGTH - 2; index++)
@@ -387,6 +429,7 @@ player take_action(player player1, scene place)
 				objects = ask_for_objects(actions, objects);
 				player1.object = objects;
 			}
+<<<<<<< HEAD
 			if (if_carrying(player1, player1.object))
 			{
 				if (player1.object == "potion")
@@ -400,6 +443,17 @@ player take_action(player player1, scene place)
 					cout << "You don`t have " << objects << " to use!" << endl;
 					player1.action = "none";
 				}
+=======
+			if (player1.object == "health potion"
+				and if_carrying(player1,player1.object))
+			{
+				player1.health += 40;
+				player1 = discard_stuff(player1, objects);
+				if (player1.health > 100)
+					player1.health = 100;
+				cout << "Health restore 40" << endl;
+				cout << "current health:" << player1.health << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			}
 			else
 				player1 = so_bad_so_sad(player1);
@@ -407,7 +461,7 @@ player take_action(player player1, scene place)
 		else
 		{
 			cout << "-------------------------------------------------------------------" << endl;
-			cout << "You have to defeat the ghost first,then you can do what you want." << endl;
+			cout << "You have to get out of the battle first,then you can do what you want." << endl;
 			cout << "-------------------------------------------------------------------" << endl;
 			player1.action = "none";
 		}
@@ -466,8 +520,13 @@ player take_action(player player1, scene place)
 							player1.object = "north";
 							if (player1.location == "up")
 							{
+<<<<<<< HEAD
 								if (player1.x > place.entrance_4_x
 									and player1.y == place.entrance_4_y
+=======
+								if (player1.x > place.entrance_4_x 
+									and player1.y == place.entrance_4_y 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 									and player1.gorilla_run != true)
 								{
 									cout << "-------------------------------------------" << endl;
@@ -524,8 +583,13 @@ player take_action(player player1, scene place)
 						player1.y_last_time = player1.y;
 						player1.y += 1;
 						player1 = if_over(player1, place);
+<<<<<<< HEAD
 						if (player1.location == "up"
 							and player1.x == place.entrance_3_x
+=======
+						if (player1.location == "up" 
+							and player1.x == place.entrance_3_x 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							and player1.y == place.entrance_3_y + 1
 							and player1.hostile == true)
 						{
@@ -536,7 +600,11 @@ player take_action(player player1, scene place)
 							player1.action = "none";
 						}
 						else if (player1.location == "up"
+<<<<<<< HEAD
 							and player1.x == place.entrance_3_x
+=======
+							and player1.x == place.entrance_3_x 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							and player1.y == place.entrance_3_y)
 						{
 							player1.action = "move";
@@ -563,7 +631,11 @@ player take_action(player player1, scene place)
 
 					}
 					else if ((objects == "east" and actions == "go" or action == "e")
+<<<<<<< HEAD
 						or (actions == "east" and objects == "none")
+=======
+						or (actions == "east" and objects == "none") 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 						or action == player1.command[3])
 					{
 
@@ -596,13 +668,22 @@ player take_action(player player1, scene place)
 						}
 					}
 				}
+<<<<<<< HEAD
 				if (objects == "up" and actions == "go"
+=======
+				if (objects == "up" and actions == "go" 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					and (player1.room == "ladder" or player1.up_or_down == 0))
 				{
 					player1.action = "up";
 				}
+<<<<<<< HEAD
 				else if (objects == "down"
 					and actions == "go"
+=======
+				else if (objects == "down" 
+					and actions == "go" 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					and (player1.room == "ladder" or player1.up_or_down == 1))
 				{
 					player1.action = "down";
@@ -635,13 +716,21 @@ player take_action(player player1, scene place)
 			player1.object = objects;
 		}
 		else if (actions == "fight")
+<<<<<<< HEAD
 		{
+=======
+		{	
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			player1.action = "fight";
 			player1.object = objects;
 			if (objects == "none")
 				player1.action = "fight";
 			else
+<<<<<<< HEAD
 				player1 = so_bad_so_sad(player1);
+=======
+				player1= so_bad_so_sad(player1);
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 		}
 		else if (actions == "take")
 		{
@@ -681,6 +770,8 @@ player take_action(player player1, scene place)
 				player1 = so_bad_so_sad(player1);
 		}
 		else if (actions == "use")
+<<<<<<< HEAD
+=======
 		{
 			player1.object = objects;
 			player1.action = actions;
@@ -689,6 +780,31 @@ player take_action(player player1, scene place)
 				objects = ask_for_objects(actions, objects);
 				player1.object = objects;
 			}
+			if (player1.object == "health potion"
+				and if_carrying(player1, player1.object))
+			{
+				player1.health += 40;
+				player1 = discard_stuff(player1, objects);
+				if (player1.health > 100)
+					player1.health = 100;
+				cout << "Health restore 40" << endl;
+				cout << "current health:" << player1.health << endl;
+			}
+			else
+				player1 = so_bad_so_sad(player1);
+		}
+		
+		else if (actions == "eat")
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
+		{
+			player1.object = objects;
+			player1.action = actions;
+			if (objects == "none")
+			{
+				objects = ask_for_objects(actions, objects);
+				player1.object = objects;
+			}
+<<<<<<< HEAD
 			if (if_carrying(player1, player1.object))
 			{
 				if (player1.object == "potion")
@@ -699,6 +815,16 @@ player take_action(player player1, scene place)
 				}
 				else
 					player1 = so_bad_so_sad(player1);
+=======
+			if (if_can_eat(player1, place) and if_carrying(player1,objects))
+			{
+				player1.action = "eat";
+				player1.object = objects;
+				player1 = discard_stuff(player1, objects);
+				cout << "-----------------------------------------------------------" << endl;
+				cout << "After you eat " << objects << " your stomach feels better" << endl;
+				cout << "-----------------------------------------------------------" << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			}
 			else
 				player1 = so_bad_so_sad(player1);
@@ -708,6 +834,7 @@ player take_action(player player1, scene place)
 			player1.object = objects;
 			if (objects == "none")
 			{
+<<<<<<< HEAD
 				objects = ask_for_objects(actions, objects);
 				player1.object = objects;
 			}
@@ -722,6 +849,8 @@ player take_action(player player1, scene place)
 			}
 			else
 			{
+=======
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				cout << "------------------------------------" << endl;
 				cout << "You don`t have " << objects << "!!!" << endl;
 				cout << "------------------------------------" << endl;
@@ -814,7 +943,11 @@ player take_action(player player1, scene place)
 		}
 		else if (actions == "cut")
 		{
+<<<<<<< HEAD
 			if (!if_carrying(player1, "knife"))
+=======
+			if (!if_carrying(player1,"knife"))
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			{
 				cout << "--------------------------" << endl;
 				cout << "You need a knife to cut!" << endl;
@@ -1073,7 +1206,11 @@ player take_action(player player1, scene place)
 				}
 			}
 		}
+<<<<<<< HEAD
 		else if (actions == "up" or action == "u" or actions == "climb")
+=======
+		else if (actions == "up" or action == "u" or actions=="climb")
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 		{
 			player1.object = objects;
 			player1.action = actions;
@@ -1102,6 +1239,7 @@ player take_action(player player1, scene place)
 				objects = ask_for_objects(actions, objects);
 				player1.object = objects;
 			}
+<<<<<<< HEAD
 			if ((objects == "brig" or objects == "door") and player1.room == "brig")
 				actions = "unlock";
 			else if (objects != "none" and player1.room == "brig")
@@ -1135,6 +1273,9 @@ player take_action(player player1, scene place)
 				player1.object = objects;
 			}
 			if (!if_carrying(player1, "key") and player1.action == "unlock")
+=======
+			if (!if_carrying(player1, "key") and player1.action == "open")
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			{
 				cout << "---------------------------" << endl;
 				cout << "You need a key to unlock!" << endl;
@@ -1146,6 +1287,47 @@ player take_action(player player1, scene place)
 			{
 				cout << "---------------------------------------" << endl;
 				cout << "This is door not a " << objects << endl;
+<<<<<<< HEAD
+=======
+				cout << "---------------------------------------" << endl;
+			}
+			else if (player1.room == "cargo hold" and player1.object == "trunk")
+			{
+				if (player1.treasure_amount==1)
+				{
+					cout << "----------------------------------------" << endl;
+					cout << "You found the treasure in the trunk!!!" << endl;
+					cout << "----------------------------------------" << endl;
+					player1.get = 1;
+				}
+				else
+					cout << "You have opened the trunk, it is empty!!!" << endl;
+			}
+		}
+		else if (actions == "unlock")
+		{
+			if (objects == "cell" or objects=="brig")
+				objects = "door";
+			player1.object = objects;
+			player1.action = actions;
+			if (objects == "none")
+			{
+				objects = ask_for_objects(actions, objects);
+				player1.object = objects;
+			}
+			if (!if_carrying(player1,"key") and player1.action=="unlock")
+			{
+				cout << "---------------------------" << endl;
+				cout << "You need a key to unlock!" << endl;
+				cout << "---------------------------" << endl;
+			}
+			else if ((objects == "brig" or objects=="door") and player1.room == "brig")
+				player1.action = "unlock";
+			else if (objects != "none" and player1.room == "brig")
+			{
+				cout << "---------------------------------------" << endl;
+				cout << "This is door not a " << objects << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				cout << "---------------------------------------" << endl;
 			}
 			else
@@ -1155,7 +1337,11 @@ player take_action(player player1, scene place)
 		{
 			player1.object = objects;
 			player1.action = actions;
+<<<<<<< HEAD
 			if ((objects == "none" or objects == "on bed" or objects == "on the bed")
+=======
+			if ((objects == "none" or objects == "on bed" or objects == "on the bed") 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				and player1.location == "up" and player1.x == place.bed_x)
 				player1.action = "lie";
 			else
@@ -1189,7 +1375,11 @@ player take_action(player player1, scene place)
 				objects = ask_for_objects(actions, objects);
 				player1.object = objects;
 			}
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			if (objects == "chainmail")
 				objects = "chain mail";
 			if (objects == "treasure")
@@ -1212,6 +1402,11 @@ player take_action(player player1, scene place)
 								player1.attack += it->second.attack;
 								player1.defence += it->second.defence;
 								player1.equipments[it->second.attribute] = it->second.name;
+<<<<<<< HEAD
+=======
+								if (it->second.attribute == "weapon")
+									player1.weapon = it->second.name;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 								cout << "-----------------------------------------" << endl;
 								cout << objects << " equiped!" << endl;
 								cout << "Current attack is: " << player1.attack << endl;
@@ -1232,7 +1427,11 @@ player take_action(player player1, scene place)
 				else if (has == -1)
 				{
 					cout << "-------------------------------------------------------" << endl;
+<<<<<<< HEAD
 					cout << "" << objects << " equiped!" << " wait....what is "
+=======
+					cout << "" << objects << " equiped!" << " wait....what is " 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 						<< objects << "?" << endl;
 					cout << "-------------------------------------------------------" << endl;
 				}
@@ -1268,7 +1467,11 @@ player take_action(player player1, scene place)
 				{
 					cout << "-----------------------------------------------------------------------" << endl;
 					cout << "You`ve light the stem,a faint glow of"
+<<<<<<< HEAD
 						<< " fire gave off a trace of warmth." << endl;
+=======
+						<<" fire gave off a trace of warmth." << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					cout << "-----------------------------------------------------------------------" << endl;
 					player1.with_light = true;
 					player1.timer = 0;
@@ -1335,7 +1538,11 @@ player take_action(player player1, scene place)
 				}
 				if (objects == "chainmail")
 					objects = "chain mail";
+<<<<<<< HEAD
 				if (!if_carrying(player1, objects))
+=======
+				if (!if_carrying(player1,objects))
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				{
 					cout << "---------------------------------------" << endl;
 					cout << "You don`t have " << objects << " !!!" << endl;
@@ -1378,7 +1585,11 @@ player take_action(player player1, scene place)
 		}
 		else if (actions == "yes" and objects == "none" and player1.room == "hut")
 			player1.action = "yes";
+<<<<<<< HEAD
 		else if (actions == "no" and objects == "none" and player1.room == "hut")
+=======
+		else if(actions=="no" and objects=="none" and player1.room=="hut")
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			player1.action = "no";
 		else
 		{
@@ -1585,6 +1796,7 @@ player setting(player player1)//This function can let the player set up the comm
 			break;
 		case 2:cout << index + 1 << ". " << "Go " << "west---" << player1.command[index] << endl;
 			break;
+<<<<<<< HEAD
 		case 3:cout << index + 1 << ". " << "Go " << "east---" << player1.command[index] << endl;
 			break;
 		case 4:cout << index + 1 << ". " << "To " << "board---" << player1.command[index] << endl;
@@ -1610,6 +1822,33 @@ player setting(player player1)//This function can let the player set up the comm
 		case 14:cout << index + 1 << ". " << "Go " << "up---" << player1.command[index] << endl;
 			break;
 		case 15:cout << index + 1 << ". " << "Go " << "down---" << player1.command[index] << endl;
+=======
+		case 3:cout << index + 1 << ". " << "Go " << "east---" << player1.command[index] << endl; 
+			break;
+		case 4:cout << index + 1 << ". " << "To " << "board---" << player1.command[index] << endl; 
+			break;
+		case 5:cout << index + 1 << ". " << "To " << "enter---" << player1.command[index] << endl; 
+			break;
+		case 6:cout << index + 1 << ". " << "To " << "take---" << player1.command[index] << endl; 
+			break;
+		case 7:cout << index + 1 << ". " << "To " << "give---" << player1.command[index] << endl; 
+			break;
+		case 8:cout << index + 1 << ". " << "To " << "search---" << player1.command[index] << endl; 
+			break;
+		case 9:cout << index + 1 << ". " << "To " << "look---" << player1.command[index] << endl;
+			break;
+		case 10:cout << index + 1 << ". " << "To " << "eat---" << player1.command[index] << endl; 
+			break;
+		case 11:cout << index + 1 << ". " << "To " << "cut---" << player1.command[index] << endl; 
+			break;
+		case 12:cout << index + 1 << ". " << "To " << "climb---" << player1.command[index] << endl;
+			break;
+		case 13:cout << index + 1 << ". " << "To " << "drop---" << player1.command[index] << endl; 
+			break;
+		case 14:cout << index + 1 << ". " << "Go " << "up---" << player1.command[index] << endl; 
+			break;
+		case 15:cout << index + 1 << ". " << "Go " << "down---" << player1.command[index] << endl; 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			break;
 		case 16:cout << index + 1 << ". " << "To " << "unlock---" << player1.command[index] << endl;
 			break;
@@ -1617,6 +1856,7 @@ player setting(player player1)//This function can let the player set up the comm
 			break;
 		case 18:cout << index + 1 << ". " << "To " << "open---" << player1.command[index] << endl;
 			break;
+<<<<<<< HEAD
 		case 19:cout << index + 1 << ". " << "To " << "quit---" << player1.command[index] << endl;
 			break;
 		case 20:cout << index + 1 << ". " << "Check " << "inventory---" << player1.command[index]
@@ -1654,6 +1894,45 @@ player setting(player player1)//This function can let the player set up the comm
 		case 36:cout << index + 1 << ". " << "To" << " unequip equipment---"
 			<< player1.command[index] << endl; break;
 		case 37:cout << index + 1 << ". " << "To" << " sell stuff---"
+=======
+		case 19:cout << index + 1 << ". " << "To " << "quit---" << player1.command[index] << endl; 
+			break;
+		case 20:cout << index + 1 << ". " << "Check " << "inventory---" << player1.command[index] 
+			<< endl; break;
+		case 21:cout << index + 1 << ". " << "To " << "setting---" << player1.command[index]
+			<< endl;break;
+		case 22:cout << index + 1 << ". " << "To " << "save---" << player1.command[index] << endl; 
+			break;
+		case 23:cout << index + 1 << ". " << "To " << "load--" << player1.command[index] << endl;
+			break;
+		case 24:cout << index + 1 << ". " << "To see " << "hint---" << player1.command[index] 
+			<< endl;break;
+		case 25:cout << index + 1 << ". " << "To see " << "help---" << player1.command[index]
+			<< endl;break;
+		case 26:cout << index + 1 << ". " << "To" << " get something---" << player1.command[index] 
+			<< endl;break;
+		case 27:cout << index + 1 << ". " << "To" << " hide extra information---" << 
+			player1.command[index] << endl; break;
+		case 28:cout << index + 1 << ". " << "To" << " display extra information---"
+			<< player1.command[index] << endl; break;
+		case 29:cout << index + 1 << ". " << "To" << " pick something---" 
+			<< player1.command[index] << endl; break;
+		case 30:cout << index + 1 << ". " << "To" << " lie---" 
+			<< player1.command[index] << endl; break;
+		case 31:cout << index + 1 << ". " << "To" << " attack---"
+			<< player1.command[index] << endl; break;
+		case 32:cout << index + 1 << ". " << "To" << " run away---" 
+			<< player1.command[index] << endl; break;
+		case 33:cout << index + 1 << ". " << "To" << " equip equipment---" 
+			<< player1.command[index] << endl; break;
+		case 34:cout << index + 1 << ". " << "To" << " check character`s state---" 
+			<< player1.command[index] << endl; break;
+		case 35:cout << index + 1 << ". " << "To" << " light the stem---" 
+			<< player1.command[index] << endl; break;
+		case 36:cout << index + 1 << ". " << "To" << " unequip equipment---" 
+			<< player1.command[index] << endl; break;
+		case 37:cout << index + 1 << ". " << "To" << " sell stuff---" 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			<< player1.command[index] << endl; break;
 		case 38:cout << index + 1 << ". " << "To" << " use stuff---"
 			<< player1.command[index] << endl; break;
@@ -1859,7 +2138,11 @@ int save_game(player player1)//This function can save the progress of the game i
 		for (index = 0; index <= COMMAND_LENGTH - 1; index++)
 			game_file << player1.command[index] << endl;
 		game_file << "drop_stuff:" << endl;
+<<<<<<< HEAD
 		for (drop_stuff = player1.drop_stuff.begin();
+=======
+		for (drop_stuff = player1.drop_stuff.begin(); 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			drop_stuff != player1.drop_stuff.end(); drop_stuff++)
 		{
 			game_file << drop_stuff->first << endl;
@@ -1882,8 +2165,13 @@ player load_game(player player1)//This function can load the game from a file.
 	string player_cargo_hold_times, player_brig_times, player_galley_times, treasure_amount;
 	string gorilla, parrot, hostile, key, prison, get, up_or_down, health, attack, money, time, day;
 	string time_spent, fighting, weapon, gold, gangplank, light, shop, hut, item1, item2, item3;
+<<<<<<< HEAD
 	string  defence, temp = " ", inventory_name, hut_score, question, ship, bandit, warning;
 	string made, spend, kill, ladder, final_score;
+=======
+	string  defence, temp = " ", inventory_name, hut_score, question,ship,bandit,warning;
+	string made, spend, kill, ladder,final_score;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	int index, inventory_quantity;
 	size_t pos;
 	player1.drop_stuff.erase(player1.drop_stuff.begin(), player1.drop_stuff.end());
@@ -2139,7 +2427,11 @@ player island(player player1, scene place)//This function can set up the map "is
 		{
 			if (player1.banana_amount != 0)
 			{
+<<<<<<< HEAD
 				if (if_carrying(player1, "knife"))
+=======
+				if (if_carrying(player1,"knife"))
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				{
 					player1.banana_amount -= 1;
 					player1.inventory["banana"] ++;
@@ -2173,7 +2465,11 @@ player island(player player1, scene place)//This function can set up the map "is
 			player1.y = -10;
 		}
 	}
+<<<<<<< HEAD
 	else if (player1.x == place.shop_x and player1.y == place.shop_y and player1.hostile == false)
+=======
+	else if (player1.x == place.shop_x and player1.y == place.shop_y and player1.hostile ==false)
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	{
 		int  index = 0, item_num = 1;
 		string item1, item2, item3;
@@ -2205,7 +2501,11 @@ player island(player player1, scene place)//This function can set up the map "is
 			while (player1.num_item2 == player1.num_item1)
 				player1.num_item2 = rand() % (place.items.size());
 			player1.num_item3 = rand() % (place.items.size());
+<<<<<<< HEAD
 			while (player1.num_item3 == player1.num_item1
+=======
+			while (player1.num_item3 == player1.num_item1 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				or player1.num_item3 == player1.num_item2)
 				player1.num_item3 = rand() % (place.items.size());
 			cout << place.shop_short_description << endl;
@@ -2214,7 +2514,11 @@ player island(player player1, scene place)//This function can set up the map "is
 		cout << "Here are the items for this time!" << endl;
 		while (item != place.items.end())
 		{
+<<<<<<< HEAD
 			if (index == player1.num_item1
+=======
+			if (index == player1.num_item1 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				or index == player1.num_item2 or index == player1.num_item3)
 			{
 				cout << item_num << "." << item->first << "-------" << item->second << endl;
@@ -2256,11 +2560,19 @@ player island(player player1, scene place)//This function can set up the map "is
 		vector<int>::iterator it;
 		if (player1.in_n_out == 0 and player1.hut_times == 1)
 		{
+<<<<<<< HEAD
 			cout << "The owner of this hut is an old man who is the most intelligent person" <<
 				"in these native people.\n" <<
 				"He has been looking for a warrior who is as wise as him.\n" <<
 				"If you can answer his questions correctly and get his appreciation,"
 				<< " he will give you a generous reward.\n" <<
+=======
+			cout << "The owner of this hut is an old man who is the most intelligent person"<<
+				"in these native people.\n" <<
+				"He has been looking for a warrior who is as wise as him.\n" <<
+				"If you can answer his questions correctly and get his appreciation,"
+				<<" he will give you a generous reward.\n" <<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				"Do you want to accept his challenge?" << endl;
 			player1.in_n_out = 1;
 		}
@@ -2320,7 +2632,11 @@ player island(player player1, scene place)//This function can set up the map "is
 			}
 			else
 			{
+<<<<<<< HEAD
 				if (match(player1.action, question->second))
+=======
+				if (match(player1.action,question->second))
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				{
 					player1.hut_score++;
 					player1.correct_row++;
@@ -2340,56 +2656,92 @@ player island(player player1, scene place)//This function can set up the map "is
 					cout << "Correct!!! " << bootlick << endl;
 					if (player1.hut_score == 6)
 					{
+<<<<<<< HEAD
 						cout << "Good job! The wise old man decide" <<
+=======
+						cout << "Good job! The wise old man decide"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							" to give you 80 golds!" << endl;
 						player1.gold += 80;
 						player1.money_made += 80;
 					}
 					else if (player1.hut_score == 15)
 					{
+<<<<<<< HEAD
 						cout << "Good job! The wise old man decide" <<
+=======
+						cout << "Good job! The wise old man decide"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							" to give you ten stems!" << endl;
 						player1.inventory["health posion"] += 10;
 					}
 					else if (player1.hut_score == 20)
 					{
+<<<<<<< HEAD
 						cout << "Good job! The The wise old man decide" <<
+=======
+						cout << "Good job! The The wise old man decide"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							" to give you a pendent!" << endl;
 						player1.inventory["pendent"]++;
 					}
 					else if (player1.hut_score == 25)
 					{
+<<<<<<< HEAD
 						cout << "Good job! The wise old man decide" <<
+=======
+						cout << "Good job! The wise old man decide"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							" to give you a chainmail helmet!" << endl;
 						player1.inventory["chainmail helmet"]++;
 					}
 					else if (player1.hut_score == 30)
 					{
+<<<<<<< HEAD
 						cout << "Good job! The wise old man decide" <<
+=======
+						cout << "Good job! The wise old man decide"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							" to give you a sword!" << endl;
 						player1.inventory["sword"]++;
 					}
 					else if (player1.hut_score == 35)
 					{
+<<<<<<< HEAD
 						cout << "Good job! The wise old man decide" <<
+=======
+						cout << "Good job! The wise old man decide"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							" to give you a pair of leggings!" << endl;
 						player1.inventory["leggings"]++;
 					}
 					else if (player1.hut_score == 40)
 					{
+<<<<<<< HEAD
 						cout << "Good job! The wise old man decide" <<
+=======
+						cout << "Good job! The wise old man decide"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							" to give you a pair of chainmail boots!" << endl;
 						player1.inventory["chainmail boots"]++;
 					}
 					else if (player1.hut_score == 50)
 					{
 						cout << "Good job! The wise old man decide"
+<<<<<<< HEAD
 							<< " to give you a chain mail!" << endl;
+=======
+							<<" to give you a chain mail!" << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 						player1.inventory["chain mail"]++;
 					}
 					else if (player1.hut_score == 65)
 					{
+<<<<<<< HEAD
 						cout << "Good job! The wise old man decide" <<
+=======
+						cout << "Good job! The wise old man decide"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 							" to give you a cross!" << endl;
 						player1.inventory["cross"]++;
 					}
@@ -2445,13 +2797,22 @@ player upper_deck(player player1, scene place, bool& success)
 	hour = stoi(player1.time.substr(0, pos++));
 	min = stoi(player1.time.substr(pos, player1.time.length() - pos));
 	cur_time = hour * 60 + min;
+<<<<<<< HEAD
 	if (cur_time >= 1080 or cur_time <= 360)
+=======
+	if (cur_time >= 1080 or cur_time<=360)
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	{
 		if (!player1.with_light)
 		{
 			srand((unsigned)time(NULL));
+<<<<<<< HEAD
 			ghost.x = rand() % 2 + player1.x;
 			ghost.y = rand() % 2 + player1.y;
+=======
+			ghost.x = rand() %2+player1.x;
+			ghost.y = rand() %2+player1.y;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			if (ghost.x == player1.x and ghost.y == player1.y)
 			{
 				cout << "You have encouter a ghost!" << endl;
@@ -2502,7 +2863,11 @@ player upper_deck(player player1, scene place, bool& success)
 		}
 		if (player1.x == place.bed_x)
 		{
+<<<<<<< HEAD
 			cout << "You see a soft comfortable bed in front of you," <<
+=======
+			cout << "You see a soft comfortable bed in front of you,"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				" you can lying on the bed to restore your health." << endl;
 			player1 = take_action(player1, place);
 
@@ -2542,7 +2907,11 @@ player upper_deck(player player1, scene place, bool& success)
 			{
 				if (player1.knife_amount == 0)
 				{
+<<<<<<< HEAD
 					cout << "You are standing in front of a table," <<
+=======
+					cout << "You are standing in front of a table,"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 						" and you see the key is under the table!" << endl;
 					player1 = take_action(player1, place);
 					if (player1.action == "get" and player1.object == "key")
@@ -2555,7 +2924,11 @@ player upper_deck(player player1, scene place, bool& success)
 				}
 				else
 				{
+<<<<<<< HEAD
 					cout << "You are standing in front of a table, " <<
+=======
+					cout << "You are standing in front of a table, "<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 						"and you see the knife is on the table and key is under the table!" << endl;
 					player1 = take_action(player1, place);
 					if (player1.action == "get" and player1.object == "knife")
@@ -2632,8 +3005,13 @@ player upper_deck(player player1, scene place, bool& success)
 				cout << "The gorilla rush to the forest and disapear!" << endl;
 				player1.in_n_out = 0;
 			}
+<<<<<<< HEAD
 			if (player1.action == "board")
 				cout << "The gorilla is there, you can`t sail the ship!" << endl;
+=======
+			if(player1.action=="board")
+					cout << "The gorilla is there, you can`t sail the ship!" << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			while (player1.action == "move" and player1.object == "north")
 			{
 				player1 = take_action(player1, place);
@@ -2641,7 +3019,11 @@ player upper_deck(player player1, scene place, bool& success)
 		}
 		else if (player1.gorilla_run != 0)
 		{
+<<<<<<< HEAD
 			if (player1.bandit == true)
+=======
+			if(player1.bandit==true)
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			{
 				monster bully;
 				bully.name = "bully";
@@ -2654,15 +3036,25 @@ player upper_deck(player player1, scene place, bool& success)
 					cout << "---------------------------------------------------------------" << endl;
 					cout << "\"Hahahahahaha!!!!Now the ship is mine!!!!\"" << endl;
 					cout << "What bad luck! There is a bully in the natives who has tracked you"
+<<<<<<< HEAD
 						<< "for a long time wants this ship!" << endl;
 					cout << "The good thing is he doesn`t know how to start it..." << endl;
 					cout << "we batter consider some ways of kicking him out of this ship." << endl;
 					cout << "---------------------------------------------------------------" << endl;
+=======
+						 <<"for a long time wants this ship!" << endl;
+					cout << "The good thing is he doesn`t know how to start it..." << endl;
+					cout << "we batter consider some ways of kicking him out of this ship." << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					player1.bandit_warning = false;
 				}
 				if (player1.in_n_out == 0)
 				{
+<<<<<<< HEAD
 					cout << "-----------------------------------------------------" << endl;
+=======
+					cout << "-----------------------------------------------------"<<endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					cout << "In front of the bully, you suddenly fell you are full" << endl;
 					cout << "of confident and courage, you come forward and try to " << endl;
 					cout << "convinced the bully to leave this ship. However it seems" << endl;
@@ -2671,6 +3063,10 @@ player upper_deck(player player1, scene place, bool& success)
 					cout << "Your health remainding:" << player1.health << endl;
 					player1.in_n_out = 1;
 				}
+<<<<<<< HEAD
+=======
+				cout << "-----------------------------------------------------" << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				cout << "Enter \"fight\" to fight with the bully!" << endl;
 				player1 = take_action(player1, place);
 				if (player1.action == "fight")
@@ -2707,9 +3103,15 @@ player upper_deck(player player1, scene place, bool& success)
 		{
 			if (player1.in_n_out == 0 and player1.gangplank_times == 1)
 			{
+<<<<<<< HEAD
 				cout << "There are hostile natives that appear outside" <<
 					" the ship after the player boards\n" <<
 					"They will not allow anyone off the ship" <<
+=======
+				cout << "There are hostile natives that appear outside"<<
+					" the ship after the player boards\n" <<
+					"They will not allow anyone off the ship"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					" until you give the treasure to them." << endl;
 				player1.in_n_out = 1;
 			}
@@ -2734,7 +3136,11 @@ player upper_deck(player player1, scene place, bool& success)
 			if (player1.in_n_out == 0)
 				cout << place.entrance_3_description << endl;
 			player1 = take_action(player1, place);
+<<<<<<< HEAD
 			if (player1.action == "get out" or
+=======
+			if (player1.action == "get out" or 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				(player1.action == "move" and player1.object == "west"))
 			{
 				cout << "You have got out of the ship!" << endl;
@@ -2771,7 +3177,11 @@ player lower_deck(player player1, scene place)
 	hour = stoi(player1.time.substr(0, pos++));
 	min = stoi(player1.time.substr(pos, player1.time.length() - pos));
 	cur_time = hour * 60 + min;
+<<<<<<< HEAD
 	if (cur_time >= 1080 and cur_time <= 360)
+=======
+	if (cur_time >= 1080 and cur_time<=360)
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	{
 		if (!player1.with_light)
 		{
@@ -2799,7 +3209,11 @@ player lower_deck(player player1, scene place)
 		else if (player1.in_n_out == 0 and player1.cargo_hold_times != 1)
 		{
 			if (player1.get == 1)
+<<<<<<< HEAD
 				cout << place.entrance_1_short_description
+=======
+				cout << place.entrance_1_short_description 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				<< "\nstuff can get:stem and treasure" << endl;
 			else
 				cout << place.entrance_1_short_description
@@ -2807,9 +3221,15 @@ player lower_deck(player player1, scene place)
 			player1.in_n_out = 1;
 		}
 		player1 = take_action(player1, place);
+<<<<<<< HEAD
 		if (player1.action == "get" or player1.action == "cut")
 		{
 			if (player1.action == "get" and player1.object == "treasure")
+=======
+		if (player1.action == "get" or player1.action=="cut")
+		{
+			if (player1.action == "get" and player1.object=="treasure")
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			{
 				if (player1.object == "treasure")
 				{
@@ -3046,7 +3466,11 @@ player so_bad_so_sad(player player1)
 	if (player1.object != "none")
 	{
 		cout << "---------------------------------------------------------------------------" << endl;
+<<<<<<< HEAD
 		cout << "So bad so sad, you can`t " << player1.action << " "
+=======
+		cout << "So bad so sad, you can`t " << player1.action << " " 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			<< player1.object << " right now!" << endl;
 		cout << "---------------------------------------------------------------------------" << endl;
 	}
@@ -3117,7 +3541,11 @@ bool if_can_give(player player1, scene place)
 		if (player1.object == it->first)
 		{
 			equal = true;
+<<<<<<< HEAD
 			if (if_carrying(player1, player1.object) != false and it->second == coordinate)
+=======
+			if (if_carrying(player1,player1.object) != false and it->second == coordinate)
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				give = true;
 			else if (if_carrying(player1, player1.object) != false and it->second != coordinate)
 			{
@@ -3232,7 +3660,7 @@ string re_name(player player1, string stuff)
 			number = max;
 
 	}
-	pos = stuff.find(" ");
+	pos = stuff.length()-2;
 	stuff = stuff.substr(0, pos);
 	number += 1;
 	stuff.append(" ");
@@ -3244,7 +3672,7 @@ string recover_name(string name)
 //that the player dropped.
 {
 	int pos;
-	pos = name.find(" ");
+	pos = name.length()-2;
 	name = name.substr(0, pos);
 	return name;
 }
@@ -3293,9 +3721,10 @@ int get_number(string name)
 //like the 1 in banana 1.
 {
 	int pos, number;
-	pos = name.find(" ");
-	name = name.substr(pos + 1);
-	number = stoi(name);
+	string num;
+	pos = name.length() - 1;
+	num = name.at(pos);
+	number = stoi(num);
 	return number;
 }
 string sentence_to_pig_latin(string sentence)
@@ -3394,8 +3823,13 @@ void get_sentence(string sentence, vector<string> & marks, vector<string> & word
 	string mark = " ", temp_mark, words = " ", temp_word;
 	while (index <= sentence.length() - 1)
 	{
+<<<<<<< HEAD
 		if ((sentence.at(index) >= 'a' and sentence.at(index) <= 'z')
 			or (sentence.at(index) >= 'A' and sentence.at(index) <= 'Z')
+=======
+		if ((sentence.at(index) >= 'a' and sentence.at(index) <= 'z') 
+			or (sentence.at(index) >= 'A' and sentence.at(index) <= 'Z') 
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			and index < sentence.length() - 1)
 		{
 			if (mark.length() != 1)
@@ -3589,7 +4023,11 @@ player look_hint_and_search(player player1, scene place)
 					cout << place.stuff_can_cut_look_description_1 << endl;
 				else if (player1.action == "hint")
 				{
+<<<<<<< HEAD
 					if (!if_carrying(player1, "knife"))
+=======
+					if (!if_carrying(player1,"knife"))
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					{
 						cout << "---------------------------------------------------------------" << endl;
 						cout << "|Need knife to cut? Don`t forget there is a ship to your east.|" << endl;
@@ -3761,7 +4199,11 @@ player look_hint_and_search(player player1, scene place)
 				{
 					cout << "------------------------------------------------------------------------" << endl;
 					cout << place.entrance_4_description;
+<<<<<<< HEAD
 					cout << "You take a sneak look at the gorilla." <<
+=======
+					cout << "You take a sneak look at the gorilla."<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 						" It's so big and frightening that you hide back quickly" << endl;
 					cout << "------------------------------------------------------------------------" << endl;
 				}
@@ -3919,7 +4361,11 @@ player look_hint_and_search(player player1, scene place)
 				}
 				else if (player1.action == "hint")
 				{
+<<<<<<< HEAD
 					if (player1.hostile == true and if_carrying(player1, "treasure"))
+=======
+					if (player1.hostile == true and if_carrying(player1,"treasure"))
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					{
 						cout << "----------------------------------------------" << endl;
 						cout << "Now, these hostile should be happy to leave." << endl;
@@ -3947,7 +4393,11 @@ player look_hint_and_search(player player1, scene place)
 				if (player1.action == "look")
 					cout << place.entrance_3_description << endl;
 				else if (player1.action == "hint")
+<<<<<<< HEAD
 					cout << "The other one who can speak on this ship" <<
+=======
+					cout << "The other one who can speak on this ship"<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					" may know where the key is." << endl;
 				else if (player1.action == "search")
 				{
@@ -4075,8 +4525,13 @@ scene init_scene(scene place)
 //This function can initialize the coordinate of special stuff that 
 // the player can do something with like drop or cut.
 {
+<<<<<<< HEAD
 	equipment stem, sword, chainmail_helmet, chain_mail,
 		leggings, chainmail_boots, banana, key, cross, pendant, knife;
+=======
+	equipment stem, sword, chainmail_helmet, chain_mail, 
+		leggings, chainmail_boots, banana, key, cross, pendant,knife;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	stem.name = "stem";
 	stem.attack = 1;
 	stem.defence = 0;
@@ -4385,9 +4840,15 @@ void help(player player1)
 void welcome()
 //This function can print welcome words to the player.
 {
+<<<<<<< HEAD
 	cout << "You wake up on an island with no memory of how" <<
 		" you got there.You need to overcome a"
 		<< "series of obstacles in order to be able to to " <<
+=======
+	cout << "You wake up on an island with no memory of how"<<
+		" you got there.You need to overcome a"
+		<< "series of obstacles in order to be able to to "<<
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 		" a pirate ship and sail it to civilization." << endl;
 }
 void boundary(player player1, scene place)
@@ -4470,7 +4931,11 @@ player game_time(player player1)
 	if (player1.time_begin == true)
 	{
 		now = time(0);
+<<<<<<< HEAD
 		ltm = *localtime(&now);
+=======
+		ltm=*localtime(&now);
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 		min = ltm.tm_min;
 		sec = ltm.tm_sec;
 		player1.start_time = min * 60 + sec;
@@ -4542,6 +5007,7 @@ player fight(player player1, scene place, monster ghost)
 	int  run, dodge;
 	player1.fighting = true;
 	if (player1.battle_warning == true)
+<<<<<<< HEAD
 	{
 		cout << "You have entered a battle, your opponent is "
 			<< ghost.name << ", very dangerous! Be careful!" << endl;
@@ -4551,6 +5017,17 @@ player fight(player player1, scene place, monster ghost)
 		player1.attack *= 2;
 	while (ghost.health != 0 and player1.fighting == true)
 	{
+=======
+	{
+		cout << "You have entered a battle, your opponent is " 
+			<< ghost.name << ", very dangerous! Be careful!" << endl;
+		player1.battle_warning = false;
+	}
+	if (player1.equipments["trinket"] == "cross")
+		player1.attack *= 2;
+	while (ghost.health != 0 and player1.fighting == true)
+	{
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 		player1 = take_action(player1, place);
 		if (player1.action == "attack")
 		{
@@ -4609,7 +5086,11 @@ player fight(player player1, scene place, monster ghost)
 				player1.money_made += 20;
 				player1.kill += 1;
 				player1.final_score += 1;
+<<<<<<< HEAD
 				cout << "Victory!!!You have defeated the " << ghost.name << "!!!" << endl;
+=======
+				cout << "Victory!!!You have defeated the "<<ghost.name<<"!!!"<< endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 				cout << "Gold add 20" << endl;
 				player1.fighting = false;
 				player1.battle_warning = true;
@@ -4643,7 +5124,11 @@ player fight(player player1, scene place, monster ghost)
 				}
 				else
 					player1.health = player1.health - (ghost.attack - player1.defence * 0.5);
+<<<<<<< HEAD
 				if (player1.health > 0)
+=======
+				if(player1.health>0)
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					cout << "fail to run away....health remind: " << player1.health << ". keep fighting!" << endl;
 			}
 		}
@@ -4678,7 +5163,11 @@ int if_has_equipment(player player1, scene place, string stuff)
 			if (it->second.name == stuff)
 			{
 				what_is_it = 1;
+<<<<<<< HEAD
 				if (if_carrying(player1, stuff) != false)
+=======
+				if (if_carrying(player1,stuff)!= false)
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 					has = 1;
 			}
 		}
@@ -4705,7 +5194,11 @@ void item_description(string item)
 		cout << "chainmail boots:Add 1 defence if equiped" << endl;
 	else if (item == "pendant")
 		cout << "pendant:There will be chance to get two stems and dodge"
+<<<<<<< HEAD
 		<< "an attack in battle when you wear pendant" << endl;
+=======
+		<<"an attack in battle when you wear pendant" << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	else if (item == "cross")
 		cout << "cross:God be with you.Attack will be double when attacking." << endl;
 }
@@ -4794,10 +5287,17 @@ void data_statistics(player player1)
 	map<string, int>times;
 	map<string, string>scene_description;
 	map<string, int>::iterator it;
+<<<<<<< HEAD
 	int max = 0, hour, min;
 	bool breaker = false;
 	hour = player1.time_spent / 60;
 	min = player1.time_spent % 60;
+=======
+	int max=0,second,min;
+	bool breaker = false;
+	min = player1.time_spent / 60;
+	second= player1.time_spent%60;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	player1.final_score += (20000 / player1.time_spent);
 	times["gangplank"] = player1.gangplank_times;
 	times["ladder"] = player1.ladder_times;
@@ -4826,15 +5326,24 @@ void data_statistics(player player1)
 	}
 	cout << "---------------------------------------------------------" << endl;
 	cout << "Hey! Take a look on your footprints in the game!" << endl;
+<<<<<<< HEAD
 	cout << "You have spend " << hour << " hours and " << min << " minutes in this game" << endl;
+=======
+	cout << "You have spend " << min << " minutes and " << second << " seconds in this game" << endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 	it = times.begin();
 	while (it != times.end() and !breaker)
 	{
 		if (it->second == max)
 		{
 			cout << "Your favorite"
+<<<<<<< HEAD
 				<< "place to go is:" << it->first
 				<< ", you have been there " << it->second << " times" << endl;
+=======
+				<< "place to go is:" << it->first 
+				<<", you have been there "<<it->second<<" times"<< endl;
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
 			cout << scene_description[it->first] << endl;
 			breaker = true;//Only for break the loop.
 		}
@@ -4846,4 +5355,8 @@ void data_statistics(player player1)
 	cout << "And you have spent " << player1.money_spend << " golds." << endl;
 	cout << "Welcome back anytime, my warrior." << endl;
 	cout << "---------------------------------------------------------" << endl;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b11997de3fb543a98b498701adde872275b62465
