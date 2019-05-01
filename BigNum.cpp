@@ -81,7 +81,7 @@ void addBig(int num1[], int num2[], int num3[])//AddBig adds the corresponding d
 											   //first two arrays and stores the answer in the third.
 											   //In a second loop, it performs the carry operation.
 {
-	int digit, my_sum, mover = 0, temp = 0, num3_size, start, digit2;
+	int digit, my_sum, mover = 0, digit2;
 	for (digit = 0; digit <= MAX_DIGITS - 1; digit++)
 		num3[digit] = 0;
 	for (digit2 = 0; digit2 <= MAX_DIGITS - 1; digit2++)
