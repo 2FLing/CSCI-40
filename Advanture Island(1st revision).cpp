@@ -5,6 +5,13 @@
 //Matthew Jones
 //CSCI-40 group project Advanture Island game.
 //use "-std=c++11" to compile"
+//*******************************************************
+//This is the source code for Advanture Island game     *
+//In this game the player`s goal is to sail the ship    *
+//in order to escape from the Island. Player has to     *
+//get the stuff he needs in differen rooms and defeated *
+// the final boss before he sail the ship successfully. *
+//*******************************************************
 #include<iostream>
 #include<stdio.h>
 #include<map>
