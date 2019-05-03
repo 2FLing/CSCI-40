@@ -5,6 +5,13 @@
 //Matthew Jones
 //CSCI-40 group project Advanture Island game.
 //use "-std=c++11" to compile"
+//*******************************************************
+//This is the source code for Advanture Island game     *
+//In this game the player`s goal is to sail the ship    *
+//in order to escape from the Island. Player has to     *
+//get the stuff he needs in differen rooms and defeated *
+// the final boss before he sail the ship successfully. *
+//*******************************************************
 #include<iostream>
 #include<stdio.h>
 #include<map>
@@ -242,9 +249,13 @@ int main()
 	{
 		place = set_scene(player1, place);
 		if (place.name == "island")
+<<<<<<< HEAD
 		{
 			island(player1, place);
 		}
+=======
+			island(player1, place);
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
 		else if (place.name == "upper deck")
 			upper_deck(player1, place, success);
 		else
@@ -1221,9 +1232,14 @@ void take_action(player & player1, scene place)
 			}
 			else if (objects != "none")
 			{
+<<<<<<< HEAD
 				enum stuff { have_stuff = 1, not_have_stuff = 0,stuff_not_in_the_game=-1 };
 				has = has_equipment(player1, place, objects);
 				if (has == have_stuff)
+=======
+				has = has_equipment(player1, place, objects);
+				if (has == 1)
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
 				{
 					map<string, equipment>::iterator it;
 					for (it = place.equips.begin(); it != place.equips.end(); it++)
@@ -1290,6 +1306,7 @@ void take_action(player & player1, scene place)
 			{
 				if (player1.with_light == false)
 				{
+<<<<<<< HEAD
 					if (carrying(player1, "stem"))
 					{
 						cout << "-----------------------------------------------------------------------" << endl;
@@ -1303,6 +1320,14 @@ void take_action(player & player1, scene place)
 					{
 						cout << "The first step of lighting a stem is: get a stem." << endl;
 					}
+=======
+					cout << "-----------------------------------------------------------------------" << endl;
+					cout << "You`ve light the stem,a faint glow of"
+						<< " fire gave off a trace of warmth." << endl;
+					cout << "-----------------------------------------------------------------------" << endl;
+					player1.with_light = true;
+					player1.timer = 0;
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
 				}
 				else
 				{
@@ -2480,7 +2505,11 @@ void upper_deck(player & player1, scene place, bool& success)
 		{
 			srand((unsigned)time(NULL));
 			ghost.x = rand() % 3 + player1.x;
+<<<<<<< HEAD
 			ghost.y =player1.y;
+=======
+			ghost.y = rand() % 2 + player1.y;
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
 			if (ghost.x == player1.x and ghost.y == player1.y)
 			{
 				cout << "You have encouter a ghost!" << endl;
@@ -2810,7 +2839,11 @@ void lower_deck(player & player1, scene place)
 		{
 			srand((unsigned)time(NULL));
 			ghost.x = rand() % 3 + player1.x;
+<<<<<<< HEAD
 			ghost.y =player1.y;
+=======
+			ghost.y = rand() % 2 + player1.y;
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
 			if (ghost.x == player1.x and ghost.y == player1.y)
 			{
 				cout << "You have encouter a ghost!" << endl;
@@ -4708,9 +4741,15 @@ int has_equipment(player player1, scene place, string stuff)
 		{
 			if (it->second.name == stuff)
 			{
+<<<<<<< HEAD
 				what_is_it = stuff_in_the_game;
 				if (carrying(player1, stuff) != false)
 					has = not_have_but_in_the_game;
+=======
+				what_is_it = 1;
+				if (carrying(player1, stuff) != false)
+					has = 1;
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
 			}
 		}
 
@@ -4876,4 +4915,8 @@ void data_statistics(player player1)
 	cout << "And you have spent " << player1.money_spend << " golds." << endl;
 	cout << "Welcome back anytime, my warrior." << endl;
 	cout << "---------------------------------------------------------" << endl;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
