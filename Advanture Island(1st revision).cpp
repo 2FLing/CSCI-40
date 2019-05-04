@@ -5,6 +5,7 @@
 //Matthew Jones
 //CSCI-40 group project Advanture Island game.
 //use "-std=c++11" to compile"
+<<<<<<< HEAD
 //*********************************************************
 //This is the source code for Advanture Island game       *
 //In this game the player`s goal is to sail the ship      *
@@ -16,6 +17,15 @@
 //command in his turn,(except when he is in a battle)     *
 //and after that it will be the turn for the other player.*
 //*********************************************************
+=======
+//*******************************************************
+//This is the source code for Advanture Island game     *
+//In this game the player`s goal is to sail the ship    *
+//in order to escape from the Island. Player has to     *
+//get the stuff he needs in differen rooms and defeated *
+// the final boss before he sail the ship successfully. *
+//*******************************************************
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 #include<iostream>
 #include<stdio.h>
 #include<map>
@@ -24,8 +34,12 @@
 #include<fstream>
 #include<cmath>
 #include<ctime>
+<<<<<<< HEAD
 #include<algorithm>
 #pragma warning(disable:4996)
+=======
+#pragma warning(disable:4996)  
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 using namespace std;
 const int COMMAND_LENGTH = 40;
 class monster
@@ -272,6 +286,7 @@ int main()
 		getline(cin, trash);
 	while (choice != one_player and choice != two_player)
 	{
+<<<<<<< HEAD
 		cout << "Wrong command, please enter the number before"
 			<< "the name of the mode." << endl;
 		getline(cin, trash);
@@ -289,6 +304,22 @@ int main()
 		getline(cin, player2.name);
 		welcome_back(player1);
 		welcome_back(player2);
+=======
+		place = set_scene(player1, place);
+		if (place.name == "island")
+<<<<<<< HEAD
+		{
+			island(player1, place);
+		}
+=======
+			island(player1, place);
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
+		else if (place.name == "upper deck")
+			upper_deck(player1, place, success);
+		else
+			lower_deck(player1, place);
+		extra_info(player1, place);
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 	}
 	else if (choice == one_player)
 	{
@@ -1237,7 +1268,11 @@ void take_action(player & player1, scene place)
 			if (!carrying(player1, "key") and player1.action == "open")
 			{
 				cout << "---------------------------" << endl;
+<<<<<<< HEAD
 				cout << "You can`t open " << objects << " for now!" << endl;
+=======
+				cout << "You can`t open "<<objects<<" for now!" << endl;
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 				cout << "---------------------------" << endl;
 			}
 			else if ((objects == "brig" or objects == "door") and player1.room == "brig")
@@ -1340,10 +1375,21 @@ void take_action(player & player1, scene place)
 			}
 			else if (objects != "none")
 			{
+<<<<<<< HEAD
 				enum if_have_stuff { have_stuff = 1, not_have_stuff = 0, stuff_not_in_the_game = -1 };
 				map<string, stuff>::iterator it;
 				has = has_equipment(player1, place, objects);
 				if (has == have_stuff)
+=======
+<<<<<<< HEAD
+				enum stuff { have_stuff = 1, not_have_stuff = 0,stuff_not_in_the_game=-1 };
+				has = has_equipment(player1, place, objects);
+				if (has == have_stuff)
+=======
+				has = has_equipment(player1, place, objects);
+				if (has == 1)
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 				{
 					for (it = place.equips.begin(); it != place.equips.end(); it++)
 						if (it->second.name == objects)
@@ -1370,7 +1416,11 @@ void take_action(player & player1, scene place)
 					cout << "You have to get " << objects << " before you equip it!" << endl;
 					cout << "-------------------------------------------------------" << endl;
 				}
+<<<<<<< HEAD
 				else if (has == stuff_not_in_the_game)
+=======
+				else if (has ==stuff_not_in_the_game)
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 				{
 					cout << "-------------------------------------------------------" << endl;
 					cout << "" << objects << " equiped!" << " wait....what is "
@@ -1411,6 +1461,10 @@ void take_action(player & player1, scene place)
 			{
 				if (player1.with_light == false)
 				{
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 					if (carrying(player1, "stem"))
 					{
 						cout << "-----------------------------------------------------------------------" << endl;
@@ -1424,6 +1478,17 @@ void take_action(player & player1, scene place)
 					{
 						cout << "The first step of lighting a stem is: get a stem." << endl;
 					}
+<<<<<<< HEAD
+=======
+=======
+					cout << "-----------------------------------------------------------------------" << endl;
+					cout << "You`ve light the stem,a faint glow of"
+						<< " fire gave off a trace of warmth." << endl;
+					cout << "-----------------------------------------------------------------------" << endl;
+					player1.with_light = true;
+					player1.timer = 0;
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 				}
 				else
 				{
@@ -2276,7 +2341,11 @@ int location(player player1, scene place)
 	}
 	else if (player1.location == "down")
 	{
+<<<<<<< HEAD
 		enum position { up = 1, down = 0 };
+=======
+		enum position{up=1,down=0};
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 		if (player1.x == place.entrance_1_x and player1.y == place.entrance_1_y)
 			cout << "You currently in front of the trunk in cargo hold." << endl;
 		else if (player1.x == place.entrance_2_x and player1.y == place.entrance_2_y)
@@ -2625,7 +2694,15 @@ void upper_deck(player & player1, scene place)
 		{
 			srand((unsigned)time(NULL));
 			ghost.x = rand() % 3 + player1.x;
+<<<<<<< HEAD
 			ghost.y = player1.y;
+=======
+<<<<<<< HEAD
+			ghost.y =player1.y;
+=======
+			ghost.y = rand() % 2 + player1.y;
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 			if (ghost.x == player1.x and ghost.y == player1.y)
 			{
 				cout << "You have encouter a ghost!" << endl;
@@ -2775,6 +2852,7 @@ void upper_deck(player & player1, scene place)
 	{
 		player1.room = "ladder";
 		player1.ladder_times++;
+<<<<<<< HEAD
 		player1.in_n_out = 0;
 		if (player1.last_room != "ship`s wheel"
 			and player1.last_room != "captain`s quarters"
@@ -2782,6 +2860,13 @@ void upper_deck(player & player1, scene place)
 			cout << "You are by the upper deck by the ladder, you can go down." << endl;
 		else
 			cout << place.entrance_2_description << endl;
+=======
+		if (player1.last_room != "ship`s wheel" 
+			and player1.last_room != "captain`s quarters"
+			and player1.last_room != "upper deck")
+			cout << "This is upper deck." << endl;
+		cout << place.entrance_2_description << endl;
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 		take_action(player1, place);
 		if (player1.action == "down")
 		{
@@ -2957,7 +3042,15 @@ void lower_deck(player & player1, scene place)
 		{
 			srand((unsigned)time(NULL));
 			ghost.x = rand() % 3 + player1.x;
+<<<<<<< HEAD
 			ghost.y = player1.y;
+=======
+<<<<<<< HEAD
+			ghost.y =player1.y;
+=======
+			ghost.y = rand() % 2 + player1.y;
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 			if (ghost.x == player1.x and ghost.y == player1.y)
 			{
 				cout << "You have encouter a ghost!" << endl;
@@ -3066,8 +3159,13 @@ void lower_deck(player & player1, scene place)
 
 	else if (player1.x == place.entrance_2_x and player1.y == place.entrance_2_y)
 	{
+<<<<<<< HEAD
 		enum position { up = 1, down = 0 };
 		if (player1.up_or_down == up)
+=======
+		enum position{up=1,down=0};
+		if (player1.up_or_down ==up)
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 		{
 			player1.room = "ladder";
 			player1.ladder_times++;
@@ -4912,14 +5010,23 @@ int has_equipment(player player1, scene place, string stuff_name)
 {
 	map<string, stuff>::iterator it;
 	map<string, string>::iterator player_equip;
+<<<<<<< HEAD
 	enum object { have_stuff = 2, not_have_but_in_the_game = 1, not_have_not_in_the_game = -1 };
 	enum in_or_out { stuff_in_the_game = 1, stuff_not_in_the_game = 0 };
+=======
+	enum object{have_stuff=2,not_have_but_in_the_game=1,not_have_not_in_the_game=-1};
+	enum in_or_out{stuff_in_the_game=1,stuff_not_in_the_game=0};
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 	int has = 0, what_is_it = 0;
 	for (player_equip = player1.equipments.begin(); player_equip != player1.equipments.end(); player_equip++)
 	{
 		if (player_equip->second == stuff_name)
 		{
+<<<<<<< HEAD
 			cout << "You already equiped " << stuff_name << "!!!" << endl;
+=======
+			cout << "You already equiped " << stuff << "!!!" << endl;
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 			has = have_stuff;
 		}
 	}
@@ -4929,9 +5036,21 @@ int has_equipment(player player1, scene place, string stuff_name)
 		{
 			if (it->second.name == stuff_name)
 			{
+<<<<<<< HEAD
 				what_is_it = stuff_in_the_game;
 				if (carrying(player1, stuff_name) != false)
 					has = not_have_but_in_the_game;
+=======
+<<<<<<< HEAD
+				what_is_it = stuff_in_the_game;
+				if (carrying(player1, stuff) != false)
+					has = not_have_but_in_the_game;
+=======
+				what_is_it = 1;
+				if (carrying(player1, stuff) != false)
+					has = 1;
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
 			}
 		}
 
@@ -5103,6 +5222,7 @@ void data_statistics(player player1)
 	cout << "And you have spent " << player1.money_spend << " golds." << endl;
 	cout << "Welcome back anytime, my warrior." << endl;
 	cout << "---------------------------------------------------------" << endl;
+<<<<<<< HEAD
 }
 void welcome_back(player & player1)
 //this function can judge if a player is
@@ -5186,3 +5306,10 @@ bool player_exists(string name)
 	}
 	return match;
 }
+=======
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 5978291d167b403e8110fac99db6168fb2d21983
+>>>>>>> f44d4631ed2fdcfe56731e375748d3d0c218faa0
