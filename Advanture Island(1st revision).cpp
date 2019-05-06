@@ -2868,7 +2868,7 @@ void upper_deck(player & player1, scene place)
 				bully.x = player1.x;
 				bully.y = player1.y;
 				bully.attack = 20;
-				bully.health = 150;
+				bully.health = 120;
 				if (player1.bandit_warning and player1.gorilla_run)
 				{
 					cout << "---------------------------------------------------------------" << endl;

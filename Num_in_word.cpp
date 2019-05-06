@@ -22,6 +22,9 @@ int main()
 		Num_in_word(new_num);
 		if (new_num != 0)
 			unit(digits, index);
+		else
+			cout<<"zero"<<endl;
+			
 	}
 	cout << endl;
 	return 0;
