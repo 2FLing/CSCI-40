@@ -5,28 +5,35 @@
 //Matthew Jones
 //CSCI-40 group project Advanture Island game.
 //use "-std=c++11" to compile"
-//*********************************************************
-//Introduction:                                           *
-//This is the source code for Advanture Island game       *
-//In this game the player`s goal is to sail the ship      *
-//in order to escape from the Island. Player has to       *
-//get the stuff he needs in differen rooms and defeated   *
-// the final boss before he sail the ship successfully.   *
-//Game Stratege:                                          *
-//You might meet ghost on the ship after 6:00p.m till     *
-//6:00 a.m on the other day, if you don`t want to meet ghost *
-//You can get stem and enter "light stem" to get a torch  *
-//The torch will go out in 30 seconds(time in reality).   *
-//Also there is a bed in the captain`s quarters, if you *
-//enter lie on bed, you can restore your health and skip the night
-//There is a diamond in the brig, you need to search before you 
-//can get the diamond, it worth 100 golds.
-//You can enter sell things in the native
-//About two players mode in this game:                    *
-//in two players mode each player can make only one       *
-//command in his turn,(except when he is in a battle)     *
-//and after that it will be the turn for the other player.*
-//*********************************************************
+//***************************************************************************************
+//Introduction:                                                                         *
+//This is the source code for Advanture Island game                                     *
+//In this game the player`s goal is to sail the ship                                    *
+//in order to escape from the Island. Player has to                                     *
+//get the stuff he needs in differen rooms and defeated                                 *
+// the final boss before he sail the ship successfully.                                 *
+//Game Stratege:                                                                        *
+//You might meet ghost on the ship after 6:00p.m till                                   *
+//6:00 a.m on the other day, if you don`t want to meet ghost                            *
+//You can get stem and enter "light stem" to get a torch                                *
+//The torch will go out in 30 seconds(time in reality).                                 *
+//Also there is a bed in the captain`s quarters, if you                                 *
+//enter lie on bed, you can restore your health and skip the night                      *
+//There is a diamond in the brig, you need to search before you                         *
+//can get the diamond, it worth 100 golds.You can sell things in the native shop.       *
+//there are equipments are selling in the native shop, you can buy them and euqip       *
+//the equipments.You can even equip key or banana...don`t sell the key to the shop,     *
+//if you sell it, you won`t pass the game.                                              *
+//About the final boss:                                                                 *
+//Every time the when the character go to the ship`s wheel, he will try to convince the *
+//bully first, but the result is always the bully slap the character on his face, that  *
+//will minus him 10 health, if your health is below ten and you go ship`s wheel to      *
+//convince the bully, you can die.                                                      *
+//About two players mode in this game:                                                  *
+//in two players mode each player can make only one                                     *
+//command in his turn,(except when he is in a battle)                                   *
+//and after that it will be the turn for the other player.                              *
+//***************************************************************************************
 #include<iostream>
 #include<stdio.h>
 #include<map>
