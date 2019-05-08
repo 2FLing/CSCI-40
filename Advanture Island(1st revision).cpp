@@ -6,11 +6,22 @@
 //CSCI-40 group project Advanture Island game.
 //use "-std=c++11" to compile"
 //*********************************************************
+//Introduction:                                           *
 //This is the source code for Advanture Island game       *
 //In this game the player`s goal is to sail the ship      *
 //in order to escape from the Island. Player has to       *
 //get the stuff he needs in differen rooms and defeated   *
 // the final boss before he sail the ship successfully.   *
+//Game Stratege:                                          *
+//You might meet ghost on the ship after 6:00p.m till     *
+//6:00 a.m on the other day, if you don`t want to meet ghost *
+//You can get stem and enter "light stem" to get a torch  *
+//The torch will go out in 30 seconds(time in reality).   *
+//Also there is a bed in the captain`s quarters, if you *
+//enter lie on bed, you can restore your health and skip the night
+//There is a diamond in the brig, you need to search before you 
+//can get the diamond, it worth 100 golds.
+//You can enter sell things in the native
 //About two players mode in this game:                    *
 //in two players mode each player can make only one       *
 //command in his turn,(except when he is in a battle)     *
@@ -123,6 +134,7 @@ public:
 	map<string, int> inventory;
 	map<string, string>drop_stuff;
 	map<string, string>equipments;
+	vector<int>index_for_questions_asked;
 	string time = "8:00";
 	string action;
 	string object;
@@ -198,6 +210,7 @@ public:
 	int num_item3 = 0;
 	int last_question_index = 100;
 	int hut_score = 0;
+	int max_hut_score = 0;
 	int last_hut_score = 0;
 	int wrong_times = 0;
 	int correct_row = 0;
@@ -1514,6 +1527,7 @@ void take_action(player & player1, scene place)
 						discard_stuff(player1, objects);
 						cout << "---------------------------------------" << endl;
 						cout << "You sold the " << objects << " to the shop!" << endl;
+						cout << "You currently have " << player1.gold << " golds." << endl;
 						cout << "---------------------------------------" << endl;
 					}
 				}
@@ -2413,14 +2427,20 @@ void island(player & player1, scene place)//This function can set up the map "is
 	}
 	else if (player1.x == place.hut_x and player1.y == place.hut_y and player1.hostile == false)
 	{
-		player1.room = "hut";
-		add_times(player1);
-		int question_index, index = 0;
-		bool repeat = false;
-		string bootlick = "";
-		map<string, string>::iterator question = place.questions.begin();
-		vector<int>index_for_questions_asked;
-		vector<int>::iterator it;
+	player1.room = "hut";
+	add_times(player1);
+	int question_index, index = 0;
+	bool repeat = false;
+	string bootlick = "";
+	map<string, string>::iterator question = place.questions.begin();
+	vector<int>::iterator it;
+	if (player1.hut_score == 100)
+	{
+		cout << "You have enter the hut, but the old man has no more questions for you..." << endl;
+	}
+	else
+	{
+		player1.room == "hut";
 		if (player1.in_n_out == 0 and player1.hut_times == 1)
 		{
 			cout << "The owner of this hut is an old man who is the most intelligent person" <<
@@ -2438,14 +2458,17 @@ void island(player & player1, scene place)//This function can set up the map "is
 				cout << "Do you want to accept the challenge?" << endl;
 			else
 				cout << "I remember you got " << player1.last_hut_score
-				<< " questions last time, that was awesome!" <<
-				"Do you want to try again?" << endl;
+				<< " questions last time, that was awesome!" << endl;
+			cout << "Do you want to try again?" << endl;
 			player1.in_n_out = 1;
 		}
 		if (player1.answering == false)
 			take_action(player1, place);
 		if (player1.action == "yes" and player1.answering == false)
+		{
 			player1.answering = true;
+			cout << "Challenge begins!!!!!!" << endl;
+		}
 		else if (player1.action == "no" and player1.answering == false)
 		{
 			cout << "\"Ok...go to do what you want to do...\" the wise old man walked away disappointed." << endl;
@@ -2455,15 +2478,23 @@ void island(player & player1, scene place)//This function can set up the map "is
 		{
 			srand((unsigned)time(NULL));
 			question_index = rand() % 99;
-			for (it = index_for_questions_asked.begin(); it != index_for_questions_asked.end(); it++)
+			for (it = player1.index_for_questions_asked.begin(); it != player1.index_for_questions_asked.end(); it++)
+			{
 				if (*it == question_index)
 					repeat = true;
-			while ((question_index == player1.last_question_index) and repeat)
+			}
+			while (repeat)
 			{
 				srand((unsigned)time(NULL));
 				question_index = rand() % 99;
+				repeat = false;
+				for (it = player1.index_for_questions_asked.begin(); it != player1.index_for_questions_asked.end(); it++)
+				{
+					if (*it == question_index)
+						repeat = true;
+				}
 			}
-			index_for_questions_asked.push_back(question_index);
+			player1.index_for_questions_asked.push_back(question_index);
 			player1.last_question_index = question_index;
 			while (question != place.questions.end() and index != question_index)
 			{
@@ -2490,6 +2521,8 @@ void island(player & player1, scene place)//This function can set up the map "is
 				if (match(player1.action, question->second))
 				{
 					player1.hut_score++;
+					if (player1.max_hut_score < player1.hut_score)
+						player1.max_hut_score = player1.hut_score;
 					player1.correct_row++;
 					player1.final_score += 1;
 					if (player1.correct_row == 3)
@@ -2505,60 +2538,73 @@ void island(player & player1, scene place)//This function can set up the map "is
 					else if (player1.correct_row >= 35)
 						bootlick = "I believe you are the most smartest man that I have seen!";
 					cout << "Correct!!! " << bootlick << endl;
-					if (player1.hut_score == 6)
+					if (player1.max_hut_score == player1.hut_score)
 					{
-						cout << "Good job! The wise old man decide" <<
-							" to give you 80 golds!" << endl;
-						player1.gold += 80;
-						player1.money_made += 80;
-					}
-					else if (player1.hut_score == 15)
-					{
-						cout << "Good job! The wise old man decide" <<
-							" to give you ten stems!" << endl;
-						player1.inventory["health posion"] += 10;
-					}
-					else if (player1.hut_score == 20)
-					{
-						cout << "Good job! The The wise old man decide" <<
-							" to give you a pendent!" << endl;
-						player1.inventory["pendent"]++;
-					}
-					else if (player1.hut_score == 25)
-					{
-						cout << "Good job! The wise old man decide" <<
-							" to give you a chainmail helmet!" << endl;
-						player1.inventory["chainmail helmet"]++;
-					}
-					else if (player1.hut_score == 30)
-					{
-						cout << "Good job! The wise old man decide" <<
-							" to give you a sword!" << endl;
-						player1.inventory["sword"]++;
-					}
-					else if (player1.hut_score == 35)
-					{
-						cout << "Good job! The wise old man decide" <<
-							" to give you a pair of leggings!" << endl;
-						player1.inventory["leggings"]++;
-					}
-					else if (player1.hut_score == 40)
-					{
-						cout << "Good job! The wise old man decide" <<
-							" to give you a pair of chainmail boots!" << endl;
-						player1.inventory["chainmail boots"]++;
-					}
-					else if (player1.hut_score == 50)
-					{
-						cout << "Good job! The wise old man decide"
-							<< " to give you a chain mail!" << endl;
-						player1.inventory["chain mail"]++;
-					}
-					else if (player1.hut_score == 65)
-					{
-						cout << "Good job! The wise old man decide" <<
-							" to give you a cross!" << endl;
-						player1.inventory["cross"]++;
+						if (player1.max_hut_score == 6)
+						{
+							cout << "Good job! The wise old man decide" <<
+								" to give you 80 golds!" << endl;
+							player1.gold += 80;
+							player1.money_made += 80;
+						}
+						else if (player1.max_hut_score == 15)
+						{
+							cout << "Good job! The wise old man decide" <<
+								" to give you ten health potions!" << endl;
+							player1.inventory["health posion"] += 10;
+						}
+						else if (player1.max_hut_score == 18)
+						{
+							cout << "Good job! The The wise old man decide" <<
+								" to give you a pendent!" << endl;
+							player1.inventory["pendant"]++;
+						}
+						else if (player1.max_hut_score == 21)
+						{
+							cout << "Good job! The wise old man decide" <<
+								" to give you a chainmail helmet!" << endl;
+							player1.inventory["chainmail helmet"]++;
+						}
+						else if (player1.max_hut_score == 24)
+						{
+							cout << "Good job! The wise old man decide" <<
+								" to give you a sword!" << endl;
+							player1.inventory["sword"]++;
+						}
+						else if (player1.max_hut_score == 27)
+						{
+							cout << "Good job! The wise old man decide" <<
+								" to give you a pair of leggings!" << endl;
+							player1.inventory["leggings"]++;
+						}
+						else if (player1.max_hut_score == 30)
+						{
+							cout << "Good job! The wise old man decide" <<
+								" to give you a pair of chainmail boots!" << endl;
+							player1.inventory["chainmail boots"]++;
+						}
+						else if (player1.max_hut_score == 33)
+						{
+							cout << "Good job! The wise old man decide"
+								<< " to give you a chain mail!" << endl;
+							player1.inventory["chain mail"]++;
+						}
+						else if (player1.max_hut_score == 36)
+						{
+							cout << "Good job! The wise old man decide" <<
+								" to give you a cross!" << endl;
+							player1.inventory["cross"]++;
+						}
+						else if (player1.max_hut_score == 100)
+						{
+							cout << "Good job! The wise old man decide" <<
+								" to give you a 1000 golds!" << endl;
+							cout << "The wise old man says:\"Ok...you are the most wisdom person I have ever seen,"
+								<< "You pass the challenge,I have no more questions for you." << endl;
+							player1.gold += 1000;
+							player1.answering = false;
+							player1.index_for_questions_asked.clear();
+						}
 					}
 				}
 				else
@@ -2571,6 +2617,7 @@ void island(player & player1, scene place)//This function can set up the map "is
 						cout << "Challenge over. You score this time is: "
 							<< player1.hut_score << endl;
 						player1.last_hut_score = player1.hut_score;
+						player1.index_for_questions_asked.clear();
 						player1.hut_score = 0;
 						player1.correct_row = 0;
 						player1.wrong_times = 0;
@@ -2580,6 +2627,7 @@ void island(player & player1, scene place)//This function can set up the map "is
 				}
 			}
 		}
+	}
 	}
 	else
 	{
@@ -2787,7 +2835,7 @@ void upper_deck(player & player1, scene place)
 	{
 		player1.room = "ship`s wheel";
 		add_times(player1);
-		if (player1.gorilla_run == 0)
+		if (player1.gorilla_run == false)
 		{
 			if (player1.in_n_out == 0)
 			{
@@ -2800,7 +2848,7 @@ void upper_deck(player & player1, scene place)
 			{
 				discard_stuff(player1, "banana");
 				place.stuff_can_give.erase("banana");
-				player1.gorilla_run = 1;
+				player1.gorilla_run = true;
 				cout << "The gorilla rush to the forest and disapear!" << endl;
 				player1.in_n_out = 0;
 			}
@@ -2811,7 +2859,7 @@ void upper_deck(player & player1, scene place)
 				take_action(player1, place);
 			}
 		}
-		else if (player1.gorilla_run != 0)
+		else if (player1.gorilla_run != false)
 		{
 			if (player1.bandit)
 			{
