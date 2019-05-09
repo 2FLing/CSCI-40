@@ -37,8 +37,8 @@ int main()
 	tail = head;
 	while (t->next != NULL)
 	{
-		cout << t->data << endl;
-		t = t->next;
+		cout << tail->data << endl;
+		tail = tail->next;
 	}
 	return 0;
 }
