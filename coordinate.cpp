@@ -48,7 +48,7 @@ int read_pairs(coordinates coordinate[])
 		cout << "Error!\n" << endl;
 		exit(1);
 	}
-	while (not file.eof() and index <= num_pairs)
+	while (not file.eof() and index < num_pairs)
 	{
 		file >> coordinate[index].x;
 		file >> coordinate[index].y;
