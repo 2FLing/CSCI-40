@@ -22,7 +22,7 @@ void sort_names(string name)//This function can write names into a new file in s
 	int  index = 0, pos, size;
 	ifstream names;
 	ofstream new_names;
-	names.open(name);
+	names.open(name.c_str());
 	if (not names.is_open())
 	{
 		cout << "error!" << endl;
@@ -39,8 +39,7 @@ void sort_names(string name)//This function can write names into a new file in s
 	new_names.open("new_names.txt");
 	for (pos = 0; pos <= size; pos++)
 	{
-		new_names << buffer[pos];
-		new_names << " ";
+		new_names << buffer[pos]<<endl;
 	}
 	new_names.close();
 }
