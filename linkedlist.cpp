@@ -19,10 +19,10 @@ int main()
 {
 	node* head;
 	node* n;
-	node* t;
+	node* tail;
 	n = new node;
 	head = n;
-	t = n;
+	tail = n;
 	int index;
 	char a = 'A';
 	for (index = 0; index <= 25; index++)
@@ -30,11 +30,11 @@ int main()
 		n->data = a;
 		a++;
 		n = new node;
-		t->next = n;
-		t = t->next;
+		tail->next = n;
+		tail = t->next;
 	}
 	n->next = NULL;
-	t = head;
+	tail = head;
 	while (t->next != NULL)
 	{
 		cout << t->data << endl;
