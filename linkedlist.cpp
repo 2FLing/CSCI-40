@@ -3,38 +3,42 @@
 //fill the list with the letters of the
 //alphabet, and then it will print the contents of the
 //linked list.
+//MingkuanPang
+//This program can caculate factorials
+// n! = (n-1)! x n and the greatest common factor
+//of two numbers.
 #include<iostream>
+#include<limits.h>
 using namespace std;
-struct Node
+struct node
 {
-	char letter;
-	Node* next;
+	char data;
+	node* next;
 };
 int main()
 {
-	int index,index2,index3;
-	char letters = 'a';
-	Node *data=new Node;
-	Node* head =new Node;
-	Node* head2 = new Node;
-	head=data;
-	head2= data;
-	for (index = 1; index <= 26; index++)
+	node* head;
+	node* n;
+	node* t;
+	n = new node;
+	head = n;
+	t = n;
+	int index;
+	char a = 'A';
+	for (index = 0; index <= 25; index++)
 	{
-		Node *new_list = new Node;
-		new_list->next =NULL;
-		data->next = new_list;
-		data = new_list;
+		n->data = a;
+		a++;
+		n = new node;
+		t->next = n;
+		t = t->next;
 	}
-	for (index2 = 1; index2 <= 26; index2++)
+	n->next = NULL;
+	t = head;
+	while (t->next != NULL)
 	{
-		head2->letter = letters;
-		letters++;
-		head2 = head2->next;
-	}
-	for (head; head->next!= NULL; head = head->next)
-	{
-		cout << head->letter <<" ";
+		cout << t->data << endl;
+		t = t->next;
 	}
 	return 0;
 }
