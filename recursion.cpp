@@ -30,11 +30,10 @@ int factorial(int times)
 	{
 		if (factorial(times - 1) > (INT_MAX / times))
 		{
-			cout << "Limit reached!" << endl;
 			times = 0;
 		}
 		else
-			times = factorial(times - 1)*times;
+			times = factorial(times - 1) * times;
 	}
 	return times;
 }
@@ -42,13 +41,12 @@ int factorial(int times)
 int gcf(int number1, int number2)
 {
 	int temp;
-	if (number2 != 0)
+	while (number2 != 0)
 	{
 		temp = number2;
 		number2 = number1 % number2;
 		number1 = temp;
 		gcf(number1, number2);
 	}
-	else
-		return number1;
+	return number1;
 }
