@@ -46,17 +46,20 @@ int read_pairs(coordinates coordinate[])
 	if (!file.is_open())
 	{
 		cout << "Error!\n" << endl;
-		exit(1);
 	}
-	while (not file.eof() and index < num_pairs)
+	else
 	{
-		file >> coordinate[index].x;
-		file >> coordinate[index].y;
-		coordinate[index].distance = sqrt(coordinate[index].x*coordinate[index].x +
-			coordinate[index].y*coordinate[index].y);
-		index++;
+		while (not file.eof() and index < num_pairs)
+		{
+			file >> coordinate[index].x;
+			file >> coordinate[index].y;
+			coordinate[index].distance = sqrt(coordinate[index].x * coordinate[index].x +
+				coordinate[index].y * coordinate[index].y);
+			index++;
+
+		}
+		file.close();
 	}
-	file.close();
 	return index;
 }
 void sort_pairs(coordinates coordinate[num_pairs], type  coordinate_type, int size)
