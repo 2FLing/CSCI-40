@@ -1,44 +1,28 @@
-//MingkuanPang
-//The program can create a linked list of 26 nodes, and then
-//fill the list with the letters of the
-//alphabet, and then it will print the contents of the
-//linked list.
-//MingkuanPang
-//This program can caculate factorials
-// n! = (n-1)! x n and the greatest common factor
-//of two numbers.
 #include<iostream>
-#include<limits.h>
 using namespace std;
 struct node
 {
-	char data;
+	char letter;
 	node* next;
 };
 int main()
 {
-	node* head;
-	node* n;
-	node* tail;
-	n = new node;
+	node* n=new node;
+	node* head=new node;
+	node* tail=new node;
+	char a = 'A';
+	int index;
 	head = n;
 	tail = n;
-	int index;
-	char a = 'A';
 	for (index = 0; index <= 25; index++)
 	{
-		n->data = a;
+		n->letter = a;
 		a++;
 		n = new node;
 		tail->next = n;
-		tail = t->next;
-	}
-	n->next = NULL;
-	tail = head;
-	while (t->next != NULL)
-	{
-		cout << tail->data << endl;
 		tail = tail->next;
 	}
-	return 0;
+	n->next = NULL;
+	for (head; head->next != NULL; head=head->next)
+		cout << head->letter << endl;
 }
