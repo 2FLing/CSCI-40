@@ -26,20 +26,20 @@ void sort_names(string name)//This function can write names into a new file in s
 	if (not names.is_open())
 	{
 		cout << "error!" << endl;
-		exit(1);
 	}
-	while ((not names.eof()) and buffer->length() <= MAX_LENGTH - 1)
+	while ((not names.eof()) and index<=MAX_LENGTH-1)
 	{
 		names >> buffer[index];
 		index++;
 	}
 	names.close();
-	size = get_size(buffer);
+	size = index-1;
 	order_name(buffer, size);
 	new_names.open("new_names.txt");
 	for (pos = 0; pos <= size; pos++)
 	{
-		new_names << buffer[pos]<<endl;
+		new_names << buffer[pos] << endl;
+
 	}
 	new_names.close();
 }
@@ -49,6 +49,7 @@ void order_name(string names[MAX_LENGTH], int size)
 	int index, pos;
 	string temp;
 	for (index = size - 1; index >= 0; index--)
+	{
 		for (pos = 0; pos <= index; pos++)
 		{
 			if (names[pos].length() > names[pos + 1].length())
@@ -58,14 +59,5 @@ void order_name(string names[MAX_LENGTH], int size)
 				names[pos + 1] = temp;
 			}
 		}
-}
-int get_size(string names[MAX_LENGTH])//Judge the effective size of a string array.
-{
-	int size, index = 0;
-	while (not names[index].empty())
-	{
-		index++;
 	}
-	size = index - 1;
-	return size;
 }
