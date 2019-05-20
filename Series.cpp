@@ -42,7 +42,7 @@ double Sum_Series(double first_term, double common_ration)//This function can ca
 double Series_Sum(double first_term, double common_ration)//This function can caculate a sum of a series of numbers by formula.
 {
 	double sum=0;
-	if (common_ration < 1)
+	if (-1<common_ration < 1)
 		sum = first_term / (1 - common_ration);
 	else
 		cout << "The comman_ration must less then 1!" << endl;
