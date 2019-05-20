@@ -28,7 +28,7 @@ int main()
 double Sum_Series(double first_term, double common_ration)//This function can caculate a sum of a series of numbers.
 {
 	double sum_1 = 0, sum_2;
-	if (-1《common_ration < 1)
+	if (-1<common_ration < 1)
 	{
 		sum_2 = Series_Sum(first_term, common_ration);
 		while (!if_equal(sum_1, sum_2))
