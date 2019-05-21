@@ -48,15 +48,11 @@ int factorial(int times)
 	return times;
 }
 //This function can caculate the greatest common factor of two numbers.
-int gcf(int number1, int number2)
+int gcf(int num1, int num2)
 {
-	int temp;
-	if (number2 != 0)
+	if (num2 != 0)
 	{
-		temp = number2;
-		number2 = number1 % number2;
-		number1 = temp;
-		number1=gcf(number1, number2);
+		num1 = gcf(num2, num1%num2);
 	}
-	return number1;
+	return num1;
 }
